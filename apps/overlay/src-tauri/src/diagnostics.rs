@@ -132,3 +132,49 @@ fn show_error(text: &str) {
 fn show_error(text: &str) {
     eprintln!("{text}");
 }
+
+/// Windows whose page said it is up (see `report_frontend`).
+static READY: Mutex<Vec<String>> = Mutex::new(Vec::new());
+
+#[derive(Debug, Clone, Copy, serde::Deserialize, specta::Type)]
+#[serde(rename_all = "camelCase")]
+pub enum FrontendEvent {
+    /// The page mounted its interface.
+    Ready,
+    Error,
+}
+
+/// What a page tells the log about itself: that it is up, or what broke.
+#[tauri::command]
+#[specta::specta]
+pub fn report_frontend(window: tauri::WebviewWindow, event: FrontendEvent, message: String) {
+    let label = window.label().to_string();
+    let message: String = message.chars().take(2000).collect();
+    match event {
+        FrontendEvent::Ready => {
+            tracing::info!("window `{label}` is up");
+            if let Ok(mut ready) = READY.lock() {
+                ready.push(label);
+            }
+        }
+        FrontendEvent::Error => tracing::error!("window `{label}`: {message}"),
+    }
+}
+
+/// Log the windows that have not mounted their interface after a while: a
+/// transparent window whose page never ran is otherwise just invisible.
+pub fn watch_windows_start(labels: &'static [&'static str]) {
+    std::thread::spawn(move || {
+        std::thread::sleep(std::time::Duration::from_secs(15));
+        let ready = READY.lock().map(|r| r.clone()).unwrap_or_default();
+        let silent: Vec<_> = labels
+            .iter()
+            .filter(|l| !ready.iter().any(|r| r == *l))
+            .collect();
+        if silent.is_empty() {
+            tracing::info!("every window is up");
+        } else {
+            tracing::warn!("no interface after 15 s in: {silent:?}");
+        }
+    });
+}

@@ -51,6 +51,7 @@ pub fn specta_builder() -> Builder<tauri::Wry> {
             commands::open_hub,
             commands::hide_window,
             commands::quit,
+            diagnostics::report_frontend,
             routine::get_routine,
             routine::routine_step,
             routine::routine_set_reading,
@@ -93,6 +94,14 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .register_asynchronous_uri_scheme_protocol(assets::SCHEME, assets::handle)
         .invoke_handler(specta.invoke_handler())
+        .on_page_load(|webview, payload| {
+            tracing::info!(
+                "window `{}`: page {:?} {}",
+                webview.label(),
+                payload.event(),
+                payload.url()
+            );
+        })
         .setup(move |app| {
             specta.mount_events(app);
             let handle = app.handle();
@@ -124,6 +133,8 @@ pub fn run() {
             }
             tick::spawn(handle.clone());
             routine::spawn(handle.clone());
+            // Windows that start visible; the others mount when first shown.
+            diagnostics::watch_windows_start(&["meter"]);
             Ok(())
         })
         .on_window_event(|window, event| {

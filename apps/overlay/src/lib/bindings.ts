@@ -36,6 +36,8 @@ export const commands = {
 	openHub: (tab: HubTab, actorId: number | null) => typedError<null, AppError>(__TAURI_INVOKE("open_hub", { tab, actorId })),
 	hideWindow: (window: WindowKind) => typedError<null, AppError>(__TAURI_INVOKE("hide_window", { window })),
 	quit: () => __TAURI_INVOKE<void>("quit"),
+	/**  What a page tells the log about itself: that it is up, or what broke. */
+	reportFrontend: (event: FrontendEvent, message: string) => __TAURI_INVOKE<void>("report_frontend", { event, message }),
 	getRoutine: () => __TAURI_INVOKE<RoutineView>("get_routine"),
 	routineStep: (id: string, delta: number) => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_step", { id, delta })),
 	routineSetReading: (id: string, amount: number) => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_set_reading", { id, amount })),
@@ -103,6 +105,10 @@ export type FightView = {
 	/**  Sorted by damage, highest first. */
 	players: PlayerDetails[],
 };
+
+export type FrontendEvent = 
+/**  The page mounted its interface. */
+"ready" | "error";
 
 export type HotkeySettings = {
 	clickThrough: string,

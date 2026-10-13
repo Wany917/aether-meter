@@ -19,7 +19,13 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   useEvent(events.settingsChanged, setSettings);
 
   useEffect(() => {
-    void commands.getSettings().then((initial) => setSettings((current) => current ?? initial));
+    commands
+      .getSettings()
+      .then((initial) => setSettings((current) => current ?? initial))
+      .catch((e: unknown) => {
+        // Without settings nothing renders: make that visible in the log.
+        void commands.reportFrontend("error", `settings did not load: ${String(e)}`).catch(() => {});
+      });
   }, []);
 
   useEffect(() => {
