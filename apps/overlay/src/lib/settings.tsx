@@ -19,13 +19,21 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   useEvent(events.settingsChanged, setSettings);
 
   useEffect(() => {
-    commands
-      .getSettings()
-      .then((initial) => setSettings((current) => current ?? initial))
-      .catch((e: unknown) => {
-        // Without settings nothing renders: make that visible in the log.
-        void commands.reportFrontend("error", `settings did not load: ${String(e)}`).catch(() => {});
-      });
+    let attempts = 0;
+    let timer = 0;
+    const load = () => {
+      commands
+        .getSettings()
+        .then((initial) => setSettings((current) => current ?? initial))
+        .catch((e: unknown) => {
+          // Without settings nothing renders: retry, and leave a trace.
+          attempts += 1;
+          void commands.reportFrontend("error", `settings did not load (attempt ${attempts}): ${String(e)}`).catch(() => {});
+          if (attempts < 20) timer = window.setTimeout(load, 250);
+        });
+    };
+    load();
+    return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {

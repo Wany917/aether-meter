@@ -127,6 +127,12 @@ pub fn run() {
             });
 
             tracing::info!("engine started");
+            // Pages call commands as soon as they load, and WebView2 loads
+            // them while setup is still running: the windows are created
+            // only now that the state those commands read is managed.
+            for window in &app.config().app.windows {
+                tauri::WebviewWindowBuilder::from_config(handle, window)?.build()?;
+            }
             windows::apply(handle, &current)?;
             tray::create(handle, &current)?;
             tracing::info!("tray ready");
