@@ -5,6 +5,7 @@ import { formatPercent } from "../../lib/format";
 import { LANGUAGE_NAMES, targetModeName } from "../../lib/i18n";
 import { CommandError } from "../../lib/ipc";
 import { useSettings } from "../../lib/settings";
+import { RecorderPanel } from "../recorder/RecorderPanel";
 import { Checkbox, Choice, SettingRow, Slider } from "./controls";
 import { HiddenTimers } from "./HiddenTimers";
 import { HotkeyField } from "./HotkeyField";
@@ -123,6 +124,8 @@ export function SettingsTab() {
           <HotkeyField value={hotkeys.toggleOverlays} label={t("settings.hotkey.toggleOverlays")} onChange={(v) => setHotkeys({ toggleOverlays: v })} />
         </SettingRow>
       </section>
+
+      <RecorderPanel />
 
       <section className="settings-section">
         <h2>{t("settings.about")}</h2>

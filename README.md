@@ -92,21 +92,28 @@ To fix or add something after a game update:
 
 ## Decode more of the game
 
-Odyle Energy, quest progress and entry counters are not decoded by any meter
-yet. To find the record that carries one of them:
+Hidden cubes, Odyle Energy, quest progress and entry counters are not decoded
+by any meter yet. To find the record that carries one of them, record it from
+the app:
 
-1. In game, note the value (say your Odyle Energy: 485).
-2. Start a Wireshark capture on the network adapter the game uses.
-3. Do the thing that changes it (open a cube: 485 becomes 445), twice if you can.
-4. Stop and save the capture as `.pcapng`, then:
+1. In Settings, **Help decode the game**: pick what you will do (open a hidden
+   cube, spend Odyle Energy...) and note the value in game (12 keys).
+2. **Record**, do the thing once or twice, come back, enter the values you saw
+   before and after (12, 11), then **Stop and save**.
+3. Read the file it shows:
 
 ```sh
-bun run probe capture.pcapng --find 485 --find 445
+bun run probe aether-cube-1791936000.jsonl
 ```
 
-The opcodes listed as holding every value, at the same offset, are the record
-to decode. `--dump <opcode>` prints all of its frames. Share the result in an
-issue (not the capture itself: it contains your session).
+The values saved with the recording are searched for; the opcodes listed as
+holding every value, at the same offset, are the record to decode.
+`--dump <opcode>` prints all of its frames. A Wireshark capture (`.pcapng`) works
+too, with `--find <value>` for each value.
+
+A recording holds what the game sent you (names of players nearby, chat):
+share the result in an issue, and the file itself only with a maintainer you
+trust.
 
 ## License
 

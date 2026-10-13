@@ -21,6 +21,9 @@ pub enum EngineError {
         source: std::io::Error,
     },
 
+    #[error("recording: {0}")]
+    Recording(String),
+
     #[error("history file {path} is corrupt: {source}")]
     HistoryFormat {
         path: PathBuf,

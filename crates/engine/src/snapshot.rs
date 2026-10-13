@@ -71,6 +71,7 @@ pub(crate) fn meter(
         players,
         ping_ms,
         dungeon: data.dungeon_label(dps.dungeon_id),
+        recording: false,
     }
 }
 

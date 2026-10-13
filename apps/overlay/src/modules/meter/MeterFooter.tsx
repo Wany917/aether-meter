@@ -24,6 +24,7 @@ export function MeterFooter({ meter }: { meter: MeterSnapshot }) {
       ) : (
         badge && <span className="meter-badge">{badge}</span>
       )}
+      {meter.recording && <span className="meter-rec">REC</span>}
       <span className="meter-dungeon" data-tauri-drag-region>
         {meter.dungeon ?? ""}
       </span>

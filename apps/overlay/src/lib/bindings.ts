@@ -60,6 +60,12 @@ export const commands = {
 	petsFavorite: (id: number, on: boolean) => typedError<PetsView, AppError>(__TAURI_INVOKE("pets_favorite", { id, on })),
 	/**  The player's own name for a pet; an empty one restores the catalog's. */
 	petsRename: (id: number, name: string) => typedError<PetsView, AppError>(__TAURI_INVOKE("pets_rename", { id, name })),
+	recordingStatus: () => __TAURI_INVOKE<RecorderStatus>("recording_status"),
+	startRecording: () => __TAURI_INVOKE<RecorderStatus>("start_recording"),
+	cancelRecording: () => __TAURI_INVOKE<RecorderStatus>("cancel_recording"),
+	/**  Stop, save with what the player saw, and show the file in the explorer. */
+	stopRecording: (note: RecordingNote) => typedError<string, AppError>(__TAURI_INVOKE("stop_recording", { note })),
+	openRecordings: () => typedError<null, AppError>(__TAURI_INVOKE("open_recordings")),
 };
 
 /** Events */
@@ -190,6 +196,8 @@ export type MeterSnapshot = {
 	players: PlayerRow[],
 	pingMs: number | null,
 	dungeon: string | null,
+	/**  A recording for decoding the game is running (see `recorder.rs`). */
+	recording: boolean,
 };
 
 export type MeterUpdated = MeterSnapshot;
@@ -199,6 +207,11 @@ export type NameDisplay = "full" |
 "masked" | 
 /**  The class name instead of the player's. */
 "class";
+
+export type NamedValue = {
+	label: string,
+	value: number,
+};
 
 export type NumberFormat = 
 /**  1.2M */
@@ -268,6 +281,23 @@ export type PlayerRow = {
 	isLocal: boolean,
 	/**  From the party roster; 0 for players outside your party. */
 	combatPower: number,
+};
+
+export type RecorderStatus = {
+	active: boolean,
+	startedMs: number | null,
+	frames: number,
+	bytes: number,
+	/**  The size limit was reached: frames since then were not kept. */
+	full: boolean,
+};
+
+/**  What the player did and saw, saved at the top of the file. */
+export type RecordingNote = {
+	/**  What was done: `cube`, `odyle`, `duty`, `other`. */
+	scenario: string,
+	values: NamedValue[],
+	note: string,
 };
 
 export type ReminderSettings = {

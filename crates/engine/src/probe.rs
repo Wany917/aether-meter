@@ -109,6 +109,55 @@ pub fn read_frames(path: &Path) -> Result<Vec<ProbeFrame>, String> {
     Ok(frames)
 }
 
+/// The frames of a recording made from the app (`recorder.rs`).
+pub fn read_recording(path: &Path) -> Result<Vec<ProbeFrame>, String> {
+    #[derive(serde::Deserialize)]
+    struct Line {
+        t: i64,
+        f: String,
+    }
+    let text = std::fs::read_to_string(path).map_err(|e| e.to_string())?;
+    let mut frames = Vec::new();
+    // The first line is the header: what the player did and saw.
+    for (number, line) in text.lines().enumerate().skip(1) {
+        let line: Line =
+            serde_json::from_str(line).map_err(|e| format!("line {}: {e}", number + 1))?;
+        let bytes = unhex(&line.f).ok_or_else(|| format!("line {}: bad hex", number + 1))?;
+        let len = read_varint(&bytes, 0);
+        let at = len.length.max(0) as usize;
+        if let Some(op) = bytes.get(at..at + 2) {
+            frames.push(ProbeFrame {
+                at_s: line.t as f64 / 1000.0,
+                opcode: [op[0], op[1]],
+                bytes,
+            });
+        }
+    }
+    Ok(frames)
+}
+
+/// The values the player entered when saving a recording.
+pub fn recording_values(path: &Path) -> Result<Vec<u32>, String> {
+    #[derive(serde::Deserialize)]
+    struct Header {
+        values: Vec<crate::recorder::NamedValue>,
+    }
+    let text = std::fs::read_to_string(path).map_err(|e| e.to_string())?;
+    let first = text.lines().next().ok_or("empty recording")?;
+    let header: Header = serde_json::from_str(first).map_err(|e| e.to_string())?;
+    Ok(header.values.into_iter().map(|v| v.value).collect())
+}
+
+fn unhex(text: &str) -> Option<Vec<u8>> {
+    if !text.len().is_multiple_of(2) {
+        return None;
+    }
+    (0..text.len())
+        .step_by(2)
+        .map(|i| u8::from_str_radix(text.get(i..i + 2)?, 16).ok())
+        .collect()
+}
+
 /// Frames holding `value` as a u16, u32 or varint.
 pub fn find(frames: &[ProbeFrame], value: u32) -> Vec<Hit> {
     let mut patterns: Vec<(&'static str, Vec<u8>)> = vec![

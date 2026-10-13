@@ -3,11 +3,14 @@
 //!   aether-probe capture.pcapng                       opcode counts
 //!   aether-probe capture.pcapng --find 485 --find 445 frames holding these values
 //!   aether-probe capture.pcapng --dump 2a38           every frame of one opcode, in hex
+//!   aether-probe aether-cube-1791936000.jsonl         a recording made from the app:
+//!                                                     the values saved with it are found
 //!
-//! Record the capture with Wireshark on the game PC while doing something whose
-//! effect you know (a cube taking Odyle Energy from 485 to 445, a quest
-//! turned in...). Opcodes that hold both the before and after values, at the
-//! same offset, are the ones to decode.
+//! Record while doing something whose effect you know (a cube taking Odyle
+//! Energy from 485 to 445, a key used, a quest turned in...): from the app
+//! (Settings, "Help decode the game"), or with Wireshark on the game PC.
+//! Opcodes that hold both the before and after values, at the same offset,
+//! are the ones to decode.
 
 use std::collections::BTreeMap;
 use std::path::PathBuf;
@@ -37,11 +40,24 @@ fn main() -> ExitCode {
         }
     }
 
-    let frames = match probe::read_frames(&path) {
+    let recording = path.extension().is_some_and(|e| e == "jsonl");
+    let frames = if recording {
+        probe::read_recording(&path)
+    } else {
+        probe::read_frames(&path)
+    };
+    let frames = match frames {
         Ok(f) => f,
         Err(e) => return fail(&e),
     };
     println!("{} frames from {}", frames.len(), path.display());
+    // A recording carries the values the player saw: look for them.
+    if recording && finds.is_empty() && dump.is_none() {
+        match probe::recording_values(&path) {
+            Ok(values) => finds = values,
+            Err(e) => return fail(&e),
+        }
+    }
 
     if let Some(op) = dump {
         for f in frames.iter().filter(|f| f.opcode == op) {

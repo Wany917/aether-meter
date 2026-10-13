@@ -182,6 +182,7 @@ impl Feed for DemoFeed {
             players,
             ping_ms: Some(38 + (t as u32 % 9)),
             dungeon: Some("Temple du Feu · Difficile".to_string()),
+            recording: false,
         }
     }
 

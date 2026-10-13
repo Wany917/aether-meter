@@ -12,6 +12,7 @@ mod error;
 mod events;
 mod hotkeys;
 mod pets;
+mod recorder;
 mod routine;
 mod settings;
 mod state;
@@ -71,6 +72,11 @@ pub fn specta_builder() -> Builder<tauri::Wry> {
             pets::get_pets,
             pets::pets_favorite,
             pets::pets_rename,
+            recorder::recording_status,
+            recorder::start_recording,
+            recorder::cancel_recording,
+            recorder::stop_recording,
+            recorder::open_recordings,
         ])
         .events(collect_events![
             events::MeterUpdated,

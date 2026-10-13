@@ -19,6 +19,7 @@ mod kills;
 pub mod model;
 mod pets;
 pub mod probe;
+mod recorder;
 mod snapshot;
 mod tracker;
 
@@ -27,3 +28,4 @@ pub use error::EngineError;
 pub use gamedata::LANGUAGES;
 pub use kills::Kill;
 pub use pets::{PetBatch, PetRecord};
+pub use recorder::{NamedValue, RecorderStatus, RecordingNote};

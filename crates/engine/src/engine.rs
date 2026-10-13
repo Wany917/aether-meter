@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::mpsc::sync_channel;
 use std::sync::{Arc, Weak};
@@ -22,6 +22,7 @@ use crate::model::{
     FightSummary, FightView, MeterSnapshot, TargetMode, TimerKind, TimerLabel, TrackerSnapshot,
 };
 use crate::pets::{PetBatch, PetLog};
+use crate::recorder::{Recorder, RecorderStatus, RecordingNote};
 use crate::snapshot;
 use crate::tracker::{self, Tracker};
 
@@ -53,6 +54,7 @@ pub struct Engine {
     data: Arc<GameData>,
     history: Arc<HistoryStore>,
     feed: Arc<dyn Feed>,
+    recorder: Arc<Mutex<Recorder>>,
     running: Arc<AtomicBool>,
     threads: Vec<JoinHandle<()>>,
 }
@@ -62,15 +64,16 @@ impl Engine {
         let data = Arc::new(GameData::load(&config.data_dir, &config.language)?);
         let history = Arc::new(HistoryStore::open(&config.history_dir)?);
         let running = Arc::new(AtomicBool::new(true));
+        let recorder = Arc::new(Mutex::new(Recorder::default()));
 
         let (feed, mut threads): (Arc<dyn Feed>, Vec<JoinHandle<()>>) = match config.source {
             SourceKind::Demo => (
                 Arc::new(DemoFeed::new(data.clone())) as Arc<dyn Feed>,
                 Vec::new(),
             ),
-            SourceKind::Live => start_parser(&data, &history, &running, None)?,
+            SourceKind::Live => start_parser(&data, &history, &running, &recorder, None)?,
             SourceKind::Replay { path, speed } => {
-                start_parser(&data, &history, &running, Some((path, speed)))?
+                start_parser(&data, &history, &running, &recorder, Some((path, speed)))?
             }
         };
         feed.set_target_mode(config.target_mode);
@@ -80,13 +83,17 @@ impl Engine {
             data,
             history,
             feed,
+            recorder,
             running,
             threads,
         })
     }
 
     pub fn meter(&self) -> MeterSnapshot {
-        self.feed.meter()
+        MeterSnapshot {
+            recording: self.recorder.lock().status().active,
+            ..self.feed.meter()
+        }
     }
 
     pub fn live_fight(&self) -> Option<FightView> {
@@ -100,6 +107,24 @@ impl Engine {
     /// Monsters killed within sight since the last call (live capture only).
     pub fn take_kills(&self) -> Vec<Kill> {
         self.feed.take_kills()
+    }
+
+    /// Keep every frame of the game's stream from now on (see `recorder.rs`).
+    pub fn start_recording(&self) {
+        self.recorder.lock().start();
+    }
+
+    pub fn recording_status(&self) -> RecorderStatus {
+        self.recorder.lock().status()
+    }
+
+    /// Stop the recording and write it into `dir`; returns the file.
+    pub fn stop_recording(&self, note: &RecordingNote, dir: &Path) -> Result<PathBuf, EngineError> {
+        self.recorder.lock().stop(note, dir)
+    }
+
+    pub fn cancel_recording(&self) {
+        self.recorder.lock().cancel();
     }
 
     /// A server's name ("Siel"), from the game data.
@@ -172,6 +197,7 @@ fn start_parser(
     data: &Arc<GameData>,
     history: &Arc<HistoryStore>,
     running: &Arc<AtomicBool>,
+    recorder: &Arc<Mutex<Recorder>>,
     replay: Option<(PathBuf, f64)>,
 ) -> Result<Started, EngineError> {
     let storage = Arc::new(DataStorage::new());
@@ -182,11 +208,17 @@ fn start_parser(
     let tracker = Arc::new(Mutex::new(Tracker::default()));
     let kills = Arc::new(Mutex::new(KillLog::default()));
     let pets = Arc::new(Mutex::new(PetLog::default()));
-    let (tap_tracker, tap_kills, tap_pets) = (tracker.clone(), kills.clone(), pets.clone());
+    let (tap_tracker, tap_kills, tap_pets, tap_recorder) = (
+        tracker.clone(),
+        kills.clone(),
+        pets.clone(),
+        recorder.clone(),
+    );
     frame_tap::set(Some(Arc::new(move |frame: &[u8]| {
         tap_tracker.lock().on_frame(frame);
         tap_kills.lock().on_frame(frame);
         tap_pets.lock().on_frame(frame);
+        tap_recorder.lock().on_frame(frame);
     })));
 
     let (tx, rx) = sync_channel::<CapturedPayload>(CHANNEL_CAPACITY);

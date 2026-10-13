@@ -162,6 +162,8 @@ pub struct MeterSnapshot {
     pub players: Vec<PlayerRow>,
     pub ping_ms: Option<u32>,
     pub dungeon: Option<String>,
+    /// A recording for decoding the game is running (see `recorder.rs`).
+    pub recording: bool,
 }
 
 impl MeterSnapshot {
@@ -175,6 +177,7 @@ impl MeterSnapshot {
             players: Vec::new(),
             ping_ms: None,
             dungeon: None,
+            recording: false,
         }
     }
 }
