@@ -17,6 +17,7 @@ use crate::kills::{Kill, KillLog};
 use crate::model::{
     EngineStatus, FightSource, FightView, MeterSnapshot, TargetMode, TrackerSnapshot,
 };
+use crate::pets::{PetBatch, PetLog};
 use crate::snapshot::{self, FightHeader};
 use crate::tracker::Tracker;
 
@@ -41,6 +42,7 @@ pub(crate) struct LiveFeed {
     pub link: Arc<LinkState>,
     pub tracker: Arc<Mutex<Tracker>>,
     pub kills: Arc<Mutex<KillLog>>,
+    pub pets: Arc<Mutex<PetLog>>,
     pub history: Arc<HistoryStore>,
     pub origin: Origin,
     /// Set by the thread that opens the capture.
@@ -62,6 +64,7 @@ impl LiveFeed {
         link: Arc<LinkState>,
         tracker: Arc<Mutex<Tracker>>,
         kills: Arc<Mutex<KillLog>>,
+        pets: Arc<Mutex<PetLog>>,
         history: Arc<HistoryStore>,
         origin: Origin,
         capture: Arc<Mutex<CaptureState>>,
@@ -86,6 +89,7 @@ impl LiveFeed {
             link,
             tracker,
             kills,
+            pets,
             history,
             origin,
             capture,
@@ -213,6 +217,14 @@ impl Feed for LiveFeed {
         match self.origin {
             Origin::Live => kills,
             Origin::Replay { .. } => Vec::new(),
+        }
+    }
+
+    fn take_pets(&self) -> Option<PetBatch> {
+        let batch = self.pets.lock().take(&self.storage);
+        match self.origin {
+            Origin::Live => batch,
+            Origin::Replay { .. } => None,
         }
     }
 

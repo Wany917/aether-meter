@@ -21,7 +21,7 @@ const COMMUNITY_CATALOG: &str =
 const CATALOG_CHECK_EVERY: Duration = Duration::from_secs(12 * 3600);
 const REMINDER_CHECK_EVERY: Duration = Duration::from_secs(60);
 
-fn now_ms() -> i64 {
+pub(crate) fn now_ms() -> i64 {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .map_or(0, |d| d.as_millis() as i64)
@@ -224,6 +224,7 @@ pub fn spawn(app: AppHandle) {
                 if last_catalog_check.is_none_or(|t| t.elapsed() >= CATALOG_CHECK_EVERY) {
                     last_catalog_check = Some(Instant::now());
                     check_community_catalog(&app);
+                    crate::pets::check_community_catalog(&app);
                 }
                 send_due_reminders(&app);
                 // Reserves keep recharging: refresh what the tab shows.
@@ -295,7 +296,7 @@ fn check_community_catalog(app: &AppHandle) {
     let _ = RoutineChanged(view).emit(app);
 }
 
-fn fetch(url: &str) -> Result<String, String> {
+pub(crate) fn fetch(url: &str) -> Result<String, String> {
     let agent: ureq::Agent = ureq::Agent::config_builder()
         .timeout_global(Some(Duration::from_secs(15)))
         .build()

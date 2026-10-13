@@ -88,6 +88,9 @@
 .ro-boss-when {
   color: var(--text-hi);
 }
+.ro-pet-level {
+  color: var(--text-dim);
+}
 .ro-boss[data-up] .ro-boss-when {
   color: #b9d3b2;
 }

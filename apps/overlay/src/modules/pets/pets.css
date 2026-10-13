@@ -1,0 +1,55 @@
+/* Pets: the routine's plates; the bar is the current level's progress */
+.pet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 3px 10px;
+  margin-top: 6px;
+}
+.pet {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 34px;
+  padding: 4px 10px 4px 8px;
+  --class: #5f708d;
+}
+.pet[data-top] {
+  --class: #6f8a6b;
+}
+.pet-level {
+  flex: none;
+  width: 38px;
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+}
+.pet .task-name[data-unnamed] {
+  color: var(--text-dim);
+}
+.pet-souls {
+  flex: none;
+  font-size: var(--text-sm);
+  color: var(--text-hi);
+}
+.pet-needed {
+  color: var(--text-faint);
+}
+.pet-rename {
+  width: 100%;
+  height: 20px;
+  padding: 0 5px;
+  border: 1px solid rgb(230 236 246 / 0.7);
+  border-radius: var(--radius-sm);
+  background: rgb(4 7 12 / 0.55);
+  color: var(--text-hi);
+  font-size: var(--text-sm);
+}
+.pet-rename:focus {
+  outline: none;
+}
+
+.pets-controls .field {
+  height: 26px;
+}
+.pets-search {
+  width: 160px;
+}

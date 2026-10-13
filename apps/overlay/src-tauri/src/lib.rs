@@ -11,6 +11,7 @@ mod diagnostics;
 mod error;
 mod events;
 mod hotkeys;
+mod pets;
 mod routine;
 mod settings;
 mod state;
@@ -67,6 +68,9 @@ pub fn specta_builder() -> Builder<tauri::Wry> {
             routine::routine_set_reminders,
             routine::routine_set_community_updates,
             routine::open_link,
+            pets::get_pets,
+            pets::pets_favorite,
+            pets::pets_rename,
         ])
         .events(collect_events![
             events::MeterUpdated,
@@ -74,6 +78,7 @@ pub fn specta_builder() -> Builder<tauri::Wry> {
             events::SettingsChanged,
             events::HubNavigate,
             events::RoutineChanged,
+            events::PetsChanged,
         ])
         // Damage and HP are u64 in Rust but never exceed what a JS number holds
         // exactly: the parser itself sums damage in i32.
@@ -123,12 +128,16 @@ pub fn run() {
             })?;
             let routine_store = Store::new(&paths.app_data_dir()?);
             let routine = Routine::new(routine_store.load_catalog(), routine_store.load_state());
+            let pets_store = aether_pets::Store::new(&paths.app_data_dir()?);
+            let pets = aether_pets::Pets::new(pets_store.load_catalog(), pets_store.load_state());
             app.manage(AppState {
                 engine,
                 settings,
                 overlays_hidden: AtomicBool::new(false),
                 routine: Mutex::new(routine),
                 routine_store,
+                pets: Mutex::new(pets),
+                pets_store,
             });
 
             tracing::info!("engine started");

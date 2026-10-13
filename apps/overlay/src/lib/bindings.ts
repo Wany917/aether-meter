@@ -56,12 +56,17 @@ export const commands = {
 	routineSetCommunityUpdates: (on: boolean) => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_set_community_updates", { on })),
 	/**  Open a guide or source link from the catalog in the default browser. */
 	openLink: (url: string) => typedError<null, AppError>(__TAURI_INVOKE("open_link", { url })),
+	getPets: () => __TAURI_INVOKE<PetsView>("get_pets"),
+	petsFavorite: (id: number, on: boolean) => typedError<PetsView, AppError>(__TAURI_INVOKE("pets_favorite", { id, on })),
+	/**  The player's own name for a pet; an empty one restores the catalog's. */
+	petsRename: (id: number, name: string) => typedError<PetsView, AppError>(__TAURI_INVOKE("pets_rename", { id, name })),
 };
 
 /** Events */
 export const events = {
 	hubNavigate: makeEvent<HubNavigate>("hub-navigate"),
 	meterUpdated: makeEvent<MeterUpdated>("meter-updated"),
+	petsChanged: makeEvent<PetsChanged>("pets-changed"),
 	routineChanged: makeEvent<RoutineChanged>("routine-changed"),
 	settingsChanged: makeEvent<SettingsChanged>("settings-changed"),
 	trackerUpdated: makeEvent<TrackerUpdated>("tracker-updated"),
@@ -69,7 +74,7 @@ export const events = {
 
 /* Types */
 /**  Every error a command can return, as `{ kind, message }` on the frontend. */
-export type AppError = { kind: "engine"; message: string } | { kind: "settings"; message: string } | { kind: "hotkey"; message: string } | { kind: "window"; message: string } | { kind: "routine"; message: string };
+export type AppError = { kind: "engine"; message: string } | { kind: "settings"; message: string } | { kind: "hotkey"; message: string } | { kind: "window"; message: string } | { kind: "routine"; message: string } | { kind: "pets"; message: string };
 
 /**  How a boss comes back, for display. */
 export type BossRule = { kind: "afterKill"; minutes: number } | { kind: "schedule"; 
@@ -161,7 +166,7 @@ export type HubNavigate = {
 	actorId: number | null,
 };
 
-export type HubTab = "details" | "history" | "routine" | "bosses" | "settings";
+export type HubTab = "details" | "history" | "routine" | "bosses" | "pets" | "settings";
 
 export type MeterSettings = {
 	/**  Background opacity, 0.2..=1. */
@@ -200,6 +205,39 @@ export type NumberFormat =
 "compact" | 
 /**  1,234,567 */
 "full";
+
+export type PetView = {
+	id: number,
+	/**  The player's name for it, else the catalog's; `None` when neither has one. */
+	name: string | null,
+	/**  The name is the player's own. */
+	customName: boolean,
+	level: number,
+	/**  Souls toward the next level. */
+	souls: number,
+	/**  Souls the next level takes; `None` at the top level. */
+	needed: number | null,
+	/**  Souls still to collect up to the top level. */
+	toMax: number,
+	favorite: boolean,
+	/**  Comes at its highest level and takes no souls. */
+	special: boolean,
+	lastGainMs: number | null,
+};
+
+export type PetsChanged = PetsView;
+
+export type PetsView = {
+	/**  The server the collection is from; 0 until the game names it. */
+	serverId: number,
+	serverName: string | null,
+	/**  When the game last sent the whole collection; `None` before any login seen. */
+	syncedAtMs: number | null,
+	maxLevel: number,
+	soulsPerLevel: number[],
+	pets: PetView[],
+	catalogRevision: number,
+};
 
 export type PlayerDetails = {
 	actorId: number,

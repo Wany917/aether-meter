@@ -11,15 +11,18 @@ Aether is licensed under the GNU General Public License v3.0 only (see `LICENSE`
   (`crates/engine/src/dispatch.rs`) and skill icon resolver
   (`crates/engine/src/icons.rs`) are adapted from it. The game data in
   `apps/overlay/src-tauri/resources/gamedata/` and the class marks in
-  `apps/overlay/src/assets/classes/` come from its repository.
+  `apps/overlay/src/assets/classes/` come from its repository. The layout of
+  the pet collection records decoded in `crates/engine/src/pets.rs` is the one
+  its pet soul tracker reads (decoder tests in its `plugins/decoder.rs`).
 - **RATmeter** by Kuroukihime, GPL-3.0
   (<https://github.com/Kuroukihime/AIon2-Dps-Meter>): the layout of the skill
   cooldown record decoded in `crates/engine/src/tracker.rs`.
 
-## Routine catalog
+## Community catalogs
 
-`catalog/routine.json` holds facts (entry counts, caps, recharge rates) gathered
-from public guides, each listed in its `sources`. Guide links point to
+`catalog/routine.json` and `catalog/pets.json` hold facts (entry counts, caps,
+recharge rates, respawn rules, souls per level) gathered from public guides,
+each listed in its `sources`. Guide links point to
 [aion2.help](https://www.aion2.help), a fan-made wiki; none of its text is
 copied here.
 

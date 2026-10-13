@@ -29,6 +29,8 @@ pub struct GameData {
     abnormal_icons: HashMap<u32, String>,
     /// First four digits of an 8-digit skill code -> icon file name.
     skill_icons: HashMap<String, String>,
+    /// Server id -> name in each language.
+    servers: HashMap<u16, HashMap<String, String>>,
     localized: RwLock<Localized>,
 }
 
@@ -54,6 +56,11 @@ struct NpcEntry {
 struct Dungeon {
     name: String,
     difficulty: Option<String>,
+}
+
+#[derive(Deserialize)]
+struct ServerTable {
+    servers: HashMap<String, HashMap<String, String>>,
 }
 
 #[derive(Deserialize)]
@@ -96,10 +103,27 @@ impl GameData {
             stack_limits,
             abnormal_icons,
             skill_icons: read_json(&dir.join("skill_icons.json")).unwrap_or_default(),
+            servers: read_json::<ServerTable>(&dir.join("servers.json"))
+                .map(|t| {
+                    t.servers
+                        .into_iter()
+                        .filter_map(|(id, names)| Some((id.parse().ok()?, names)))
+                        .collect()
+                })
+                .unwrap_or_default(),
             localized: RwLock::new(Localized::default()),
         };
         data.set_language(language);
         Ok(data)
+    }
+
+    /// A server's name in the current language ("Siel"), if the table has it.
+    pub fn server_name(&self, id: u16) -> Option<String> {
+        let names = self.servers.get(&id)?;
+        names
+            .get(&self.language())
+            .or_else(|| names.get("en"))
+            .cloned()
     }
 
     pub fn language(&self) -> String {
@@ -267,5 +291,12 @@ mod tests {
         let en = bundled("en");
         assert_eq!(en.target_label(0, " Some Boss "), "Some Boss");
         assert_eq!(en.target_label(1, ""), "");
+    }
+
+    #[test]
+    fn servers_are_named_in_the_current_language() {
+        assert_eq!(bundled("ko").server_name(1001).as_deref(), Some("시엘"));
+        assert_eq!(bundled("fr").server_name(1001).as_deref(), Some("Siel"));
+        assert_eq!(bundled("fr").server_name(0), None);
     }
 }

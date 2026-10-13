@@ -1,0 +1,11 @@
+{
+  "$schema": "./pets.schema.json",
+  "revision": 1,
+  "updated": "2026-10-13",
+  "soulsPerLevel": [5, 25, 75],
+  "sources": [
+    "https://mobalytics.gg/gamebase/guides/aion-2-pet-leveling",
+    "https://www.keengamer.com/articles/guides/all-pets-and-how-to-get-them-in-aion-2/"
+  ],
+  "pets": []
+}

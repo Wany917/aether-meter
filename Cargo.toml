@@ -1,9 +1,9 @@
 [workspace]
 resolver = "3"
-members = ["crates/engine", "crates/routine", "apps/overlay/src-tauri"]
+members = ["crates/engine", "crates/pets", "crates/routine", "apps/overlay/src-tauri"]
 
 [workspace.package]
-version = "0.1.7"
+version = "0.1.8"
 edition = "2024"
 license = "GPL-3.0-only"
 repository = "https://github.com/Wany917/aether-meter"

@@ -17,6 +17,7 @@ tauri-build = { version = "2", features = [] }
 
 [dependencies]
 aether-engine = { path = "../../../crates/engine", features = ["specta"] }
+aether-pets = { path = "../../../crates/pets", features = ["specta"] }
 aether-routine = { path = "../../../crates/routine", features = ["specta"] }
 parking_lot.workspace = true
 serde.workspace = true

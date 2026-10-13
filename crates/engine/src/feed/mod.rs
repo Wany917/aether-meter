@@ -6,6 +6,7 @@ pub(crate) use live::{CaptureState, LiveFeed, Origin};
 
 use crate::kills::Kill;
 use crate::model::{FightView, MeterSnapshot, TargetMode, TrackerSnapshot};
+use crate::pets::PetBatch;
 
 /// Where snapshots come from: the parser, or a synthetic fight for UI work.
 pub(crate) trait Feed: Send + Sync {
@@ -20,4 +21,6 @@ pub(crate) trait Feed: Send + Sync {
     fn save_fights(&self, force: bool);
     /// Monsters killed in sight of a live capture since the last call.
     fn take_kills(&self) -> Vec<Kill>;
+    /// Pet collection records read since the last call, live capture only.
+    fn take_pets(&self) -> Option<PetBatch>;
 }

@@ -294,4 +294,8 @@ impl Feed for DemoFeed {
     fn take_kills(&self) -> Vec<crate::kills::Kill> {
         Vec::new()
     }
+
+    fn take_pets(&self) -> Option<crate::pets::PetBatch> {
+        None
+    }
 }

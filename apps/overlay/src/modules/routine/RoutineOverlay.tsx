@@ -2,11 +2,12 @@ import { type CSSProperties, useRef } from "react";
 
 import { commands, type ReserveView, type TaskView } from "../../lib/bindings";
 import { formatRemaining } from "../../lib/format";
-import { useRoutine } from "../../lib/ipc";
+import { usePets, useRoutine } from "../../lib/ipc";
 import { useSettings } from "../../lib/settings";
 import { useFitWindowHeight } from "../../lib/windowFit";
 import { Icon } from "../../ui/Icon";
 import { bySoonest, shortStatus } from "../bosses/text";
+import { petName } from "../pets/text";
 import { useNow } from "../tracker/useNow";
 import { run } from "./run";
 
@@ -48,6 +49,7 @@ function OverlayTask({ task, locked }: { task: TaskView; locked: boolean }) {
 /** The routine at a glance, above the game: what caps soon, what is left. */
 export function RoutineOverlay() {
   const routine = useRoutine();
+  const petsView = usePets();
   const { settings, t } = useSettings();
   const { language } = settings;
   const panel = useRef<HTMLElement>(null);
@@ -64,6 +66,7 @@ export function RoutineOverlay() {
     .filter((b) => b.favorite && b.status.kind !== "unknown")
     .sort(bySoonest)
     .slice(0, MAX_BOSSES);
+  const pets = (petsView?.pets ?? []).filter((pet) => pet.favorite && pet.needed !== null);
   const pending = (routine?.tasks ?? []).filter((task) => task.progress < task.target);
   const daily = pending.filter((task) => task.group === "daily");
   const weekly = pending.filter((task) => task.group !== "daily");
@@ -118,6 +121,22 @@ export function RoutineOverlay() {
               <li key={boss.id} className="ro-boss" data-up={boss.status.kind === "up" || undefined}>
                 <span className="ro-reserve-name">{boss.label}</span>
                 <span className="num ro-boss-when">{shortStatus(boss, now, t, language)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {pets.length > 0 && (
+        <section>
+          <h2 className="ro-section">{t("pets.followed")}</h2>
+          <ul className="ro-bosses">
+            {pets.map((pet) => (
+              <li key={pet.id} className="ro-boss">
+                <span className="ro-reserve-name">{petName(pet, t)}</span>
+                <span className="num ro-boss-when">
+                  {pet.souls}/{pet.needed} <span className="ro-pet-level">{t("pets.level")} {pet.level + 1}</span>
+                </span>
               </li>
             ))}
           </ul>

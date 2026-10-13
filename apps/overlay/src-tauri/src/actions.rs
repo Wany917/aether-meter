@@ -20,11 +20,12 @@ pub fn save_settings(app: &AppHandle, settings: Settings) -> Result<Settings, Ap
 
     if previous.language != saved.language {
         state.engine.set_language(&saved.language);
-        let now = std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .map_or(0, |d| d.as_millis() as i64);
-        let view = state.routine.lock().view(now, &saved.language);
+        let view = state
+            .routine
+            .lock()
+            .view(crate::routine::now_ms(), &saved.language);
         RoutineChanged(view).emit(app)?;
+        crate::pets::refresh(app);
     }
     if previous.target_mode != saved.target_mode {
         state.engine.set_target_mode(saved.target_mode);

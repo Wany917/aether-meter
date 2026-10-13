@@ -42,6 +42,9 @@ pub fn spawn(app: AppHandle) {
                     if !kills.is_empty() {
                         crate::routine::record_kills(&app, &kills);
                     }
+                    if let Some(batch) = state.engine.take_pets() {
+                        crate::pets::record(&app, batch);
+                    }
                 }
                 if last_tracker.elapsed() >= TRACKER_EVERY {
                     last_tracker = Instant::now();

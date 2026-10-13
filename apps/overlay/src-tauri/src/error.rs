@@ -15,6 +15,8 @@ pub enum AppError {
     Window(String),
     #[error("{0}")]
     Routine(String),
+    #[error("{0}")]
+    Pets(String),
 }
 
 impl From<aether_engine::EngineError> for AppError {

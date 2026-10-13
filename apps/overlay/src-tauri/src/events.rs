@@ -1,6 +1,7 @@
 //! Events pushed to the frontend. Typed on both sides through tauri-specta.
 
 use aether_engine::model::{MeterSnapshot, TrackerSnapshot};
+use aether_pets::PetsView;
 use aether_routine::RoutineView;
 use serde::{Deserialize, Serialize};
 use specta::Type;
@@ -20,6 +21,9 @@ pub struct SettingsChanged(pub Settings);
 #[derive(Debug, Clone, Serialize, Deserialize, Type, Event)]
 pub struct RoutineChanged(pub RoutineView);
 
+#[derive(Debug, Clone, Serialize, Deserialize, Type, Event)]
+pub struct PetsChanged(pub PetsView);
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Type)]
 #[serde(rename_all = "camelCase")]
 pub enum HubTab {
@@ -27,6 +31,7 @@ pub enum HubTab {
     History,
     Routine,
     Bosses,
+    Pets,
     Settings,
 }
 

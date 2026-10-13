@@ -19,6 +19,7 @@ struct Labels {
     history: &'static str,
     routine: &'static str,
     bosses: &'static str,
+    pets: &'static str,
     routine_overlay: &'static str,
     settings: &'static str,
     click_through: &'static str,
@@ -35,6 +36,7 @@ fn labels(language: &str) -> Labels {
             history: "Historique",
             routine: "Routine",
             bosses: "Boss",
+            pets: "Familiers",
             routine_overlay: "Routine en overlay",
             settings: "Paramètres",
             click_through: "Verrouiller les overlays (clic traversant)",
@@ -48,6 +50,7 @@ fn labels(language: &str) -> Labels {
             history: "History",
             routine: "Routine",
             bosses: "Bosses",
+            pets: "Pets",
             routine_overlay: "Routine overlay",
             settings: "Settings",
             click_through: "Lock overlays (click-through)",
@@ -84,6 +87,7 @@ fn menu(app: &AppHandle, settings: &Settings) -> tauri::Result<Menu<Wry>> {
             &MenuItem::with_id(app, "history", l.history, true, None::<&str>)?,
             &MenuItem::with_id(app, "routine", l.routine, true, None::<&str>)?,
             &MenuItem::with_id(app, "bosses", l.bosses, true, None::<&str>)?,
+            &MenuItem::with_id(app, "pets", l.pets, true, None::<&str>)?,
             &MenuItem::with_id(app, "settings", l.settings, true, None::<&str>)?,
             &PredefinedMenuItem::separator(app)?,
             &CheckMenuItem::with_id(
@@ -148,6 +152,7 @@ fn on_menu(app: &AppHandle, id: &str) {
         "history" => actions::open_hub(app, HubTab::History, None),
         "routine" => actions::open_hub(app, HubTab::Routine, None),
         "bosses" => actions::open_hub(app, HubTab::Bosses, None),
+        "pets" => actions::open_hub(app, HubTab::Pets, None),
         "routine_overlay" => {
             let enabled = windows::is_visible(app, WindowKind::Routine);
             actions::set_routine_overlay(app, !enabled).map(|_| ())

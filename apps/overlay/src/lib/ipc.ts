@@ -47,6 +47,7 @@ function useLive<T>(load: () => Promise<T>, source: EventSource<T>): T | undefin
 export const useMeter = () => useLive(commands.getMeter, events.meterUpdated);
 export const useTracker = () => useLive(commands.getTracker, events.trackerUpdated);
 export const useRoutine = () => useLive(commands.getRoutine, events.routineChanged);
+export const usePets = () => useLive(commands.getPets, events.petsChanged);
 
 type CommandResult<T> = { status: "ok"; data: T } | { status: "error"; error: AppError };
 

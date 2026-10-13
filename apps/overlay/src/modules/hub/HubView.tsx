@@ -10,6 +10,7 @@ import { Tabs } from "../../ui/Tabs";
 import { BossesTab } from "../bosses/BossesTab";
 import { DetailsTab } from "../details/DetailsTab";
 import { HistoryTab } from "../history/HistoryTab";
+import { PetsTab } from "../pets/PetsTab";
 import { RoutineTab } from "../routine/RoutineTab";
 import { SettingsTab } from "../settings/SettingsTab";
 import { useDocumentVisible } from "./useDocumentVisible";
@@ -55,6 +56,7 @@ export function HubView() {
             { id: "history", label: t("tab.history") },
             { id: "routine", label: t("tab.routine") },
             { id: "bosses", label: t("tab.bosses") },
+            { id: "pets", label: t("tab.pets") },
             { id: "settings", label: t("tab.settings") },
           ]}
           active={tab}
@@ -76,6 +78,7 @@ export function HubView() {
         {tab === "history" && <HistoryTab active={visible} onOpen={openSaved} />}
         {tab === "routine" && <RoutineTab />}
         {tab === "bosses" && <BossesTab />}
+        {tab === "pets" && <PetsTab />}
         {tab === "settings" && <SettingsTab />}
       </main>
     </div>

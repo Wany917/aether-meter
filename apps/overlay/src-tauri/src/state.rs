@@ -13,4 +13,6 @@ pub struct AppState {
     pub overlays_hidden: AtomicBool,
     pub routine: Mutex<Routine>,
     pub routine_store: Store,
+    pub pets: Mutex<aether_pets::Pets>,
+    pub pets_store: aether_pets::Store,
 }

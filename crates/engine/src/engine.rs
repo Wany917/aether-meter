@@ -21,6 +21,7 @@ use crate::kills::{Kill, KillLog};
 use crate::model::{
     FightSummary, FightView, MeterSnapshot, TargetMode, TimerKind, TimerLabel, TrackerSnapshot,
 };
+use crate::pets::{PetBatch, PetLog};
 use crate::snapshot;
 use crate::tracker::{self, Tracker};
 
@@ -101,6 +102,16 @@ impl Engine {
         self.feed.take_kills()
     }
 
+    /// A server's name ("Siel"), from the game data.
+    pub fn server_name(&self, id: u16) -> Option<String> {
+        self.data.server_name(id)
+    }
+
+    /// Pet collection records since the last call (live capture only).
+    pub fn take_pets(&self) -> Option<PetBatch> {
+        self.feed.take_pets()
+    }
+
     pub fn timer_label(&self, kind: TimerKind, id: u32) -> TimerLabel {
         tracker::label(kind, id, &self.data)
     }
@@ -170,10 +181,12 @@ fn start_parser(
 
     let tracker = Arc::new(Mutex::new(Tracker::default()));
     let kills = Arc::new(Mutex::new(KillLog::default()));
-    let (tap_tracker, tap_kills) = (tracker.clone(), kills.clone());
+    let pets = Arc::new(Mutex::new(PetLog::default()));
+    let (tap_tracker, tap_kills, tap_pets) = (tracker.clone(), kills.clone(), pets.clone());
     frame_tap::set(Some(Arc::new(move |frame: &[u8]| {
         tap_tracker.lock().on_frame(frame);
         tap_kills.lock().on_frame(frame);
+        tap_pets.lock().on_frame(frame);
     })));
 
     let (tx, rx) = sync_channel::<CapturedPayload>(CHANNEL_CAPACITY);
@@ -236,6 +249,7 @@ fn start_parser(
         link,
         tracker,
         kills,
+        pets,
         history.clone(),
         origin,
         capture_state,
