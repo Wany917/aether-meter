@@ -1,7 +1,7 @@
 import { type CSSProperties, useEffect, useState } from "react";
 
 import { commands, type ReserveView } from "../../lib/bindings";
-import { formatRemaining, formatTime } from "../../lib/format";
+import { formatTime, formatUntil } from "../../lib/format";
 import { useSettings } from "../../lib/settings";
 import { Icon } from "../../ui/Icon";
 import { openLink, run } from "./run";
@@ -21,6 +21,7 @@ export function ReserveCard({ reserve, now, onError }: { reserve: ReserveView; n
     }
   };
 
+  const adjust = (delta: number) => run(commands.routineAdjustReading(reserve.id, delta), onError);
   const full = reading?.fullSinceMs != null;
   const fill = reading ? Math.min(1, reading.amount / reserve.cap) : 0;
 
@@ -34,6 +35,15 @@ export function ReserveCard({ reserve, now, onError }: { reserve: ReserveView; n
         </button>
       </header>
       <div className="reserve-body">
+        <button
+          type="button"
+          className="step-btn reserve-step num"
+          disabled={!reading || reading.amount === 0}
+          title={`-${reserve.step}`}
+          onClick={() => adjust(-reserve.step)}
+        >
+          -{reserve.step}
+        </button>
         <input
           className="reserve-input num"
           inputMode="numeric"
@@ -44,10 +54,13 @@ export function ReserveCard({ reserve, now, onError }: { reserve: ReserveView; n
           onBlur={commit}
           onKeyDown={(e) => e.key === "Enter" && e.currentTarget.blur()}
         />
+        <button type="button" className="step-btn reserve-step num" disabled={!reading} title={`+${reserve.step}`} onClick={() => adjust(reserve.step)}>
+          +{reserve.step}
+        </button>
         <span className="reserve-cap num">/ {reserve.cap}</span>
         <span className="reserve-status">
           {!reading && t("routine.notEntered")}
-          {reading?.fullAtMs != null && `${t("routine.fullIn")} ${formatRemaining(reading.fullAtMs - now, language)}`}
+          {reading?.fullAtMs != null && `${t("routine.fullAt")} ${formatUntil(reading.fullAtMs, now, language, t("routine.in"))}`}
           {full && (
             <span className="reserve-full">
               {t("routine.full")}

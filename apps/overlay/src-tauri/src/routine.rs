@@ -71,6 +71,17 @@ pub fn routine_set_reading(
     mutate(&app, |r, now| r.set_reading(&id, amount.min(100_000), now))
 }
 
+/// One use spent (negative) or gained, from where the reserve should be now.
+#[tauri::command]
+#[specta::specta]
+pub fn routine_adjust_reading(
+    app: AppHandle,
+    id: String,
+    delta: i32,
+) -> Result<RoutineView, AppError> {
+    mutate(&app, |r, now| r.adjust_reading(&id, i64::from(delta), now))
+}
+
 #[tauri::command]
 #[specta::specta]
 pub fn routine_add_task(

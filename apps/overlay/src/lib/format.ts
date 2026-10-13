@@ -84,3 +84,15 @@ export function formatRemaining(ms: number, language: string): string {
 export function formatWeekday(epochMs: number, language: string): string {
   return new Intl.DateTimeFormat(uiLocale(language), { weekday: "long" }).format(epochMs);
 }
+
+/** "jeudi 21:00": a moment more than a day away. */
+export function formatWhen(epochMs: number, language: string): string {
+  return new Intl.DateTimeFormat(uiLocale(language), { weekday: "long", hour: "2-digit", minute: "2-digit" }).format(epochMs);
+}
+
+const DAY_MS = 86_400_000;
+
+/** "dans 5 h 12" within a day, "jeudi 21:00" beyond: a countdown in days reads poorly. */
+export function formatUntil(epochMs: number, now: number, language: string, within: string): string {
+  return epochMs - now <= DAY_MS ? `${within} ${formatRemaining(epochMs - now, language)}` : formatWhen(epochMs, language);
+}

@@ -1,197 +1,360 @@
 {
   "$schema": "./routine.schema.json",
-  "revision": 1,
+  "revision": 2,
   "updated": "2026-10-13",
   "resetHourUtc": 7,
   "tasks": [
     {
-      "id": "mission-quests",
-      "group": "daily",
-      "cadence": { "kind": "daily" },
-      "target": 5,
-      "label": { "en": "Mission quests", "fr": "Quêtes de mission" },
-      "note": { "en": "Per server. Abyss Points and Kinah.", "fr": "Par serveur. Points Abyssaux et kinah." },
-      "guide": "https://www.aion2.help/guide/quest-types",
-      "sources": ["https://www.aion2.help/guide/quest-types", "https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"],
-      "verified": true
-    },
-    {
       "id": "secret-mission",
       "group": "daily",
-      "cadence": { "kind": "daily" },
+      "cadence": {
+        "kind": "daily"
+      },
       "target": 1,
-      "label": { "en": "Secret mission", "fr": "Mission secrète" },
-      "note": { "en": "Collect the four map fragments to open the chest.", "fr": "Réunir les quatre fragments de carte pour ouvrir le coffre." },
+      "label": {
+        "en": "Secret mission",
+        "fr": "Mission secrète"
+      },
+      "note": {
+        "en": "Collect the four map fragments to open the chest.",
+        "fr": "Réunir les quatre fragments de carte pour ouvrir le coffre."
+      },
       "guide": "https://www.aion2.help/guide/daily-quests-fragments",
-      "sources": ["https://www.aion2.help/guide/daily-quests-fragments"],
+      "sources": [
+        "https://www.aion2.help/guide/daily-quests-fragments"
+      ],
       "verified": false
     },
     {
       "id": "command-quests",
       "group": "weekly",
-      "cadence": { "kind": "weekly", "day": "wednesday" },
+      "cadence": {
+        "kind": "weekly",
+        "day": "wednesday"
+      },
       "target": 12,
-      "label": { "en": "Command quests", "fr": "Quêtes de commandement" },
-      "note": { "en": "Scrolls from the Command Shop merchant.", "fr": "Parchemins chez le marchand de commandement." },
+      "label": {
+        "en": "Command quests",
+        "fr": "Quêtes de commandement"
+      },
+      "note": {
+        "en": "Scrolls from the Command Shop merchant.",
+        "fr": "Parchemins chez le marchand de commandement."
+      },
       "guide": "https://www.aion2.help/guide/quest-types",
-      "sources": ["https://www.aion2.help/guide/quest-types"],
+      "sources": [
+        "https://www.aion2.help/guide/quest-types"
+      ],
       "verified": false
     },
     {
       "id": "daily-dungeon",
       "group": "weekly",
-      "cadence": { "kind": "weekly", "day": "wednesday" },
+      "cadence": {
+        "kind": "weekly",
+        "day": "wednesday"
+      },
       "target": 7,
-      "label": { "en": "Bio-Research Base", "fr": "Base de recherche" },
-      "note": { "en": "7 free entries a week, up to 30 with tickets.", "fr": "7 entrées gratuites par semaine, jusqu'à 30 avec des tickets." },
+      "label": {
+        "en": "Bio-Research Base",
+        "fr": "Base de recherche"
+      },
+      "note": {
+        "en": "7 free entries a week, up to 30 with tickets.",
+        "fr": "7 entrées gratuites par semaine, jusqu'à 30 avec des tickets."
+      },
       "guide": "https://www.aion2.help/guide/daily-dungeon-guide",
-      "sources": ["https://www.aion2.help/guide/daily-dungeon-guide", "https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"],
+      "sources": [
+        "https://www.aion2.help/guide/daily-dungeon-guide",
+        "https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"
+      ],
       "verified": false
     },
     {
       "id": "awakening-battle",
       "group": "weekly",
-      "cadence": { "kind": "weekly", "day": "wednesday" },
+      "cadence": {
+        "kind": "weekly",
+        "day": "wednesday"
+      },
       "target": 1,
-      "label": { "en": "Awakening battle", "fr": "Bataille de l'éveil" },
+      "label": {
+        "en": "Awakening battle",
+        "fr": "Bataille de l'éveil"
+      },
       "guide": "https://www.aion2.help/guide/awakening-battle",
-      "sources": ["https://www.aion2.help/guide/daily-quests-fragments"],
+      "sources": [
+        "https://www.aion2.help/guide/daily-quests-fragments"
+      ],
       "verified": false
     },
     {
       "id": "ascension-trial",
       "group": "weekly",
-      "cadence": { "kind": "weekly", "day": "wednesday" },
+      "cadence": {
+        "kind": "weekly",
+        "day": "wednesday"
+      },
       "target": 3,
-      "label": { "en": "Ascension trial", "fr": "Épreuve de l'ascension" },
-      "sources": ["https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"],
+      "label": {
+        "en": "Ascension trial",
+        "fr": "Épreuve de l'ascension"
+      },
+      "sources": [
+        "https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"
+      ],
       "verified": false
     },
     {
       "id": "subjugation",
       "group": "weekly",
-      "cadence": { "kind": "weekly", "day": "wednesday" },
+      "cadence": {
+        "kind": "weekly",
+        "day": "wednesday"
+      },
       "target": 3,
-      "label": { "en": "Subjugation tickets", "fr": "Tickets d'assujettissement" },
+      "label": {
+        "en": "Subjugation tickets",
+        "fr": "Tickets d'assujettissement"
+      },
       "guide": "https://www.aion2.help/guide/subjugation-war",
-      "sources": ["https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"],
+      "sources": [
+        "https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"
+      ],
       "verified": false
     },
     {
       "id": "raids",
       "group": "weekly",
-      "cadence": { "kind": "weekly", "day": "wednesday" },
+      "cadence": {
+        "kind": "weekly",
+        "day": "wednesday"
+      },
       "target": 4,
-      "label": { "en": "Raid attempts", "fr": "Tentatives de raid" },
-      "note": { "en": "Per raid.", "fr": "Par raid." },
-      "sources": ["https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"],
+      "label": {
+        "en": "Raid attempts",
+        "fr": "Tentatives de raid"
+      },
+      "note": {
+        "en": "Per raid.",
+        "fr": "Par raid."
+      },
+      "sources": [
+        "https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"
+      ],
       "verified": false
     },
     {
       "id": "exploration",
       "group": "weekly",
-      "cadence": { "kind": "weekly", "day": "wednesday" },
+      "cadence": {
+        "kind": "weekly",
+        "day": "wednesday"
+      },
       "target": 7,
-      "label": { "en": "Exploration rewards", "fr": "Récompenses d'exploration" },
-      "note": { "en": "Per dungeon.", "fr": "Par donjon." },
+      "label": {
+        "en": "Exploration rewards",
+        "fr": "Récompenses d'exploration"
+      },
+      "note": {
+        "en": "Per dungeon.",
+        "fr": "Par donjon."
+      },
       "guide": "https://www.aion2.help/guide/expedition-mode",
-      "sources": ["https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"],
+      "sources": [
+        "https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"
+      ],
       "verified": false
     },
     {
       "id": "abyss-time",
       "group": "weekly",
-      "cadence": { "kind": "weekly", "day": "wednesday" },
+      "cadence": {
+        "kind": "weekly",
+        "day": "wednesday"
+      },
       "target": 1,
-      "label": { "en": "Abyss time", "fr": "Temps d'Abysse" },
-      "note": { "en": "7 hours per layer, 14 with membership on Lower and Middle.", "fr": "7 heures par couche, 14 avec l'abonnement sur les couches inférieure et intermédiaire." },
+      "label": {
+        "en": "Abyss time",
+        "fr": "Temps d'Abysse"
+      },
+      "note": {
+        "en": "7 hours per layer, 14 with membership on Lower and Middle.",
+        "fr": "7 heures par couche, 14 avec l'abonnement sur les couches inférieure et intermédiaire."
+      },
       "guide": "https://www.aion2.help/guide/abyss-content-guide",
-      "sources": ["https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"],
+      "sources": [
+        "https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"
+      ],
       "verified": false
     },
     {
       "id": "odyle-stones",
       "group": "shop",
-      "cadence": { "kind": "weekly", "day": "sunday" },
+      "cadence": {
+        "kind": "weekly",
+        "day": "sunday"
+      },
       "target": 7,
       "membershipOnly": true,
-      "label": { "en": "Odyle Energy Stones", "fr": "Pierres d'énergie d'Odyle" },
-      "note": { "en": "Wind Breeze Merchant, 40 energy each. Reported to refill on Sunday.", "fr": "Marchand de la brise, 40 d'énergie chacune. Le stock se renouvellerait le dimanche." },
-      "sources": ["https://allthings.how/aion-2-best-items-to-grab-before-the-weekly-reset/"],
+      "label": {
+        "en": "Odyle Energy Stones",
+        "fr": "Pierres d'énergie d'Odyle"
+      },
+      "note": {
+        "en": "Wind Breeze Merchant, 40 energy each. Reported to refill on Sunday.",
+        "fr": "Marchand de la brise, 40 d'énergie chacune. Le stock se renouvellerait le dimanche."
+      },
+      "sources": [
+        "https://allthings.how/aion-2-best-items-to-grab-before-the-weekly-reset/"
+      ],
       "verified": false
     },
     {
       "id": "odyle-morph",
       "group": "shop",
-      "cadence": { "kind": "weekly", "day": "wednesday" },
+      "cadence": {
+        "kind": "weekly",
+        "day": "wednesday"
+      },
       "target": 4,
-      "label": { "en": "Substance Morph: Odyle Energy", "fr": "Transmutation : énergie d'Odyle" },
-      "note": { "en": "25 Odyle, 5 Fine Odyle, 1 Pure Odyle and 50,000 Kinah each. The weekly cap has changed several times.", "fr": "25 Odyle, 5 Odyle raffinée, 1 Odyle pure et 50 000 kinah par fabrication. Le plafond hebdo a changé plusieurs fois." },
-      "sources": ["https://allthings.how/aion-2-how-to-get-odyle/"],
+      "label": {
+        "en": "Substance Morph: Odyle Energy",
+        "fr": "Transmutation : énergie d'Odyle"
+      },
+      "note": {
+        "en": "25 Odyle, 5 Fine Odyle, 1 Pure Odyle and 50,000 Kinah each. The weekly cap has changed several times.",
+        "fr": "25 Odyle, 5 Odyle raffinée, 1 Odyle pure et 50 000 kinah par fabrication. Le plafond hebdo a changé plusieurs fois."
+      },
+      "sources": [
+        "https://allthings.how/aion-2-how-to-get-odyle/"
+      ],
       "verified": false
     }
   ],
   "reserves": [
     {
       "id": "odyle-energy",
-      "label": { "en": "Odyle Energy", "fr": "Énergie d'Odyle" },
-      "note": { "en": "Cubes cost 20 to 60. Refill items do not count against the cap.", "fr": "Les cubes coûtent de 20 à 60. Les objets de recharge ne comptent pas dans le plafond." },
+      "label": {
+        "en": "Odyle Energy",
+        "fr": "Énergie d'Odyle"
+      },
+      "note": {
+        "en": "Cubes cost 20 to 60. Refill items do not count against the cap.",
+        "fr": "Les cubes coûtent de 20 à 60. Les objets de recharge ne comptent pas dans le plafond."
+      },
       "regen": 15,
       "everyHours": 3,
       "cap": 560,
       "memberCap": 840,
-      "sources": ["https://metabot.gg/en/aion-2/guides/daily-weekly-checklist", "https://expcarry.com/aion-2-odyle-energy-guide"],
+      "step": 40,
+      "sources": [
+        "https://metabot.gg/en/aion-2/guides/daily-weekly-checklist",
+        "https://expcarry.com/aion-2-odyle-energy-guide"
+      ],
       "verified": true
     },
     {
+      "id": "mission-quests",
+      "label": {
+        "en": "Mission quests (Duty)",
+        "fr": "Quêtes de mission (Duty)"
+      },
+      "note": {
+        "en": "5 a day, banked up to 20. Per server.",
+        "fr": "5 par jour, jusqu'à 20 en stock. Par serveur."
+      },
+      "regen": 5,
+      "everyHours": 24,
+      "cap": 20,
+      "guide": "https://www.aion2.help/guide/quest-types",
+      "sources": [
+        "https://www.aion2.help/guide/quest-types",
+        "https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"
+      ],
+      "verified": false
+    },
+    {
       "id": "conquest-rewards",
-      "label": { "en": "Conquest rewards", "fr": "Récompenses de conquête" },
+      "label": {
+        "en": "Conquest rewards",
+        "fr": "Récompenses de conquête"
+      },
       "regen": 1,
       "everyHours": 8,
       "cap": 21,
-      "sources": ["https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"],
+      "sources": [
+        "https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"
+      ],
       "verified": false
     },
     {
       "id": "transcendence-rewards",
-      "label": { "en": "Transcendence rewards", "fr": "Récompenses de transcendance" },
+      "label": {
+        "en": "Transcendence rewards",
+        "fr": "Récompenses de transcendance"
+      },
       "regen": 1,
       "everyHours": 12,
       "cap": 14,
       "guide": "https://www.aion2.help/guide/transcendence-system",
-      "sources": ["https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"],
+      "sources": [
+        "https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"
+      ],
       "verified": false
     },
     {
       "id": "nightmare",
-      "label": { "en": "Nightmare attempts", "fr": "Tentatives de Cauchemar" },
+      "label": {
+        "en": "Nightmare attempts",
+        "fr": "Tentatives de Cauchemar"
+      },
       "regen": 2,
       "everyHours": 24,
       "cap": 14,
       "guide": "https://www.aion2.help/guide/nightmare-content",
-      "sources": ["https://metabot.gg/en/aion-2/guides/daily-weekly-checklist", "https://www.aion2.help/guide/nightmare-content"],
+      "sources": [
+        "https://metabot.gg/en/aion-2/guides/daily-weekly-checklist",
+        "https://www.aion2.help/guide/nightmare-content"
+      ],
       "verified": false
     },
     {
       "id": "shugo-keys",
-      "label": { "en": "Shugo Festival keys", "fr": "Clés du festival Shugo" },
-      "note": { "en": "Per server.", "fr": "Par serveur." },
+      "label": {
+        "en": "Shugo Festival keys",
+        "fr": "Clés du festival Shugo"
+      },
+      "note": {
+        "en": "Per server.",
+        "fr": "Par serveur."
+      },
       "regen": 3,
       "everyHours": 24,
       "cap": 12,
       "memberCap": 21,
-      "sources": ["https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"],
+      "sources": [
+        "https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"
+      ],
       "verified": false
     },
     {
       "id": "invasion-keys",
-      "label": { "en": "Dimensional Invasion keys", "fr": "Clés d'invasion dimensionnelle" },
-      "note": { "en": "Per server.", "fr": "Par serveur." },
+      "label": {
+        "en": "Dimensional Invasion keys",
+        "fr": "Clés d'invasion dimensionnelle"
+      },
+      "note": {
+        "en": "Per server.",
+        "fr": "Par serveur."
+      },
       "regen": 1,
       "everyHours": 24,
       "cap": 7,
       "guide": "https://www.aion2.help/guide/dimensional-assault",
-      "sources": ["https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"],
+      "sources": [
+        "https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"
+      ],
       "verified": false
     }
   ]

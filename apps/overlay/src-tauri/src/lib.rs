@@ -55,6 +55,7 @@ pub fn specta_builder() -> Builder<tauri::Wry> {
             routine::get_routine,
             routine::routine_step,
             routine::routine_set_reading,
+            routine::routine_adjust_reading,
             routine::routine_add_task,
             routine::routine_remove,
             routine::routine_show_hidden,

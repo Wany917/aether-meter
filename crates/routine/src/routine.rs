@@ -102,6 +102,7 @@ impl Routine {
                     cap,
                     regen: r.regen,
                     every_hours: r.every_hours,
+                    step: r.step.unwrap_or(1),
                     reading: self
                         .state
                         .readings
@@ -177,6 +178,26 @@ impl Routine {
         if self.catalog.reserve(id).is_none() {
             return Err(RoutineError::UnknownReserve(id.to_string()));
         }
+        self.state
+            .readings
+            .insert(id.to_string(), Reading { amount, at: now });
+        Ok(())
+    }
+
+    /// Add `delta` (negative to spend) to where a reserve should be now.
+    pub fn adjust_reading(&mut self, id: &str, delta: i64, now: i64) -> Result<(), RoutineError> {
+        let def = self
+            .catalog
+            .reserve(id)
+            .ok_or_else(|| RoutineError::UnknownReserve(id.to_string()))?;
+        let reading = *self
+            .state
+            .readings
+            .get(id)
+            .ok_or_else(|| RoutineError::NotEntered(id.to_string()))?;
+        let cap = def.cap_for(self.state.membership);
+        let current = i64::from(project(self.clock(), def, cap, reading, now).amount);
+        let amount = (current + delta).clamp(0, i64::from(u32::MAX)) as u32;
         self.state
             .readings
             .insert(id.to_string(), Reading { amount, at: now });
@@ -421,19 +442,22 @@ mod tests {
     #[test]
     fn task_progress_clears_at_the_reset() {
         let mut r = routine();
-        r.step_task("mission-quests", 1, wed(8)).unwrap();
-        r.step_task("mission-quests", 1, wed(9)).unwrap();
+        let id = r
+            .add_task("Farm", TaskGroup::Daily, Cadence::Daily, 5, wed(8))
+            .unwrap();
+        r.step_task(&id, 1, wed(8)).unwrap();
+        r.step_task(&id, 1, wed(9)).unwrap();
         let done = |r: &Routine, now| {
             r.view(now, "fr")
                 .tasks
                 .iter()
-                .find(|t| t.id == "mission-quests")
+                .find(|t| t.id == id)
                 .unwrap()
                 .progress
         };
         assert_eq!(done(&r, wed(20)), 2);
         assert_eq!(done(&r, wed(7) + DAY_MS), 0, "next day");
-        r.step_task("mission-quests", 9, wed(10)).unwrap();
+        r.step_task(&id, 9, wed(10)).unwrap();
         assert_eq!(done(&r, wed(10)), 5, "capped at the target");
     }
 
@@ -465,6 +489,33 @@ mod tests {
 
         r.set_membership(true);
         assert_eq!(odyle(&r, wed(19)).amount, 590, "the member cap is higher");
+    }
+
+    #[test]
+    fn quick_adjustments_start_from_the_projected_value() {
+        let mut r = routine();
+        assert!(
+            r.adjust_reading("odyle-energy", -40, wed(8)).is_err(),
+            "nothing entered yet"
+        );
+        r.set_reading("odyle-energy", 200, wed(8)).unwrap();
+        // 10:00 and 13:00 added 30: a cube at 14:00 starts from 230.
+        r.adjust_reading("odyle-energy", -40, wed(14)).unwrap();
+        let odyle = r
+            .view(wed(14), "en")
+            .reserves
+            .into_iter()
+            .find(|v| v.id == "odyle-energy")
+            .unwrap();
+        assert_eq!((odyle.step, odyle.reading.unwrap().amount), (40, 190));
+        r.adjust_reading("odyle-energy", -9_999, wed(14)).unwrap();
+        let empty = r
+            .view(wed(14), "en")
+            .reserves
+            .into_iter()
+            .find(|v| v.id == "odyle-energy")
+            .unwrap();
+        assert_eq!(empty.reading.unwrap().amount, 0, "never below zero");
     }
 
     #[test]

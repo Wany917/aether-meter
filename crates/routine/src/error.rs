@@ -14,6 +14,8 @@ pub enum RoutineError {
     UnknownTask(String),
     #[error("no reserve `{0}`")]
     UnknownReserve(String),
+    #[error("enter the in-game value of `{0}` first")]
+    NotEntered(String),
     #[error("invalid task: {0}")]
     InvalidTask(String),
     #[error("routine file {path}: {source}")]

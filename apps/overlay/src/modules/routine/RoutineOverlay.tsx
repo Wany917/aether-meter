@@ -10,6 +10,7 @@ import { useNow } from "../tracker/useNow";
 import { run } from "./run";
 
 const MAX_WEEKLY = 5;
+const DAY_MS = 86_400_000;
 
 /** Full reserves first, then the ones that will cap soonest. */
 function urgency(reserve: ReserveView): number {
@@ -52,7 +53,10 @@ export function RoutineOverlay() {
   useNow(30_000);
   const now = Date.now();
 
-  const reserves = (routine?.reserves ?? []).filter((r) => r.reading).sort((a, b) => urgency(a) - urgency(b));
+  // Only what needs you soon: full already, or full within a day.
+  const reserves = (routine?.reserves ?? [])
+    .filter((r) => r.reading && urgency(r) - now <= DAY_MS)
+    .sort((a, b) => urgency(a) - urgency(b));
   const pending = (routine?.tasks ?? []).filter((task) => task.progress < task.target);
   const daily = pending.filter((task) => task.group === "daily");
   const weekly = pending.filter((task) => task.group !== "daily");

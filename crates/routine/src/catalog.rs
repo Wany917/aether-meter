@@ -65,6 +65,9 @@ pub struct ReserveDef {
     pub cap: u32,
     #[serde(default)]
     pub member_cap: Option<u32>,
+    /// What one use adds or takes (a cube: 40 Odyle Energy). 1 if absent.
+    #[serde(default)]
+    pub step: Option<u32>,
     #[serde(default)]
     pub guide: Option<String>,
     #[serde(default)]
@@ -157,6 +160,9 @@ impl Catalog {
             if reserve.member_cap.is_some_and(|m| m < reserve.cap) {
                 return invalid(&reserve.id, "memberCap cannot be below cap");
             }
+            if reserve.step == Some(0) {
+                return invalid(&reserve.id, "step must be positive");
+            }
         }
         Ok(())
     }
@@ -188,7 +194,8 @@ mod tests {
     #[test]
     fn the_bundled_catalog_is_valid() {
         let catalog = Catalog::parse(BUNDLED).unwrap();
-        assert!(catalog.task("mission-quests").is_some());
+        assert!(catalog.reserve("mission-quests").is_some());
+        assert_eq!(catalog.reserve("odyle-energy").unwrap().step, Some(40));
         assert_eq!(catalog.reserve("odyle-energy").unwrap().cap_for(true), 840);
     }
 

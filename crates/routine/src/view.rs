@@ -55,6 +55,8 @@ pub struct ReserveView {
     pub cap: u32,
     pub regen: u32,
     pub every_hours: u16,
+    /// What one use adds or takes, for the quick buttons.
+    pub step: u32,
     /// `None` until the player enters a value.
     pub reading: Option<ReserveProjection>,
 }

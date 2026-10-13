@@ -93,7 +93,8 @@
 }
 .reserve-body {
   display: flex;
-  align-items: baseline;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 6px;
 }
 .reserve-input {
@@ -109,6 +110,13 @@
 .reserve-input:focus {
   outline: none;
   border-color: rgb(230 236 246 / 0.7);
+}
+.reserve-step {
+  width: auto;
+  min-width: 26px;
+  padding: 0 4px;
+  font-size: var(--text-xs);
+  border: 1px solid rgb(205 214 228 / 0.2);
 }
 .reserve-cap {
   font-size: var(--text-sm);

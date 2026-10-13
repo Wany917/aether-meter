@@ -41,6 +41,8 @@ export const commands = {
 	getRoutine: () => __TAURI_INVOKE<RoutineView>("get_routine"),
 	routineStep: (id: string, delta: number) => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_step", { id, delta })),
 	routineSetReading: (id: string, amount: number) => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_set_reading", { id, amount })),
+	/**  One use spent (negative) or gained, from where the reserve should be now. */
+	routineAdjustReading: (id: string, delta: number) => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_adjust_reading", { id, delta })),
 	routineAddTask: (label: string, group: TaskGroup, cadence: Cadence, target: number) => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_add_task", { label, group, cadence, target })),
 	routineRemove: (id: string) => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_remove", { id })),
 	routineShowHidden: () => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_show_hidden")),
@@ -224,6 +226,8 @@ export type ReserveView = {
 	cap: number,
 	regen: number,
 	everyHours: number,
+	/**  What one use adds or takes, for the quick buttons. */
+	step: number,
 	/**  `None` until the player enters a value. */
 	reading: ReserveProjection | null,
 };
