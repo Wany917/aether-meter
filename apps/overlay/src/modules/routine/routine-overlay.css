@@ -1,0 +1,121 @@
+.routine-overlay {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 6px 6px;
+  overflow: hidden;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.7);
+}
+.ro-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  margin: 0 -6px;
+  padding: 0 6px 0 11px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, rgb(34 45 64 / calc(var(--panel-alpha, 0.9) * 0.5)), transparent);
+}
+.ro-title {
+  font-weight: 700;
+  color: var(--text-hi);
+}
+.ro-reset {
+  flex: 1;
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+}
+.ro-controls {
+  display: flex;
+  opacity: 0;
+  transition: opacity var(--fast) ease;
+}
+.routine-overlay:hover .ro-controls {
+  opacity: 1;
+}
+.routine-overlay[data-click-through] .ro-controls {
+  display: none;
+}
+
+.ro-reserves {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0 4px;
+  list-style: none;
+}
+.ro-reserve {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 64px;
+  align-items: baseline;
+  gap: 8px;
+  font-size: var(--text-sm);
+}
+.ro-reserve-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+}
+.ro-reserve-amount {
+  color: var(--text-hi);
+}
+.ro-reserve-when {
+  text-align: right;
+  color: var(--text-dim);
+}
+.ro-reserve[data-full] .ro-reserve-when,
+.ro-reserve[data-full] .ro-reserve-amount {
+  color: #f0b4a8;
+}
+
+.ro-section {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 2px 0 3px 4px;
+  font-size: var(--text-xs);
+  font-weight: 400;
+  color: var(--text-dim);
+}
+.ro-more {
+  color: var(--text-faint);
+}
+.ro-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ro-task {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: calc(24px * var(--ui-scale, 1));
+  padding: 0 8px;
+  --class: #5f708d;
+}
+.ro-task .check:disabled {
+  cursor: default;
+}
+.ro-task-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-sm);
+  color: var(--text-hi);
+}
+.ro-task-count {
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+}
+.ro-empty {
+  margin: 4px 6px 2px;
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+}

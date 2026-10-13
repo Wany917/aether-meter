@@ -1,0 +1,17 @@
+{
+  "name": "aether-meter",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "bun --cwd apps/overlay run dev",
+    "dev:demo": "bun --cwd apps/overlay run dev:demo",
+    "build": "bun --cwd apps/overlay run build",
+    "typecheck": "bun --cwd apps/overlay run typecheck",
+    "bindings": "cargo test -p aether --lib export_bindings",
+    "test": "cargo test --workspace && bun run typecheck",
+    "sync:gamedata": "bun run scripts/sync-gamedata.ts",
+    "probe": "cargo run -q -p aether-engine --bin aether-probe --"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Wany917/aether-meter/catalog/routine.schema.json",
+  "title": "Aether routine catalog",
+  "description": "Recurring AION 2 content: checklists that reset with the game, and banked counters that recharge up to a cap. Bump `revision` on every change.",
+  "type": "object",
+  "required": ["revision", "updated", "resetHourUtc", "tasks", "reserves"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "revision": { "type": "integer", "minimum": 1, "description": "Increase by one on every change: clients only take a newer revision." },
+    "updated": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "resetHourUtc": { "type": "integer", "minimum": 0, "maximum": 23 },
+    "tasks": { "type": "array", "items": { "$ref": "#/$defs/task" } },
+    "reserves": { "type": "array", "items": { "$ref": "#/$defs/reserve" } }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "maxLength": 48 },
+    "localized": {
+      "type": "object",
+      "required": ["en"],
+      "additionalProperties": { "type": "string", "minLength": 1, "maxLength": 200 }
+    },
+    "url": { "type": "string", "pattern": "^https://" },
+    "weekday": { "enum": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] },
+    "cadence": {
+      "oneOf": [
+        { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "daily" } }, "additionalProperties": false },
+        {
+          "type": "object",
+          "required": ["kind", "day"],
+          "properties": { "kind": { "const": "weekly" }, "day": { "$ref": "#/$defs/weekday" } },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "task": {
+      "type": "object",
+      "required": ["id", "group", "cadence", "target", "label", "verified"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "group": { "enum": ["daily", "weekly", "shop"] },
+        "cadence": { "$ref": "#/$defs/cadence" },
+        "target": { "type": "integer", "minimum": 1, "maximum": 999 },
+        "membershipOnly": { "type": "boolean" },
+        "label": { "$ref": "#/$defs/localized" },
+        "note": { "$ref": "#/$defs/localized" },
+        "guide": { "$ref": "#/$defs/url" },
+        "sources": { "type": "array", "items": { "$ref": "#/$defs/url" } },
+        "verified": { "type": "boolean", "description": "True once checked in game or confirmed by several sources." }
+      },
+      "additionalProperties": false
+    },
+    "reserve": {
+      "type": "object",
+      "required": ["id", "label", "regen", "everyHours", "cap", "verified"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "label": { "$ref": "#/$defs/localized" },
+        "note": { "$ref": "#/$defs/localized" },
+        "regen": { "type": "integer", "minimum": 1, "description": "Amount added at each recharge." },
+        "everyHours": { "type": "integer", "minimum": 1, "maximum": 168 },
+        "cap": { "type": "integer", "minimum": 1 },
+        "memberCap": { "type": "integer", "minimum": 1 },
+        "guide": { "$ref": "#/$defs/url" },
+        "sources": { "type": "array", "items": { "$ref": "#/$defs/url" } },
+        "verified": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

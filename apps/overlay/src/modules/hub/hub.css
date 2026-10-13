@@ -1,0 +1,86 @@
+.hub {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background:
+    radial-gradient(90% 60% at 50% -10%, rgb(44 60 90 / 0.18), transparent 70%),
+    linear-gradient(180deg, var(--bg-2), var(--bg-0));
+}
+
+/* Title bar: mark and name left, tabs centered on the arc, controls right */
+.hub-bar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  height: 46px;
+  padding: 0 14px 0 18px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, rgb(4 6 10 / 0.75), rgb(10 14 22 / 0.4));
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  align-self: center;
+}
+.brand-mark {
+  flex: none;
+}
+.hub-title {
+  font-size: 17px;
+  color: var(--text-hi);
+  letter-spacing: 0.01em;
+}
+.hub-window-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  align-self: center;
+}
+.hub-window-controls .icon-btn {
+  width: 30px;
+  height: 30px;
+}
+.hub-window-controls .icon-btn svg {
+  width: 18px;
+  height: 18px;
+}
+.hub-close:hover {
+  background: rgb(207 61 72 / 0.25);
+}
+.hub-content {
+  flex: 1;
+  min-height: 0;
+}
+
+.tab-loading {
+  height: 100%;
+}
+.empty-state {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 6px;
+  height: 100%;
+  padding: 24px;
+  text-align: center;
+}
+.empty-state p {
+  margin: 0;
+}
+.empty-title {
+  font-size: var(--text-lg);
+  color: var(--text-hi);
+}
+.empty-hint {
+  max-width: 420px;
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+}
+.empty-state .status-sigil {
+  width: 13px;
+  height: 13px;
+  margin-bottom: 10px;
+  transform: rotate(45deg);
+  border: 1px solid var(--text-dim);
+}

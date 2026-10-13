@@ -1,0 +1,288 @@
+.routine {
+  height: 100%;
+  overflow-y: auto;
+  padding: 0 22px 24px;
+}
+
+/* Reset countdowns and membership, on a band like the game's headers */
+.routine-bar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 0 -22px 4px;
+  padding: 9px 22px;
+  background: linear-gradient(180deg, var(--bg-2), var(--bg-1));
+  border-bottom: 1px solid var(--line);
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+}
+.routine-resets {
+  display: flex;
+  gap: 22px;
+}
+.routine-resets strong {
+  margin-left: 4px;
+  font-weight: 400;
+  color: var(--text-hi);
+}
+.routine-toggles {
+  display: flex;
+  gap: 18px;
+}
+.inline-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.routine-section {
+  margin-top: 10px;
+}
+.routine-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 10px 0 6px 2px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-hi);
+}
+.routine-count {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+.routine-hint {
+  margin: -2px 0 8px 2px;
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+
+/* Reserves: plates whose bar is the counter's fill */
+.reserve-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 6px;
+}
+.reserve {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px 7px;
+  --class: #8193ad;
+}
+.reserve[data-full] {
+  --class: #b0584a;
+}
+.reserve-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.reserve-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-hi);
+}
+.reserve-body {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.reserve-input {
+  width: 58px;
+  padding: 1px 6px;
+  border: 1px solid rgb(205 214 228 / 0.25);
+  border-radius: var(--radius-sm);
+  background: rgb(4 7 12 / 0.55);
+  color: var(--text-hi);
+  font-size: 15px;
+  text-align: right;
+}
+.reserve-input:focus {
+  outline: none;
+  border-color: rgb(230 236 246 / 0.7);
+}
+.reserve-cap {
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+}
+.reserve-status {
+  margin-left: auto;
+  font-size: var(--text-sm);
+  color: var(--text);
+}
+.reserve-full {
+  color: #f0b4a8;
+}
+.reserve-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+}
+.reserve-foot .text-btn {
+  margin-left: auto;
+  font-size: var(--text-xs);
+}
+
+/* Tasks: three columns of plates, filled as they get done */
+.task-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0 16px;
+  margin-top: 8px;
+}
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.task {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 32px;
+  padding: 4px 8px 4px 10px;
+  --class: #5f708d;
+}
+.task[data-done] {
+  --class: #6f8a6b;
+}
+.task-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+.task-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-hi);
+}
+.task[data-done] .task-name {
+  color: var(--text-dim);
+}
+.task-note {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+.task .text-btn {
+  font-size: var(--text-xs);
+}
+.task-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: var(--text-sm);
+  color: var(--text-hi);
+}
+.task-count .num {
+  min-width: 36px;
+  text-align: center;
+}
+.step-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-sm);
+  color: var(--text-dim);
+}
+.step-btn:hover:not(:disabled) {
+  color: var(--text-hi);
+  background: rgb(var(--steel) / 0.18);
+}
+.step-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.step-btn svg {
+  width: 11px;
+  height: 11px;
+}
+.unverified {
+  color: #c8a865;
+}
+
+/* A hide/delete cross that shows on hover */
+.row-action {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  flex: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-faint);
+  opacity: 0;
+  transition: opacity var(--fast) ease;
+}
+.plate:hover .row-action,
+.row-action:focus-visible {
+  opacity: 1;
+}
+.row-action:hover {
+  color: var(--text-hi);
+}
+.row-action svg {
+  width: 10px;
+  height: 10px;
+}
+
+.task-add {
+  display: flex;
+  gap: 4px;
+  margin-top: 5px;
+}
+.task-add .field {
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+}
+.task-add .task-add-count {
+  flex: none;
+  width: 44px;
+  text-align: center;
+}
+.task-add .btn {
+  min-height: 28px;
+  padding: 0 10px;
+}
+
+.routine-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px 24px;
+  margin-top: 20px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+}
+.routine-reminders,
+.routine-catalog {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+}
+.routine-reminders .field {
+  width: 70px;
+  height: 26px;
+}

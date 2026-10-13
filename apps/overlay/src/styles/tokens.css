@@ -1,0 +1,83 @@
+/*
+ * Design tokens, read off the game's own windows (Rank, Skill, party finder).
+ * The game is sober: near-black navy panels, white and grey text, hairlines.
+ * Colour lives in the class emblems; cyan only marks "you", as "My Rank" does;
+ * gold only on primary buttons and the one number that matters most.
+ */
+:root {
+  /* Surfaces, darkest to lightest */
+  --bg-0: #06090f;
+  --bg-1: #0b1019;
+  --bg-2: #121a27;
+  --bg-3: #1a2333;
+  --bg-4: #243046;
+  --panel-top: rgb(17 23 34 / var(--panel-alpha, 0.9));
+  --panel-bottom: rgb(6 9 14 / var(--panel-alpha, 0.9));
+
+  /* Lines */
+  --line: rgb(160 182 214 / 0.13);
+  --line-strong: rgb(196 214 240 / 0.26);
+  --edge-light: rgb(225 236 255 / 0.1);
+
+  /* Text */
+  --text-hi: #eef2f8;
+  --text: #c8d0dd;
+  --text-dim: #8b95a8;
+  --text-faint: #5a6477;
+
+  /* Accents */
+  --gold-hi: #f6dc93;
+  --gold: #e2bd6a;
+  --gold-lo: #a97b2b;
+  --aether: #4fc8e2;
+  --aether-glow: rgb(79 200 226 / 0.25);
+  --arc: #d8ecff;
+  --hp: #a8323a;
+  --hp-hi: #c2414a;
+  --ember: #c4563f;
+  --live: #cf3d48;
+  --ok: #52c08e;
+
+  /* Bars and selections: the steel-blue haze of the game's highlighted rows */
+  --steel: 150 172 204;
+
+  /* Classes, sampled from the game's class emblems (used sparingly) */
+  --class-gladiator: #63b6c9;
+  --class-templar: #7497ec;
+  --class-assassin: #68b65a;
+  --class-ranger: #49ac83;
+  --class-sorcerer: #a073e0;
+  --class-elementalist: #c35cc4;
+  --class-cleric: #dcbc60;
+  --class-chanter: #dfa25a;
+  --class-brawler: #d4685d;
+  --class-unknown: #8b95a8;
+
+  /* Type */
+  --font-game: "Aion2", "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  --text-xs: calc(10.5px * var(--ui-scale, 1));
+  --text-sm: calc(11.5px * var(--ui-scale, 1));
+  --text-md: calc(13px * var(--ui-scale, 1));
+  --text-lg: calc(16px * var(--ui-scale, 1));
+  --text-xl: calc(22px * var(--ui-scale, 1));
+  --text-2xl: calc(30px * var(--ui-scale, 1));
+
+  /* Shape and motion */
+  --radius-sm: 3px;
+  --radius: 5px;
+  --radius-md: 9px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --fast: 120ms;
+  --slow: 420ms;
+}
+
+[data-class="gladiator"] { --class: var(--class-gladiator); }
+[data-class="templar"] { --class: var(--class-templar); }
+[data-class="assassin"] { --class: var(--class-assassin); }
+[data-class="ranger"] { --class: var(--class-ranger); }
+[data-class="sorcerer"] { --class: var(--class-sorcerer); }
+[data-class="elementalist"] { --class: var(--class-elementalist); }
+[data-class="cleric"] { --class: var(--class-cleric); }
+[data-class="chanter"] { --class: var(--class-chanter); }
+[data-class="brawler"] { --class: var(--class-brawler); }
+[data-class="unknown"] { --class: var(--class-unknown); }

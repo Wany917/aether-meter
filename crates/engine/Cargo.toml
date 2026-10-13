@@ -1,0 +1,25 @@
+[package]
+name = "aether-engine"
+description = "Capture, parsing and combat snapshots for the Aether overlay"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+publish = false
+
+[features]
+default = []
+# Derives `specta::Type` on the UI model so the overlay can export TS bindings.
+specta = ["dep:specta", "dep:specta-typescript"]
+
+[dependencies]
+a2tools.workspace = true
+libloading.workspace = true
+parking_lot.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+specta = { workspace = true, optional = true }
+specta-typescript = { workspace = true, optional = true }

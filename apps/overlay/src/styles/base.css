@@ -1,0 +1,225 @@
+@import "./tokens.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-game);
+  font-size: var(--text-md);
+  line-height: 1.35;
+  color: var(--text);
+  background: transparent;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  user-select: none;
+  overflow: hidden;
+}
+
+body.window-hub {
+  background: var(--bg-1);
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  background: none;
+  padding: 0;
+}
+
+:focus-visible {
+  outline: 1px solid rgb(230 236 246 / 0.75);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: rgb(150 172 204 / 0.35);
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Thin, dark scrollbars like the game's lists */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(160 182 214 / 0.18);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(160 182 214 / 0.3);
+}
+
+/* A game window surface: vertical shade, hairline frame, light on the top edge */
+.surface {
+  background: linear-gradient(180deg, var(--panel-top), var(--panel-bottom));
+  border: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 var(--edge-light);
+  border-radius: var(--radius-md);
+}
+
+/* Buttons, after the game's: gold for the primary action, slate otherwise */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 14px;
+  border-radius: var(--radius);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+  transition: filter var(--fast) ease, background-color var(--fast) ease;
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.btn-gold {
+  color: #1d1505;
+  background: linear-gradient(180deg, #f3d57f 0%, #d7ab4c 55%, #b98a32 100%);
+  box-shadow: inset 0 1px 0 rgb(255 248 220 / 0.7), 0 0 0 1px rgb(120 86 24 / 0.6);
+  font-weight: 700;
+}
+.btn-gold:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+.btn-slate {
+  color: var(--text-hi);
+  background: linear-gradient(180deg, #2e3a50, #222c3e);
+  box-shadow: inset 0 1px 0 rgb(220 232 255 / 0.12), 0 0 0 1px rgb(0 0 0 / 0.35);
+}
+.btn-slate:hover:not(:disabled) {
+  background: linear-gradient(180deg, #364460, #283348);
+}
+.btn-danger {
+  color: #ffe9e9;
+  background: linear-gradient(180deg, #8f2c33, #6d1f25);
+  box-shadow: inset 0 1px 0 rgb(255 200 200 / 0.18), 0 0 0 1px rgb(0 0 0 / 0.35);
+}
+
+/* Square icon buttons for window chrome and row actions */
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius);
+  color: var(--text-dim);
+  transition: color var(--fast) ease, background-color var(--fast) ease;
+}
+.icon-btn:hover {
+  color: var(--text-hi);
+  background: rgb(160 182 214 / 0.1);
+}
+.icon-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* Text fields and selects */
+.field {
+  height: 30px;
+  padding: 0 10px;
+  background: rgb(4 7 12 / 0.6);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  color: var(--text-hi);
+  font-size: var(--text-sm);
+}
+.field:focus {
+  outline: none;
+  border-color: rgb(230 236 246 / 0.7);
+}
+select.field {
+  appearance: none;
+  padding-right: 28px;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text-dim) 50%), linear-gradient(135deg, var(--text-dim) 50%, transparent 50%);
+  background-position: calc(100% - 15px) 13px, calc(100% - 10px) 13px;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+select.field option {
+  background: var(--bg-2);
+}
+
+/* Range: a hairline track and the game's diamond thumb, in silver */
+.range {
+  appearance: none;
+  width: 100%;
+  height: 18px;
+  background: transparent;
+  cursor: pointer;
+}
+.range::-webkit-slider-runnable-track {
+  height: 2px;
+  background: linear-gradient(90deg, rgb(226 233 244 / 0.6) var(--fill, 50%), rgb(255 255 255 / 0.12) var(--fill, 50%));
+}
+.range::-webkit-slider-thumb {
+  appearance: none;
+  width: 11px;
+  height: 11px;
+  margin-top: -4.5px;
+  transform: rotate(45deg);
+  background: linear-gradient(135deg, #f4f7fb, #a9b4c6);
+  border: 1px solid rgb(10 14 22 / 0.9);
+}
+
+/* Checkbox: the game's square box, filled when on */
+.check {
+  position: relative;
+  width: 15px;
+  height: 15px;
+  flex: none;
+  border: 1px solid rgb(205 214 228 / 0.55);
+  border-radius: var(--radius-sm);
+  background: rgb(4 7 12 / 0.6);
+  transition: border-color var(--fast) ease;
+}
+.check:hover {
+  border-color: rgb(225 232 244 / 0.85);
+}
+.check::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 1px;
+  background: #eef2f8;
+  transform: scale(0);
+  transition: transform var(--fast) var(--ease-out);
+}
+.check[aria-checked="true"]::after {
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}

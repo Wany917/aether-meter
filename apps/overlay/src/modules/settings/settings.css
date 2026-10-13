@@ -1,0 +1,151 @@
+.settings {
+  height: 100%;
+  overflow-y: auto;
+  padding: 8px 28px 40px;
+}
+.settings-section {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px 0 4px;
+}
+.settings-section h2 {
+  margin: 0 0 8px 2px;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text-hi);
+}
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  min-height: 42px;
+  margin-bottom: 3px;
+  padding: 6px 14px;
+  border-radius: var(--radius);
+  background: rgb(9 13 21 / 0.55);
+  box-shadow: inset 0 1px 0 var(--edge-light);
+}
+.setting-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  color: var(--text);
+}
+.setting-hint {
+  font-size: var(--text-sm);
+  color: var(--text-faint);
+}
+.setting-control {
+  display: flex;
+  justify-content: flex-end;
+  flex: none;
+  min-width: 220px;
+}
+.setting-control .field {
+  width: 220px;
+}
+.slider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 220px;
+}
+.slider-value {
+  min-width: 44px;
+  text-align: right;
+  font-size: var(--text-sm);
+  color: var(--text-hi);
+}
+
+.hotkey-field {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  min-width: 220px;
+  min-height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: rgb(4 7 12 / 0.6);
+}
+.hotkey-field[data-recording] {
+  border-color: rgb(230 236 246 / 0.75);
+}
+.hotkey-prompt {
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+}
+.keycap {
+  min-width: 22px;
+  padding: 1px 6px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: var(--text-xs);
+  text-align: center;
+  color: var(--text-hi);
+  background: linear-gradient(180deg, #33405a, #252f43);
+  box-shadow: inset 0 1px 0 rgb(220 232 255 / 0.15), 0 1px 0 rgb(0 0 0 / 0.6);
+}
+
+.hidden-timers {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 300px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hidden-timers li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hidden-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-sm);
+  color: var(--text);
+}
+.text-btn {
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+  text-decoration: underline;
+  text-decoration-color: rgb(139 149 168 / 0.4);
+  text-underline-offset: 3px;
+}
+.text-btn:hover {
+  color: var(--text-hi);
+  text-decoration-color: currentColor;
+}
+
+/* An error the player has to read: a full ember frame, nothing decorative */
+.settings-error {
+  max-width: 760px;
+  margin: 14px auto 0;
+  padding: 10px 14px;
+  border: 1px solid rgb(212 89 63 / 0.6);
+  border-radius: var(--radius);
+  background: rgb(40 12 10 / 0.6);
+  color: #f4c7bb;
+  font-size: var(--text-sm);
+}
+.settings-error strong {
+  margin-right: 6px;
+  color: #ffdcd2;
+}
+
+.about-text {
+  max-width: 620px;
+  margin: 0 0 16px;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--text-dim);
+  user-select: text;
+}

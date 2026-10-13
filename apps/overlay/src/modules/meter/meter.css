@@ -1,0 +1,316 @@
+.meter {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* Text stays legible over the game when the background is see-through */
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.7);
+  /* Natural height: the window follows it (useFitWindowHeight) */
+  overflow: hidden;
+}
+
+/* Header: target, timer, HP */
+.meter-header {
+  flex: none;
+  padding: 6px 8px 7px 10px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, rgb(34 45 64 / calc(var(--panel-alpha, 0.9) * 0.5)), transparent);
+}
+.meter-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: calc(24px * var(--ui-scale, 1));
+}
+.target-mark {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin: 0 2px;
+  transform: rotate(45deg);
+  border: 1px solid var(--line-strong);
+}
+.target-mark[data-boss] {
+  border-color: rgb(230 236 246 / 0.8);
+  background: rgb(230 236 246 / 0.35);
+}
+.target-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 700;
+  color: var(--text-hi);
+}
+.meter-timer {
+  flex: none;
+  color: var(--text-dim);
+  font-size: var(--text-sm);
+}
+.meter-controls {
+  display: flex;
+  gap: 1px;
+  margin-right: -4px;
+  opacity: 0;
+  transition: opacity var(--fast) ease;
+}
+.meter:hover .meter-controls,
+.meter-controls:focus-within {
+  opacity: 1;
+}
+.meter-controls .icon-btn[aria-pressed="true"] {
+  color: var(--text-hi);
+  background: rgb(var(--steel) / 0.14);
+}
+.meter-locked {
+  display: none;
+  color: var(--text-faint);
+}
+.meter-locked svg {
+  width: 12px;
+  height: 12px;
+}
+
+.target-hp {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+}
+.target-hp-track {
+  flex: 1;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgb(0 0 0 / 0.45);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.05);
+}
+.target-hp-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--hp-hi), var(--hp));
+  transition: width 320ms var(--ease-out);
+}
+.target-hp-value {
+  flex: none;
+  min-width: 42px;
+  text-align: right;
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+}
+
+/* Rows */
+.meter-rows {
+  flex: 0 1 auto;
+  min-height: 0;
+  padding: 4px 0 2px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+/* Rows sit at their rank's offset; a change of rank slides instead of jumping */
+.meter-rows-track {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.meter-rows-track > li {
+  position: absolute;
+  top: 0;
+  left: 5px;
+  right: 5px;
+  transition: transform 280ms var(--ease-out);
+  animation: row-in 260ms var(--ease-out);
+}
+@keyframes row-in {
+  from {
+    opacity: 0;
+  }
+}
+/* 25 px plates on a 27 px pitch */
+.player-row {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  height: calc(25px * var(--ui-scale, 1));
+  padding: 0 9px 0 4px;
+  text-align: left;
+}
+.player-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+}
+.player-row[data-idle] .player-name {
+  color: var(--text-faint);
+}
+.player-cp {
+  margin-left: 6px;
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+.player-dps {
+  min-width: 48px;
+  text-align: right;
+  font-weight: 700;
+  color: var(--text-hi);
+}
+.player-share {
+  min-width: 42px;
+  text-align: right;
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+}
+
+/* Your row, pinned under the list when it falls out of view */
+.meter-pinned {
+  position: relative;
+  padding: 7px 5px 3px;
+}
+.meter-pinned::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 12px;
+  right: 12px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+}
+
+/* Where you stand */
+.my-standing {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 3px 11px 5px;
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.my-label {
+  font-weight: 700;
+  color: var(--aether);
+}
+.my-gap {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.my-gap .num {
+  color: var(--text-hi);
+}
+
+/* Before the first hit */
+.meter-status {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 4px;
+  padding: 14px 18px;
+  text-align: center;
+}
+.meter-status p {
+  margin: 0;
+}
+.status-sigil {
+  width: 11px;
+  height: 11px;
+  margin-bottom: 8px;
+  transform: rotate(45deg);
+  border: 1px solid var(--text-dim);
+  animation: sigil-breathe 2.4s ease-in-out infinite;
+}
+.meter-status[data-kind="captureUnavailable"] .status-sigil {
+  border-color: var(--ember);
+  animation: none;
+}
+.status-title {
+  color: var(--text-hi);
+}
+.status-hint {
+  max-width: 270px;
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+}
+.status-detail {
+  max-width: 280px;
+  margin-top: 4px !important;
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+@keyframes sigil-breathe {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Footer */
+.meter-footer {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: calc(24px * var(--ui-scale, 1));
+  padding: 0 10px;
+  border-top: 1px solid var(--line);
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+}
+.meter-ping {
+  flex: none;
+}
+.meter-ping[data-level="slow"] {
+  color: var(--text);
+}
+.meter-ping[data-level="bad"] {
+  color: #e0707a;
+}
+.meter-badge {
+  flex: none;
+  color: var(--text-dim);
+}
+.meter-dungeon {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.meter-party {
+  flex: none;
+  color: var(--text-hi);
+}
+.meter-party-label {
+  margin-right: 5px;
+  color: var(--text-faint);
+}
+
+.resize-grip {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 12px;
+  height: 12px;
+  cursor: ew-resize;
+  background:
+    linear-gradient(135deg, transparent 55%, var(--line-strong) 55%, var(--line-strong) 62%, transparent 62%),
+    linear-gradient(135deg, transparent 75%, var(--line-strong) 75%, var(--line-strong) 82%, transparent 82%);
+}
+
+/* Locked: nothing to click, so nothing clickable is drawn */
+.meter[data-click-through] .meter-controls,
+.meter[data-click-through] .resize-grip {
+  display: none;
+}
+.meter[data-click-through] .meter-locked {
+  display: inline-grid;
+}
+.meter[data-click-through] .player-row:hover {
+  background: rgb(9 13 21 / 0.62);
+}

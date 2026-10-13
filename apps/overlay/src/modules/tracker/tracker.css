@@ -1,0 +1,77 @@
+.tracker {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 52px;
+  padding: 8px;
+  border: 1px dashed transparent;
+  border-radius: var(--radius-md);
+  transition: border-color var(--fast) ease, background-color var(--fast) ease;
+}
+/* Unlocked: show where the window is so it can be moved */
+.tracker:not([data-click-through]):hover {
+  border-color: var(--line-strong);
+  background: rgb(8 12 19 / 0.45);
+}
+.tracker-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.tracker-empty {
+  margin: 0;
+  text-align: center;
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  opacity: 0;
+  transition: opacity var(--fast) ease;
+}
+.tracker:not([data-click-through]):hover .tracker-empty {
+  opacity: 1;
+}
+
+.timer-tile {
+  position: relative;
+  width: var(--size);
+  height: var(--size);
+  flex: none;
+  cursor: pointer;
+  border-radius: var(--radius);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.55);
+}
+.timer-tile:disabled {
+  cursor: default;
+}
+.timer-tile[data-soon] .game-icon {
+  box-shadow: inset 0 0 0 1px rgb(240 244 250 / 0.85);
+}
+/* Elapsed time as a dark clockwise sweep, like the skill bar */
+.timer-shade {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  background: conic-gradient(from 0deg, rgb(3 6 10 / 0.68) var(--elapsed), transparent 0);
+}
+.timer-tile[data-kind="buff"] .timer-shade {
+  background: conic-gradient(from 0deg, rgb(3 6 10 / 0.5) var(--elapsed), transparent 0);
+}
+.timer-left,
+.timer-stacks {
+  position: absolute;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 0 2px #000, 0 0 2px #000, 0 1px 3px #000;
+}
+.timer-left {
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  text-align: center;
+  font-size: calc(var(--size) * 0.3);
+}
+.timer-stacks {
+  top: 2px;
+  right: 3px;
+  font-size: calc(var(--size) * 0.26);
+}

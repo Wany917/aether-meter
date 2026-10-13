@@ -1,0 +1,126 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Aether",
+  "version": "0.1.0",
+  "identifier": "app.aether.meter",
+  "build": {
+    "beforeDevCommand": "bun run web:dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "bun run web:build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "macOSPrivateApi": true,
+    "withGlobalTauri": false,
+    "windows": [
+      {
+        "label": "meter",
+        "title": "Aether",
+        "url": "meter.html",
+        "width": 340,
+        "height": 320,
+        "minWidth": 260,
+        "minHeight": 60,
+        "decorations": false,
+        "transparent": true,
+        "shadow": false,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "resizable": true,
+        "focus": false,
+        "visible": true
+      },
+      {
+        "label": "tracker",
+        "title": "Aether · Buffs",
+        "url": "tracker.html",
+        "width": 420,
+        "height": 130,
+        "minWidth": 160,
+        "minHeight": 40,
+        "decorations": false,
+        "transparent": true,
+        "shadow": false,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "resizable": true,
+        "focus": false,
+        "visible": false
+      },
+      {
+        "label": "routine",
+        "title": "Aether · Routine",
+        "url": "routine.html",
+        "width": 270,
+        "height": 220,
+        "minWidth": 220,
+        "minHeight": 60,
+        "decorations": false,
+        "transparent": true,
+        "shadow": false,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "resizable": true,
+        "focus": false,
+        "visible": false
+      },
+      {
+        "label": "hub",
+        "title": "Aether",
+        "url": "hub.html",
+        "width": 1040,
+        "height": 680,
+        "minWidth": 760,
+        "minHeight": 480,
+        "decorations": false,
+        "transparent": false,
+        "shadow": true,
+        "center": true,
+        "resizable": true,
+        "visible": false,
+        "backgroundColor": "#0b0f17"
+      }
+    ],
+    "security": {
+      "csp": {
+        "default-src": "'self'",
+        "script-src": "'self'",
+        "style-src": "'self' 'unsafe-inline'",
+        "img-src": "'self' data: gameasset: http://gameasset.localhost",
+        "font-src": "'self' gameasset: http://gameasset.localhost",
+        "connect-src": "ipc: http://ipc.localhost"
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": [
+      "nsis"
+    ],
+    "category": "Game",
+    "shortDescription": "Game-styled DPS overlay for AION 2",
+    "copyright": "GPL-3.0-only. Game assets © NCSOFT Corporation.",
+    "resources": {
+      "resources/gamedata/": "gamedata/"
+    },
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "languages": [
+          "French",
+          "English"
+        ],
+        "displayLanguageSelector": false
+      }
+    },
+    "publisher": "Aether contributors",
+    "homepage": "https://github.com/Wany917/aether-meter"
+  }
+}

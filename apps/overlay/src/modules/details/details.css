@@ -1,0 +1,270 @@
+.details {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+/* Fight summary */
+.fight-header {
+  display: flex;
+  align-items: flex-end;
+  gap: 28px;
+  padding: 12px 22px 12px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, rgb(26 35 51 / 0.5), transparent);
+}
+.fight-identity {
+  flex: 1;
+  min-width: 0;
+}
+.fight-kicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+}
+.fight-kicker > span:first-letter {
+  text-transform: uppercase;
+}
+.fight-dungeon {
+  color: var(--text-faint);
+}
+.fight-title {
+  margin: 2px 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-hi);
+  text-shadow: 0 2px 12px rgb(0 0 0 / 0.6);
+}
+.fight-live {
+  color: var(--text);
+}
+.fight-stats {
+  display: flex;
+  gap: 22px;
+  margin: 0;
+}
+.fight-stats dt,
+.player-stats dt {
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+}
+.fight-stats dd,
+.player-stats dd {
+  margin: 1px 0 0;
+  font-size: 14px;
+  color: var(--text-hi);
+}
+.gold {
+  color: var(--gold) !important;
+}
+
+/* Two columns: the party, then the selected player */
+.details-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+}
+
+.band-title {
+  margin: 0;
+  padding: 5px 14px;
+  font-size: var(--text-sm);
+  font-weight: 400;
+  text-align: center;
+  color: var(--text-hi);
+  background: linear-gradient(180deg, #2a3549, #212b3d);
+  box-shadow: inset 0 1px 0 rgb(220 232 255 / 0.1), 0 1px 0 rgb(0 0 0 / 0.4);
+}
+
+.party-list {
+  min-height: 0;
+  overflow-y: auto;
+  border-right: 1px solid var(--line);
+  background: rgb(4 7 12 / 0.35);
+}
+.party-list ol {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+}
+.party-item {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  height: 27px;
+  padding: 0 9px 0 4px;
+  text-align: left;
+}
+/* Selected: a brighter frame, lifted off the list */
+.party-item[aria-current] {
+  box-shadow: inset 0 0 0 1px rgb(236 242 250 / 0.8), 0 3px 10px rgb(0 0 0 / 0.45);
+}
+.party-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-hi);
+}
+.party-dps {
+  color: var(--text-hi);
+  font-weight: 700;
+}
+.party-share {
+  min-width: 40px;
+  text-align: right;
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+}
+
+/* Selected player */
+.player-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.player-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 22px 8px;
+}
+.player-emblem {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex: none;
+}
+.player-emblem img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px rgb(0 0 0 / 0.6));
+}
+.player-identity {
+  flex: 1;
+  min-width: 0;
+}
+.player-class {
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+}
+.player-title {
+  margin: 1px 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--text-hi);
+}
+.player-title[data-local] {
+  color: var(--aether);
+}
+.player-dps-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.player-dps-label {
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+}
+.player-dps-value {
+  font-size: 22px;
+  line-height: 1.1;
+  color: var(--gold);
+}
+.player-versus {
+  margin-top: 2px;
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+}
+.player-versus .num {
+  color: var(--text-hi);
+}
+.player-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 4px;
+  margin: 0;
+  padding: 2px 22px 12px;
+}
+.player-stats > div {
+  padding: 5px 10px;
+  border-radius: var(--radius);
+  background: rgb(9 13 21 / 0.62);
+  box-shadow: inset 0 1px 0 var(--edge-light);
+}
+
+.skill-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 14px 14px;
+}
+.skill-table {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: var(--text-sm);
+}
+.skill-head,
+.skill-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.7fr) repeat(8, minmax(48px, 0.5fr));
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px 0 4px;
+}
+.skill-head > span:not(:first-child),
+.skill-row > span[role="cell"]:not(:first-of-type) {
+  text-align: right;
+}
+.skill-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: 28px;
+  font-size: var(--text-xs);
+  padding-left: 12px;
+  color: var(--text-dim);
+  background: var(--bg-1);
+}
+.skill-row {
+  height: 27px;
+  color: var(--text);
+}
+.skill-cell-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.skill-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-hi);
+}
+.skill-damage {
+  font-weight: 700;
+  color: var(--text-hi);
+}
+
+.empty-note {
+  padding: 24px;
+  color: var(--text-dim);
+}

@@ -1,0 +1,15 @@
+# Rust
+/target/
+
+# Frontend
+node_modules/
+apps/overlay/dist/
+
+# Tauri
+apps/overlay/src-tauri/gen/
+
+# OS / editors
+.DS_Store
+*.log
+.vscode/
+.idea/

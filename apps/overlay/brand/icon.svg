@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="field" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#22304a"/>
+      <stop offset="1" stop-color="#0a0f18"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6dc93"/>
+      <stop offset="0.55" stop-color="#d9b25e"/>
+      <stop offset="1" stop-color="#a87a2a"/>
+    </linearGradient>
+    <radialGradient id="core" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.45" stop-color="#9fe9ff"/>
+      <stop offset="1" stop-color="#2aa8d8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <path d="M512 36 L988 512 L512 988 L36 512 Z" fill="url(#field)" stroke="url(#gold)" stroke-width="26" stroke-linejoin="round"/>
+  <path d="M512 118 L906 512 L512 906 L118 512 Z" fill="none" stroke="#d9b25e" stroke-opacity="0.38" stroke-width="6"/>
+  <path d="M512 236 L728 742 L636 742 L512 438 L388 742 L296 742 Z" fill="url(#gold)"/>
+  <circle cx="512" cy="636" r="118" fill="url(#core)" opacity="0.9"/>
+  <path d="M512 572 L564 636 L512 700 L460 636 Z" fill="#e9fbff"/>
+</svg>

@@ -1,0 +1,21 @@
+[package]
+name = "aether-routine"
+description = "Daily and weekly routine for AION 2: checklists that reset with the game, banked counters that cap"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+publish = false
+
+[features]
+default = []
+specta = ["dep:specta", "dep:specta-typescript"]
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+specta = { workspace = true, optional = true }
+specta-typescript = { workspace = true, optional = true }

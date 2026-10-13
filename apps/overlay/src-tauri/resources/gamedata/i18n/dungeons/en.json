@@ -1,0 +1,206 @@
+{
+  "600001": {
+    "name": "Krao Cave",
+    "difficulty": "normal"
+  },
+  "600002": {
+    "name": "Krao Cave",
+    "difficulty": "exploration"
+  },
+  "600003": {
+    "name": "Krao Cave"
+  },
+  "600004": {
+    "name": "Krao Cave",
+    "difficulty": "hard"
+  },
+  "600011": {
+    "name": "Urugugu Canyon"
+  },
+  "600012": {
+    "name": "Urugugu Canyon"
+  },
+  "600013": {
+    "name": "Urugugu Canyon"
+  },
+  "600014": {
+    "name": "Urugugu Canyon"
+  },
+  "600021": {
+    "name": "Fire Temple"
+  },
+  "600022": {
+    "name": "Fire Temple"
+  },
+  "600023": {
+    "name": "Fire Temple"
+  },
+  "600024": {
+    "name": "Fire Temple"
+  },
+  "600025": {
+    "name": "Fire Temple",
+    "difficulty": "normal"
+  },
+  "600031": {
+    "name": "Draupnir"
+  },
+  "600032": {
+    "name": "Draupnir"
+  },
+  "600033": {
+    "name": "Draupnir"
+  },
+  "600034": {
+    "name": "Draupnir"
+  },
+  "600041": {
+    "name": "Dying Dramata's Nest"
+  },
+  "600042": {
+    "name": "Dying Dramata's Nest"
+  },
+  "600051": {
+    "name": "Deus Research Base"
+  },
+  "600052": {
+    "name": "Deus Research Base"
+  },
+  "600053": {
+    "name": "Deus Research Base"
+  },
+  "600054": {
+    "name": "Deus Research Base"
+  },
+  "600055": {
+    "name": "Deus Research Base"
+  },
+  "600056": {
+    "name": "Deus Research Base"
+  },
+  "600057": {
+    "name": "Deus Research Base"
+  },
+  "600058": {
+    "name": "Deus Research Base"
+  },
+  "600059": {
+    "name": "Deus Research Base"
+  },
+  "600061": {
+    "name": "Shattered Arkanis"
+  },
+  "600062": {
+    "name": "Shattered Arkanis"
+  },
+  "600063": {
+    "name": "Shattered Arkanis"
+  },
+  "600064": {
+    "name": "Shattered Arkanis"
+  },
+  "600065": {
+    "name": "Shattered Arkanis"
+  },
+  "600066": {
+    "name": "Shattered Arkanis"
+  },
+  "600067": {
+    "name": "Shattered Arkanis"
+  },
+  "600068": {
+    "name": "Shattered Arkanis"
+  },
+  "600069": {
+    "name": "Shattered Arkanis"
+  },
+  "600071": {
+    "name": "Vakron Sky Island"
+  },
+  "600072": {
+    "name": "Vakron Sky Island"
+  },
+  "600073": {
+    "name": "Vakron Sky Island"
+  },
+  "600074": {
+    "name": "Vakron Sky Island",
+    "difficulty": "normal"
+  },
+  "600091": {
+    "name": "Ferocious Horn Den",
+    "difficulty": "exploration"
+  },
+  "600092": {
+    "name": "Ferocious Horn Den",
+    "difficulty": "normal"
+  },
+  "600093": {
+    "name": "Ferocious Horn Den",
+    "difficulty": "hard"
+  },
+  "600121": {
+    "name": "Cradle of Nihility",
+    "difficulty": "exploration"
+  },
+  "600122": {
+    "name": "Cradle of Nihility",
+    "difficulty": "normal"
+  },
+  "600123": {
+    "name": "Cradle of Nihility",
+    "difficulty": "hard"
+  },
+  "600131": {
+    "name": "the Hall of Illusion",
+    "difficulty": "exploration"
+  },
+  "600132": {
+    "name": "the Hall of Illusion",
+    "difficulty": "normal"
+  },
+  "600133": {
+    "name": "the Hall of Illusion",
+    "difficulty": "hard"
+  },
+  "600141": {
+    "name": "Azure Breath Island",
+    "difficulty": "exploration"
+  },
+  "600142": {
+    "name": "Azure Breath Island",
+    "difficulty": "normal"
+  },
+  "600143": {
+    "name": "Azure Breath Island",
+    "difficulty": "hard"
+  },
+  "600151": {
+    "name": "Citadel of the Fallen Daeva",
+    "difficulty": "exploration"
+  },
+  "600152": {
+    "name": "Citadel of the Fallen Daeva",
+    "difficulty": "normal"
+  },
+  "600153": {
+    "name": "Citadel of the Fallen Daeva",
+    "difficulty": "hard"
+  },
+  "600161": {
+    "name": "Consumed Deus Research Base",
+    "difficulty": "exploration"
+  },
+  "600162": {
+    "name": "Consumed Deus Research Base",
+    "difficulty": "normal"
+  },
+  "600163": {
+    "name": "Consumed Deus Research Base",
+    "difficulty": "hard"
+  },
+  "610044": {
+    "name": "Dying Dramata's Nest",
+    "difficulty": "hard"
+  }
+}

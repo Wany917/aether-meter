@@ -1,0 +1,187 @@
+//! Game data shipped next to the app: localized names and icon tables.
+//!
+//! The files come from the A2Tools repository at the pinned parser revision
+//! (`bun run sync:gamedata`), so names always match what the parser decodes.
+
+use std::collections::{HashMap, HashSet};
+use std::path::{Path, PathBuf};
+use std::sync::Arc;
+
+use a2tools::capture::abnormal;
+use a2tools::i18n::lookup::{self, NpcLookup, SkillLookup};
+use parking_lot::RwLock;
+use serde::Deserialize;
+use serde::de::DeserializeOwned;
+
+use crate::error::EngineError;
+
+/// Every locale the data files carry. Anything else falls back to English.
+pub const LANGUAGES: [&str; 10] = [
+    "de", "en", "es", "fr", "ja", "ko", "pt", "ru", "zh-Hans", "zh-Hant",
+];
+
+pub struct GameData {
+    dir: PathBuf,
+    pub skills: Arc<SkillLookup>,
+    pub npcs: Arc<NpcLookup>,
+    pub dot_skill_ids: HashSet<i32>,
+    pub stack_limits: HashMap<u32, u32>,
+    abnormal_icons: HashMap<u32, String>,
+    /// First four digits of an 8-digit skill code -> icon file name.
+    skill_icons: HashMap<String, String>,
+    localized: RwLock<Localized>,
+}
+
+#[derive(Default)]
+struct Localized {
+    language: String,
+    abnormals: HashMap<u32, String>,
+    dungeons: HashMap<i32, Dungeon>,
+}
+
+#[derive(Deserialize)]
+struct Dungeon {
+    name: String,
+    difficulty: Option<String>,
+}
+
+#[derive(Deserialize)]
+struct AbnormalTable {
+    abnormals: HashMap<String, AbnormalEntry>,
+}
+
+#[derive(Deserialize)]
+struct AbnormalEntry {
+    icon: Option<String>,
+}
+
+impl GameData {
+    pub fn load(dir: &Path, language: &str) -> Result<Self, EngineError> {
+        if !dir.join("i18n").join("skills").is_dir() {
+            return Err(EngineError::GameDataMissing(dir.to_path_buf()));
+        }
+
+        let abnormal_table: Option<AbnormalTable> = read_json(&dir.join("abnormals.json"));
+        let abnormal_icons = abnormal_table
+            .map(|t| {
+                t.abnormals
+                    .into_iter()
+                    .filter_map(|(id, entry)| Some((id.parse().ok()?, entry.icon?)))
+                    .collect()
+            })
+            .unwrap_or_default();
+        let stack_limits = std::fs::read_to_string(dir.join("abnormals.json"))
+            .map(|text| abnormal::stack_limits(&text))
+            .unwrap_or_default();
+
+        let data = Self {
+            dir: dir.to_path_buf(),
+            skills: Arc::new(SkillLookup::new()),
+            npcs: Arc::new(NpcLookup::new()),
+            dot_skill_ids: read_json::<Vec<i32>>(&dir.join("dot_skill_ids.json"))
+                .unwrap_or_default()
+                .into_iter()
+                .collect(),
+            stack_limits,
+            abnormal_icons,
+            skill_icons: read_json(&dir.join("skill_icons.json")).unwrap_or_default(),
+            localized: RwLock::new(Localized::default()),
+        };
+        data.set_language(language);
+        Ok(data)
+    }
+
+    pub fn language(&self) -> String {
+        self.localized.read().language.clone()
+    }
+
+    /// Reload every localized name. Skill and NPC lookups are swapped in place,
+    /// so the running parser picks the new names up on its next snapshot.
+    pub fn set_language(&self, language: &str) {
+        let language = if LANGUAGES.contains(&language) {
+            language
+        } else {
+            "en"
+        };
+        lookup::load_language(&self.skills, &self.npcs, &self.dir, language);
+
+        let i18n = self.dir.join("i18n");
+        let abnormals =
+            read_localized::<HashMap<String, String>>(&i18n.join("abnormals"), language)
+                .unwrap_or_default()
+                .into_iter()
+                .filter_map(|(id, name)| Some((id.parse().ok()?, name)))
+                .collect();
+        let dungeons = read_localized::<HashMap<String, Dungeon>>(&i18n.join("dungeons"), language)
+            .unwrap_or_default()
+            .into_iter()
+            .filter_map(|(id, d)| Some((id.parse().ok()?, d)))
+            .collect();
+
+        *self.localized.write() = Localized {
+            language: language.to_string(),
+            abnormals,
+            dungeons,
+        };
+    }
+
+    pub fn skill_name(&self, code: i32) -> String {
+        self.skills.lookup_skill_name(code)
+    }
+
+    pub fn abnormal_name(&self, id: u32) -> Option<String> {
+        self.localized.read().abnormals.get(&id).cloned()
+    }
+
+    pub fn abnormal_icon(&self, id: u32) -> Option<&str> {
+        self.abnormal_icons.get(&id).map(String::as_str)
+    }
+
+    pub fn skill_icon_table(&self) -> &HashMap<String, String> {
+        &self.skill_icons
+    }
+
+    /// "Krao Cave · Normal", or `None` outside an instance.
+    pub fn dungeon_label(&self, id: i32) -> Option<String> {
+        if id <= 0 {
+            return None;
+        }
+        let localized = self.localized.read();
+        let dungeon = localized.dungeons.get(&id)?;
+        Some(match dungeon.difficulty.as_deref() {
+            Some(d) => format!(
+                "{} · {}",
+                dungeon.name,
+                difficulty_label(d, &localized.language)
+            ),
+            None => dungeon.name.clone(),
+        })
+    }
+}
+
+/// Only English, Korean and Chinese ship dungeon tables; the difficulty words
+/// are translated here for the languages that fall back to English names.
+fn difficulty_label(difficulty: &str, language: &str) -> String {
+    match (difficulty, language) {
+        ("hard", "fr") => "Difficile".to_string(),
+        ("hard", _) => "Hard".to_string(),
+        ("normal", _) => "Normal".to_string(),
+        ("exploration", _) => "Exploration".to_string(),
+        (other, _) => other.to_string(),
+    }
+}
+
+fn read_localized<T: DeserializeOwned>(dir: &Path, language: &str) -> Option<T> {
+    read_json(&dir.join(format!("{language}.json"))).or_else(|| read_json(&dir.join("en.json")))
+}
+
+fn read_json<T: DeserializeOwned>(path: &Path) -> Option<T> {
+    let text = std::fs::read_to_string(path).ok()?;
+    match serde_json::from_str(&text) {
+        Ok(value) => Some(value),
+        Err(e) => {
+            tracing::warn!("ignoring {}: {e}", path.display());
+            None
+        }
+    }
+}
