@@ -7,6 +7,7 @@
 mod actions;
 mod assets;
 mod commands;
+mod diagnostics;
 mod error;
 mod events;
 mod hotkeys;
@@ -74,12 +75,7 @@ pub fn specta_builder() -> Builder<tauri::Wry> {
 }
 
 pub fn run() {
-    tracing_subscriber::fmt()
-        .with_env_filter(
-            tracing_subscriber::EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| "info,aether=debug".into()),
-        )
-        .init();
+    diagnostics::init();
 
     let specta = specta_builder();
 
@@ -137,8 +133,16 @@ pub fn run() {
                 let _ = window.hide();
             }
         })
-        .build(tauri::generate_context!())
-        .expect("failed to build the Aether app");
+        .build(tauri::generate_context!());
+    // Setup errors (missing game data, a window that will not open...) land
+    // here: say so instead of vanishing.
+    let app = match app {
+        Ok(app) => app,
+        Err(e) => {
+            diagnostics::fatal(&e.to_string());
+            return;
+        }
+    };
 
     app.run(|app, event| {
         if let RunEvent::ExitRequested { .. } = event
@@ -175,13 +179,31 @@ fn source_from_args() -> SourceKind {
 
 /// The bundled data, or the source tree's copy when running from `tauri dev`.
 fn game_data_dir(resource_dir: Option<PathBuf>) -> PathBuf {
-    let bundled = resource_dir.map(|d| d.join("gamedata"));
-    match bundled {
-        Some(dir) if dir.join("i18n").is_dir() => dir,
-        _ => PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+    let exe_dir = std::env::current_exe()
+        .ok()
+        .and_then(|p| p.parent().map(PathBuf::from));
+    let candidates = [resource_dir, exe_dir]
+        .into_iter()
+        .flatten()
+        .flat_map(|base| {
+            [
+                base.join("gamedata"),
+                base.join("resources").join("gamedata"),
+            ]
+        })
+        .chain([PathBuf::from(env!("CARGO_MANIFEST_DIR"))
             .join("resources")
-            .join("gamedata"),
+            .join("gamedata")]);
+    let mut tried = Vec::new();
+    for dir in candidates {
+        if dir.join("i18n").is_dir() {
+            tracing::info!("game data from {}", dir.display());
+            return dir;
+        }
+        tried.push(dir);
     }
+    tracing::error!("no game data in any of {tried:?}");
+    tried.into_iter().next().unwrap_or_default()
 }
 
 #[cfg(test)]
