@@ -16,6 +16,10 @@ pub enum RoutineError {
     UnknownReserve(String),
     #[error("enter the in-game value of `{0}` first")]
     NotEntered(String),
+    #[error("no boss `{0}`")]
+    UnknownBoss(String),
+    #[error("a kill time must be within the last 7 days")]
+    InvalidKill,
     #[error("invalid task: {0}")]
     InvalidTask(String),
     #[error("routine file {path}: {source}")]

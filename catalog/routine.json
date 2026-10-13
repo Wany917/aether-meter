@@ -1,6 +1,6 @@
 {
   "$schema": "./routine.schema.json",
-  "revision": 2,
+  "revision": 3,
   "updated": "2026-10-13",
   "resetHourUtc": 7,
   "tasks": [
@@ -354,6 +354,549 @@
       "guide": "https://www.aion2.help/guide/dimensional-assault",
       "sources": [
         "https://metabot.gg/en/aion-2/guides/daily-weekly-checklist"
+      ],
+      "verified": false
+    }
+  ],
+  "bosses": [
+    {
+      "id": "eternal-gartua",
+      "npcCodes": [
+        2101074
+      ],
+      "label": {
+        "en": "Eternal Gartua",
+        "fr": "Gartua de l'éternité"
+      },
+      "respawn": {
+        "kind": "afterKill",
+        "minutes": 720
+      },
+      "guide": "https://www.aion2.help/guide/region-bosses",
+      "sources": [
+        "https://game8.co/games/Aion-2/archives/631054",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "immortal-gartua",
+      "npcCodes": [
+        2400800
+      ],
+      "label": {
+        "en": "Immortal Gartua",
+        "fr": "Gartua de l'immortalité"
+      },
+      "respawn": {
+        "kind": "afterKill",
+        "minutes": 720
+      },
+      "guide": "https://www.aion2.help/guide/region-bosses",
+      "sources": [
+        "https://game8.co/games/Aion-2/archives/631054",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "high-commander-lagta",
+      "npcCodes": [
+        2101131,
+        2400853
+      ],
+      "label": {
+        "en": "High Commander Lagta",
+        "fr": "Haut Commandant Lagta"
+      },
+      "zone": {
+        "en": "Verteron / Altgard",
+        "fr": "Verteron / Altgard"
+      },
+      "respawn": {
+        "kind": "afterKill",
+        "minutes": 720
+      },
+      "guide": "https://www.aion2.help/guide/region-bosses",
+      "sources": [
+        "https://game8.co/games/Aion-2/archives/631054",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "silent-dartan",
+      "npcCodes": [
+        2101120,
+        2400855
+      ],
+      "label": {
+        "en": "Silent Dartan",
+        "fr": "Dartan la Silencieuse"
+      },
+      "zone": {
+        "en": "Verteron / Altgard",
+        "fr": "Verteron / Altgard"
+      },
+      "respawn": {
+        "kind": "afterKill",
+        "minutes": 360
+      },
+      "guide": "https://www.aion2.help/guide/region-bosses",
+      "sources": [
+        "https://game8.co/games/Aion-2/archives/631054",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "soul-ruler-kashapa",
+      "npcCodes": [
+        2101122,
+        2400854
+      ],
+      "label": {
+        "en": "Soul Ruler Kashapa",
+        "fr": "Kashapa le dominateur des âmes"
+      },
+      "zone": {
+        "en": "Verteron / Altgard",
+        "fr": "Verteron / Altgard"
+      },
+      "respawn": {
+        "kind": "afterKill",
+        "minutes": 360
+      },
+      "guide": "https://www.aion2.help/guide/region-bosses",
+      "sources": [
+        "https://game8.co/games/Aion-2/archives/631054",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "guruta",
+      "npcCodes": [
+        2400593
+      ],
+      "label": {
+        "en": "Drakan Battalion Weapon Guruta",
+        "fr": "Guruta l'arme de troupe Drakan"
+      },
+      "respawn": {
+        "kind": "afterKill",
+        "minutes": 360
+      },
+      "guide": "https://www.aion2.help/guide/region-bosses",
+      "sources": [
+        "https://game8.co/games/Aion-2/archives/631054",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "predator-garsan",
+      "npcCodes": [
+        2400212
+      ],
+      "label": {
+        "en": "Predator Garsan",
+        "fr": "Garsan le Prédateur"
+      },
+      "respawn": {
+        "kind": "afterKill",
+        "minutes": 120
+      },
+      "guide": "https://www.aion2.help/guide/region-bosses",
+      "sources": [
+        "https://game8.co/games/Aion-2/archives/631054",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "blood-warrior-lannar",
+      "npcCodes": [
+        2400223
+      ],
+      "label": {
+        "en": "Blood Warrior Lannar",
+        "fr": "Lannar le guerrier de sang"
+      },
+      "respawn": {
+        "kind": "afterKill",
+        "minutes": 120
+      },
+      "guide": "https://www.aion2.help/guide/region-bosses",
+      "sources": [
+        "https://game8.co/games/Aion-2/archives/631054",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "deceiver-trid",
+      "npcCodes": [
+        2400274
+      ],
+      "label": {
+        "en": "Deceiver Trid",
+        "fr": "Trid la Trompeuse"
+      },
+      "respawn": {
+        "kind": "afterKill",
+        "minutes": 120
+      },
+      "guide": "https://www.aion2.help/guide/region-bosses",
+      "sources": [
+        "https://game8.co/games/Aion-2/archives/631054",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "blue-wave-kelpina",
+      "npcCodes": [
+        2400335
+      ],
+      "label": {
+        "en": "Blue Wave Kelpina",
+        "fr": "Kelpina la Vague bleue"
+      },
+      "respawn": {
+        "kind": "afterKill",
+        "minutes": 120
+      },
+      "guide": "https://www.aion2.help/guide/region-bosses",
+      "sources": [
+        "https://game8.co/games/Aion-2/archives/631054",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "high-overseer-nutah",
+      "npcCodes": [
+        2400353
+      ],
+      "label": {
+        "en": "High Overseer Nutah",
+        "fr": "Nutah le Chef superviseur"
+      },
+      "respawn": {
+        "kind": "afterKill",
+        "minutes": 120
+      },
+      "guide": "https://www.aion2.help/guide/region-bosses",
+      "sources": [
+        "https://game8.co/games/Aion-2/archives/631054",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "melted-danar",
+      "npcCodes": [
+        2400017
+      ],
+      "label": {
+        "en": "Melted Danar",
+        "fr": "Danar le fondu"
+      },
+      "note": {
+        "en": "Sources disagree: 30 min or 1 h.",
+        "fr": "Les sources divergent : 30 min ou 1 h."
+      },
+      "respawn": {
+        "kind": "afterKill",
+        "minutes": 60
+      },
+      "guide": "https://www.aion2.help/guide/region-bosses",
+      "sources": [
+        "https://game8.co/games/Aion-2/archives/631054",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "black-warrior-aed",
+      "npcCodes": [
+        2400074
+      ],
+      "label": {
+        "en": "Black Warrior Aed",
+        "fr": "Aed le guerrier noir"
+      },
+      "respawn": {
+        "kind": "afterKill",
+        "minutes": 30
+      },
+      "guide": "https://www.aion2.help/guide/region-bosses",
+      "sources": [
+        "https://game8.co/games/Aion-2/archives/631054",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "faithful-rajit",
+      "npcCodes": [
+        2400140
+      ],
+      "label": {
+        "en": "Faithful Rajit",
+        "fr": "Rajit le fidèle"
+      },
+      "respawn": {
+        "kind": "afterKill",
+        "minutes": 30
+      },
+      "guide": "https://www.aion2.help/guide/region-bosses",
+      "sources": [
+        "https://game8.co/games/Aion-2/archives/631054",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "berserker-vargor",
+      "npcCodes": [
+        2400141
+      ],
+      "label": {
+        "en": "Berserker Vargor",
+        "fr": "Vargor le Berserker"
+      },
+      "respawn": {
+        "kind": "afterKill",
+        "minutes": 30
+      },
+      "guide": "https://www.aion2.help/guide/region-bosses",
+      "sources": [
+        "https://game8.co/games/Aion-2/archives/631054",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "watcher-kaira",
+      "npcCodes": [
+        2600089
+      ],
+      "label": {
+        "en": "Watcher Kaira",
+        "fr": "Kaira la veilleuse"
+      },
+      "zone": {
+        "en": "Lower Reshanta",
+        "fr": "Reshanta inférieur"
+      },
+      "note": {
+        "en": "Every 3 h from 01:00 Berlin time, to be confirmed.",
+        "fr": "Toutes les 3 h depuis 01:00 (heure de Berlin), à confirmer."
+      },
+      "respawn": {
+        "kind": "schedule",
+        "zone": "europe",
+        "slots": [
+          {
+            "at": "01:00"
+          },
+          {
+            "at": "04:00"
+          },
+          {
+            "at": "07:00"
+          },
+          {
+            "at": "10:00"
+          },
+          {
+            "at": "13:00"
+          },
+          {
+            "at": "16:00"
+          },
+          {
+            "at": "19:00"
+          },
+          {
+            "at": "22:00"
+          }
+        ],
+        "windowMinutes": 30
+      },
+      "sources": [
+        "https://questlog.gg/aion-2/en/boss-schedule",
+        "https://shugo.gg/timers",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "guardian-lord-nahma",
+      "npcCodes": [
+        2600084,
+        2600093,
+        2600094,
+        2600150
+      ],
+      "label": {
+        "en": "Guardian Lord Nahma",
+        "fr": "Nahma le seigneur gardien"
+      },
+      "zone": {
+        "en": "Lower Reshanta",
+        "fr": "Reshanta inférieur"
+      },
+      "respawn": {
+        "kind": "schedule",
+        "zone": "europe",
+        "slots": [
+          {
+            "day": "friday",
+            "at": "21:00"
+          },
+          {
+            "day": "sunday",
+            "at": "21:00"
+          }
+        ],
+        "windowMinutes": 30
+      },
+      "sources": [
+        "https://questlog.gg/aion-2/en/boss-schedule",
+        "https://shugo.gg/timers",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "executor-argo",
+      "npcCodes": [
+        2600097
+      ],
+      "label": {
+        "en": "Executor Argo",
+        "fr": "Agro exécuteur"
+      },
+      "zone": {
+        "en": "Lower Reshanta",
+        "fr": "Reshanta inférieur"
+      },
+      "note": {
+        "en": "After the Artifact Siege.",
+        "fr": "Après le siège des artefacts."
+      },
+      "respawn": {
+        "kind": "schedule",
+        "zone": "europe",
+        "slots": [
+          {
+            "day": "monday",
+            "at": "21:30"
+          },
+          {
+            "day": "thursday",
+            "at": "21:30"
+          },
+          {
+            "day": "saturday",
+            "at": "21:30"
+          }
+        ],
+        "windowMinutes": 30
+      },
+      "sources": [
+        "https://questlog.gg/aion-2/en/boss-schedule",
+        "https://shugo.gg/timers",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "executor-kaira",
+      "npcCodes": [
+        2600098
+      ],
+      "label": {
+        "en": "Executor Kaira",
+        "fr": "Kaira exécutrice"
+      },
+      "zone": {
+        "en": "Lower Reshanta",
+        "fr": "Reshanta inférieur"
+      },
+      "note": {
+        "en": "After the Artifact Siege.",
+        "fr": "Après le siège des artefacts."
+      },
+      "respawn": {
+        "kind": "schedule",
+        "zone": "europe",
+        "slots": [
+          {
+            "day": "monday",
+            "at": "21:30"
+          },
+          {
+            "day": "thursday",
+            "at": "21:30"
+          },
+          {
+            "day": "saturday",
+            "at": "21:30"
+          }
+        ],
+        "windowMinutes": 30
+      },
+      "sources": [
+        "https://questlog.gg/aion-2/en/boss-schedule",
+        "https://shugo.gg/timers",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
+      ],
+      "verified": false
+    },
+    {
+      "id": "executor-tamasa",
+      "npcCodes": [
+        2600096
+      ],
+      "label": {
+        "en": "Executor Tamasa",
+        "fr": "Tamasa l'exécuteur"
+      },
+      "zone": {
+        "en": "Lower Reshanta",
+        "fr": "Reshanta inférieur"
+      },
+      "note": {
+        "en": "After the Artifact Siege.",
+        "fr": "Après le siège des artefacts."
+      },
+      "respawn": {
+        "kind": "schedule",
+        "zone": "europe",
+        "slots": [
+          {
+            "day": "monday",
+            "at": "21:30"
+          },
+          {
+            "day": "thursday",
+            "at": "21:30"
+          },
+          {
+            "day": "saturday",
+            "at": "21:30"
+          }
+        ],
+        "windowMinutes": 30
+      },
+      "sources": [
+        "https://questlog.gg/aion-2/en/boss-schedule",
+        "https://shugo.gg/timers",
+        "https://allthings.how/aion-2-world-boss-timers-every-field-and-abyss-boss-spawn-schedule/"
       ],
       "verified": false
     }

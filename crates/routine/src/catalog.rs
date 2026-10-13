@@ -6,6 +6,7 @@ use std::collections::{BTreeMap, HashSet};
 
 use serde::{Deserialize, Serialize};
 
+use crate::bosses::BossDef;
 use crate::error::CatalogError;
 use crate::schedule::Cadence;
 
@@ -32,6 +33,9 @@ pub struct Catalog {
     pub reset_hour_utc: u8,
     pub tasks: Vec<TaskDef>,
     pub reserves: Vec<ReserveDef>,
+    /// Since revision 3; older catalogs have none.
+    #[serde(default)]
+    pub bosses: Vec<BossDef>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -117,20 +121,38 @@ impl Catalog {
         let entries = self
             .tasks
             .iter()
-            .map(|t| (&t.id, &t.label, &t.note, &t.guide, &t.sources))
-            .chain(
-                self.reserves
-                    .iter()
-                    .map(|r| (&r.id, &r.label, &r.note, &r.guide, &r.sources)),
-            );
-        for (id, label, note, guide, sources) in entries {
+            .map(|t| {
+                (
+                    &t.id,
+                    [Some(&t.label), t.note.as_ref(), None],
+                    &t.guide,
+                    &t.sources,
+                )
+            })
+            .chain(self.reserves.iter().map(|r| {
+                (
+                    &r.id,
+                    [Some(&r.label), r.note.as_ref(), None],
+                    &r.guide,
+                    &r.sources,
+                )
+            }))
+            .chain(self.bosses.iter().map(|b| {
+                (
+                    &b.id,
+                    [Some(&b.label), b.note.as_ref(), b.zone.as_ref()],
+                    &b.guide,
+                    &b.sources,
+                )
+            }));
+        for (id, texts, guide, sources) in entries {
             if !is_id(id) {
                 return invalid(id, "ids are lowercase words joined by `-`");
             }
             if !ids.insert(id.as_str()) {
                 return invalid(id, "duplicate id");
             }
-            for text in [Some(label), note.as_ref()].into_iter().flatten() {
+            for text in texts.into_iter().flatten() {
                 if !text.contains_key("en")
                     || text.values().any(|v| v.trim().is_empty() || v.len() > 200)
                 {
@@ -162,6 +184,15 @@ impl Catalog {
             }
             if reserve.step == Some(0) {
                 return invalid(&reserve.id, "step must be positive");
+            }
+        }
+        let mut codes = HashSet::new();
+        for boss in &self.bosses {
+            if let Err(why) = boss.validate() {
+                return invalid(&boss.id, &why);
+            }
+            if !boss.npc_codes.iter().all(|c| codes.insert(*c)) {
+                return invalid(&boss.id, "an NPC code belongs to one boss only");
             }
         }
         Ok(())

@@ -13,6 +13,7 @@ use super::Feed;
 use crate::dispatch::LinkState;
 use crate::gamedata::GameData;
 use crate::history::HistoryStore;
+use crate::kills::{Kill, KillLog};
 use crate::model::{
     EngineStatus, FightSource, FightView, MeterSnapshot, TargetMode, TrackerSnapshot,
 };
@@ -39,6 +40,7 @@ pub(crate) struct LiveFeed {
     pub ping: Arc<PingTracker>,
     pub link: Arc<LinkState>,
     pub tracker: Arc<Mutex<Tracker>>,
+    pub kills: Arc<Mutex<KillLog>>,
     pub history: Arc<HistoryStore>,
     pub origin: Origin,
     /// Set by the thread that opens the capture.
@@ -59,6 +61,7 @@ impl LiveFeed {
         ping: Arc<PingTracker>,
         link: Arc<LinkState>,
         tracker: Arc<Mutex<Tracker>>,
+        kills: Arc<Mutex<KillLog>>,
         history: Arc<HistoryStore>,
         origin: Origin,
         capture: Arc<Mutex<CaptureState>>,
@@ -82,6 +85,7 @@ impl LiveFeed {
             ping,
             link,
             tracker,
+            kills,
             history,
             origin,
             capture,
@@ -201,6 +205,15 @@ impl Feed for LiveFeed {
         self.calculator
             .lock()
             .set_target_selection_mode(mode.parser_id());
+    }
+
+    fn take_kills(&self) -> Vec<Kill> {
+        let kills = self.kills.lock().take(&self.storage);
+        // A replay's deaths happened long ago: they would start wrong timers.
+        match self.origin {
+            Origin::Live => kills,
+            Origin::Replay { .. } => Vec::new(),
+        }
     }
 
     fn save_fights(&self, force: bool) {

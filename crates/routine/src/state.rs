@@ -24,6 +24,7 @@ pub struct UserState {
     pub community_updates: bool,
     /// Reminders already sent, so each is sent once.
     pub notified: Vec<String>,
+    pub bosses: BossState,
 }
 
 impl Default for UserState {
@@ -37,6 +38,28 @@ impl Default for UserState {
             reminders: ReminderSettings::default(),
             community_updates: true,
             notified: Vec::new(),
+            bosses: BossState::default(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct BossState {
+    /// Boss ids the player follows: shown on the overlay, announced before they return.
+    pub favorites: Vec<String>,
+    /// Boss id -> last death seen or entered, epoch ms.
+    pub kills: BTreeMap<String, i64>,
+    /// Announce a followed boss this long before it returns.
+    pub lead_minutes: u8,
+}
+
+impl Default for BossState {
+    fn default() -> Self {
+        Self {
+            favorites: Vec::new(),
+            kills: BTreeMap::new(),
+            lead_minutes: 5,
         }
     }
 }

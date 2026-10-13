@@ -290,4 +290,8 @@ impl Feed for DemoFeed {
     fn set_target_mode(&self, _mode: TargetMode) {}
 
     fn save_fights(&self, _force: bool) {}
+
+    fn take_kills(&self) -> Vec<crate::kills::Kill> {
+        Vec::new()
+    }
 }

@@ -65,7 +65,11 @@
 }
 .meter-locked {
   display: none;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-xs);
   color: var(--text-faint);
+  white-space: nowrap;
 }
 .meter-locked svg {
   width: 12px;
@@ -331,7 +335,7 @@
   display: none;
 }
 .meter[data-click-through] .meter-locked {
-  display: inline-grid;
+  display: inline-flex;
 }
 .meter[data-click-through] .player-row:hover {
   background: rgb(9 13 21 / 0.62);

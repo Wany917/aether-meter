@@ -1,0 +1,96 @@
+/* Boss rows reuse the routine's plates; the bar fills as the respawn nears */
+.bosses-hint {
+  margin-top: 10px;
+}
+.boss-columns {
+  grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+}
+.boss {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 34px;
+  padding: 4px 8px 4px 8px;
+  --class: #5f708d;
+}
+.boss[data-state="up"] {
+  --class: #6f8a6b;
+}
+
+.boss-star {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+  color: var(--text-faint);
+}
+.boss-star:hover {
+  color: var(--text-hi);
+}
+.boss-star[aria-pressed="true"] {
+  color: #d9b86a;
+}
+.boss-star svg {
+  width: 14px;
+  height: 14px;
+}
+
+.boss-status {
+  flex: none;
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+  white-space: nowrap;
+  text-align: right;
+}
+.boss-status strong {
+  font-weight: 400;
+  color: var(--text-hi);
+}
+.boss[data-state="up"] .boss-status strong {
+  color: #b9d3b2;
+}
+.boss-status-dim {
+  color: var(--text-faint);
+}
+
+.boss-actions {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+}
+.boss-kill {
+  height: 22px;
+  padding: 0 7px;
+  border: 1px solid rgb(205 214 228 / 0.2);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  color: var(--text);
+}
+.boss-kill:hover {
+  color: var(--text-hi);
+  background: rgb(var(--steel) / 0.18);
+}
+.boss-time {
+  width: 50px;
+  height: 22px;
+  padding: 0 5px;
+  border: 1px solid rgb(205 214 228 / 0.2);
+  border-radius: var(--radius-sm);
+  background: rgb(4 7 12 / 0.55);
+  color: var(--text-hi);
+  font-size: var(--text-xs);
+  text-align: center;
+}
+.boss-time::placeholder {
+  color: var(--text-faint);
+}
+.boss-time:focus {
+  outline: none;
+  border-color: rgb(230 236 246 / 0.7);
+}
+.boss .row-action:disabled {
+  visibility: hidden;
+}

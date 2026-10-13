@@ -26,6 +26,7 @@ pub enum HubTab {
     Details,
     History,
     Routine,
+    Bosses,
     Settings,
 }
 

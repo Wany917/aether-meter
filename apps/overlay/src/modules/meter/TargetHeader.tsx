@@ -2,6 +2,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 
 import { commands, type MeterSnapshot } from "../../lib/bindings";
 import { formatDuration, formatPercent } from "../../lib/format";
+import { keycaps } from "../../lib/hotkeys";
 import { targetModeName } from "../../lib/i18n";
 import { useSettings } from "../../lib/settings";
 import { Icon } from "../../ui/Icon";
@@ -52,8 +53,10 @@ export function TargetHeader({ meter }: { meter: MeterSnapshot | undefined }) {
             <Icon name="close" />
           </button>
         </div>
-        <span className="meter-locked" title={t("meter.locked")}>
+        {/* Clicks go through: say how to get them back. */}
+        <span className="meter-locked">
           <Icon name="lock" />
+          {keycaps(settings.hotkeys.clickThrough).join("+")}
         </span>
       </div>
       {hp !== null && (

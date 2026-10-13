@@ -17,6 +17,7 @@ use crate::error::EngineError;
 use crate::feed::{CaptureState, DemoFeed, Feed, LiveFeed, Origin};
 use crate::gamedata::GameData;
 use crate::history::HistoryStore;
+use crate::kills::{Kill, KillLog};
 use crate::model::{
     FightSummary, FightView, MeterSnapshot, TargetMode, TimerKind, TimerLabel, TrackerSnapshot,
 };
@@ -95,6 +96,11 @@ impl Engine {
         self.feed.tracker()
     }
 
+    /// Monsters killed within sight since the last call (live capture only).
+    pub fn take_kills(&self) -> Vec<Kill> {
+        self.feed.take_kills()
+    }
+
     pub fn timer_label(&self, kind: TimerKind, id: u32) -> TimerLabel {
         tracker::label(kind, id, &self.data)
     }
@@ -163,9 +169,11 @@ fn start_parser(
     let link = Arc::new(LinkState::default());
 
     let tracker = Arc::new(Mutex::new(Tracker::default()));
-    let tap_tracker = tracker.clone();
+    let kills = Arc::new(Mutex::new(KillLog::default()));
+    let (tap_tracker, tap_kills) = (tracker.clone(), kills.clone());
     frame_tap::set(Some(Arc::new(move |frame: &[u8]| {
-        tap_tracker.lock().on_frame(frame)
+        tap_tracker.lock().on_frame(frame);
+        tap_kills.lock().on_frame(frame);
     })));
 
     let (tx, rx) = sync_channel::<CapturedPayload>(CHANNEL_CAPACITY);
@@ -227,6 +235,7 @@ fn start_parser(
         ping,
         link,
         tracker,
+        kills,
         history.clone(),
         origin,
         capture_state,

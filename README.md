@@ -15,6 +15,10 @@ a per-skill breakdown, saved boss fights, and a buff and cooldown tracker.
 - **Routine**: daily and weekly checklists that clear themselves at the game's
   reset, banked counters (Odyle Energy, Nightmare, Conquest...) projected to
   their cap so nothing goes to waste, and reminders before a reset or a cap.
+- **Bosses**: field boss respawn timers that start on their own when a boss dies
+  near you (kills seen elsewhere can be entered), fixed-time Reshanta bosses on
+  the European server clock, and the ones you follow on the overlay with a
+  reminder before they return.
 - French and English interface; skill and monster names in ten languages.
 
 ## Install (Windows)
@@ -54,7 +58,7 @@ bun --cwd apps/overlay tauri dev -- -- --replay path/to/fight.pcapng --speed 2
 
 ```
 crates/engine/          capture, connection locking, parsing, UI model, history
-crates/routine/         checklists, banked counters, reminders (no Tauri)
+crates/routine/         checklists, banked counters, boss timers, reminders (no Tauri)
 catalog/                community-maintained routine content
 apps/overlay/src-tauri/ desktop shell: windows, tray, hotkeys, game-asset cache
 apps/overlay/src/       React UI, one page per window (meter, tracker, hub)
@@ -67,8 +71,8 @@ pinned by revision in the workspace `Cargo.toml`. After a game patch, bump the
 
 ## Routine catalog: help keep it right
 
-What the Routine tab lists (tasks, counts, recharge rates, caps, reset hour)
-lives in [`catalog/routine.json`](catalog/routine.json), not in the code.
+What the Routine and Bosses tabs list (tasks, counts, recharge rates, caps,
+reset hour, boss NPC codes and respawn rules) lives in [`catalog/routine.json`](catalog/routine.json), not in the code.
 Clients fetch the latest revision from this repository, so a merged fix reaches
 every player without a new release.
 

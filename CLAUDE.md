@@ -16,6 +16,8 @@ Tauri 2 desktop app + Rust engine + React/TS UI, Bun for JS tooling. GPL-3.0.
 - `crates/routine`: no Tauri. Content comes from `catalog/routine.json` (community catalog, validated by
   `Catalog::parse` with the same rules as `catalog/routine.schema.json`); player state is separate.
   Any catalog change bumps `revision`; clients fetch newer revisions from GitHub main.
+  Bosses live in the same catalog: kills come from the engine (`Engine::take_kills`, death
+  records read off the frame tap), schedules are on a server clock (`zone.rs`, Berlin for EU).
 - `apps/overlay/src-tauri`: thin shell. Commands delegate to `actions.rs` or the engine.
   `gameasset://` scheme serves NCSOFT font/icons from a disk cache (allow-listed routes only).
 - `apps/overlay/src`: `modules/<feature>/`, shared `ui/`, `lib/` (ipc, i18n, format).

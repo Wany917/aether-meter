@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { keycaps } from "../../lib/hotkeys";
 import { useSettings } from "../../lib/settings";
 
 const MODIFIER_CODES = new Set(["ControlLeft", "ControlRight", "ShiftLeft", "ShiftRight", "AltLeft", "AltRight", "MetaLeft", "MetaRight"]);
@@ -13,13 +14,6 @@ function accelerator(e: KeyboardEvent): string | null {
   // A bare key would fire while typing in game chat; F-keys are the exception.
   if (modifiers.length === 0 && !/^F\d{1,2}$/.test(e.code)) return null;
   return [...modifiers, e.code].join("+");
-}
-
-/** "CommandOrControl+Shift+KeyL" -> ["Ctrl", "Shift", "L"]. */
-function keycaps(value: string): string[] {
-  return value.split("+").map((part) =>
-    part === "CommandOrControl" ? "Ctrl" : part.replace(/^Key(?=[A-Z]$)/, "").replace(/^Digit(?=\d$)/, ""),
-  );
 }
 
 export function HotkeyField({ value, label, onChange }: { value: string; label: string; onChange: (next: string) => void }) {

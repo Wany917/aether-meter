@@ -7,6 +7,7 @@ import { useSettings } from "../../lib/settings";
 import { BrandMark } from "../../ui/BrandMark";
 import { Icon } from "../../ui/Icon";
 import { Tabs } from "../../ui/Tabs";
+import { BossesTab } from "../bosses/BossesTab";
 import { DetailsTab } from "../details/DetailsTab";
 import { HistoryTab } from "../history/HistoryTab";
 import { RoutineTab } from "../routine/RoutineTab";
@@ -53,6 +54,7 @@ export function HubView() {
             { id: "details", label: t("tab.details") },
             { id: "history", label: t("tab.history") },
             { id: "routine", label: t("tab.routine") },
+            { id: "bosses", label: t("tab.bosses") },
             { id: "settings", label: t("tab.settings") },
           ]}
           active={tab}
@@ -73,6 +75,7 @@ export function HubView() {
         )}
         {tab === "history" && <HistoryTab active={visible} onOpen={openSaved} />}
         {tab === "routine" && <RoutineTab />}
+        {tab === "bosses" && <BossesTab />}
         {tab === "settings" && <SettingsTab />}
       </main>
     </div>

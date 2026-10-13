@@ -6,10 +6,12 @@ import { useRoutine } from "../../lib/ipc";
 import { useSettings } from "../../lib/settings";
 import { useFitWindowHeight } from "../../lib/windowFit";
 import { Icon } from "../../ui/Icon";
+import { bySoonest, shortStatus } from "../bosses/text";
 import { useNow } from "../tracker/useNow";
 import { run } from "./run";
 
 const MAX_WEEKLY = 5;
+const MAX_BOSSES = 6;
 const DAY_MS = 86_400_000;
 
 /** Full reserves first, then the ones that will cap soonest. */
@@ -57,6 +59,11 @@ export function RoutineOverlay() {
   const reserves = (routine?.reserves ?? [])
     .filter((r) => r.reading && urgency(r) - now <= DAY_MS)
     .sort((a, b) => urgency(a) - urgency(b));
+  // Followed bosses with something to say: up, or a time to come back.
+  const bosses = (routine?.bosses ?? [])
+    .filter((b) => b.favorite && b.status.kind !== "unknown")
+    .sort(bySoonest)
+    .slice(0, MAX_BOSSES);
   const pending = (routine?.tasks ?? []).filter((task) => task.progress < task.target);
   const daily = pending.filter((task) => task.group === "daily");
   const weekly = pending.filter((task) => task.group !== "daily");
@@ -101,6 +108,20 @@ export function RoutineOverlay() {
             );
           })}
         </ul>
+      )}
+
+      {bosses.length > 0 && (
+        <section>
+          <h2 className="ro-section">{t("bosses.followed")}</h2>
+          <ul className="ro-bosses">
+            {bosses.map((boss) => (
+              <li key={boss.id} className="ro-boss" data-up={boss.status.kind === "up" || undefined}>
+                <span className="ro-reserve-name">{boss.label}</span>
+                <span className="num ro-boss-when">{shortStatus(boss, now, t, language)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
       {daily.length > 0 && (

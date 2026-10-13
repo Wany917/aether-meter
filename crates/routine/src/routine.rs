@@ -19,8 +19,8 @@ pub struct Reminder {
 
 /// The catalog and what the player did with it.
 pub struct Routine {
-    catalog: Catalog,
-    state: UserState,
+    pub(crate) catalog: Catalog,
+    pub(crate) state: UserState,
 }
 
 impl Routine {
@@ -129,6 +129,8 @@ impl Routine {
             catalog_updated: self.catalog.updated.clone(),
             tasks: catalog_tasks.chain(custom_tasks).collect(),
             reserves,
+            bosses: self.boss_views(now, language),
+            boss_lead_minutes: self.state.bosses.lead_minutes,
             hidden_count: catalog_ids.filter(|id| !visible(id)).count() as u32,
         }
     }
@@ -367,6 +369,8 @@ impl Routine {
                 ));
             }
         }
+
+        due.extend(self.boss_reminders(&view.bosses, now, fr));
 
         let mut fresh = Vec::new();
         for (key, reminder) in due {

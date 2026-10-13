@@ -43,6 +43,11 @@ export const commands = {
 	routineSetReading: (id: string, amount: number) => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_set_reading", { id, amount })),
 	/**  One use spent (negative) or gained, from where the reserve should be now. */
 	routineAdjustReading: (id: string, delta: number) => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_adjust_reading", { id, delta })),
+	routineBossFavorite: (id: string, on: boolean) => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_boss_favorite", { id, on })),
+	/**  A kill seen elsewhere: now, or at `at_ms`. */
+	routineBossKilled: (id: string, atMs: number | null) => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_boss_killed", { id, atMs })),
+	routineBossForget: (id: string) => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_boss_forget", { id })),
+	routineSetBossLead: (minutes: number) => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_set_boss_lead", { minutes })),
 	routineAddTask: (label: string, group: TaskGroup, cadence: Cadence, target: number) => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_add_task", { label, group, cadence, target })),
 	routineRemove: (id: string) => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_remove", { id })),
 	routineShowHidden: () => typedError<RoutineView, AppError>(__TAURI_INVOKE("routine_show_hidden")),
@@ -65,6 +70,36 @@ export const events = {
 /* Types */
 /**  Every error a command can return, as `{ kind, message }` on the frontend. */
 export type AppError = { kind: "engine"; message: string } | { kind: "settings"; message: string } | { kind: "hotkey"; message: string } | { kind: "window"; message: string } | { kind: "routine"; message: string };
+
+/**  How a boss comes back, for display. */
+export type BossRule = { kind: "afterKill"; minutes: number } | { kind: "schedule"; 
+/**  The next time of each slot, earliest first. */
+nextSlotsMs: number[]; 
+/**  Every slot is daily (no weekday). */
+daily: boolean };
+
+export type BossStatus = 
+/**  No death known yet: the timer starts at the first one. */
+{ kind: "unknown" } | 
+/**  Dead, back at `at_ms`. */
+{ kind: "respawning"; atMs: number } | 
+/**  Should be up since `since_ms`: nobody was seen killing it since. */
+{ kind: "up"; sinceMs: number } | 
+/**  Next scheduled appearance. */
+{ kind: "scheduled"; atMs: number };
+
+export type BossView = {
+	id: string,
+	label: string,
+	zone: string | null,
+	note: string | null,
+	guide: string | null,
+	verified: boolean,
+	favorite: boolean,
+	rule: BossRule,
+	status: BossStatus,
+	lastKillMs: number | null,
+};
 
 /**  When the content behind a task comes back. */
 export type Cadence = { kind: "daily" } | { kind: "weekly"; day: Weekday };
@@ -126,7 +161,7 @@ export type HubNavigate = {
 	actorId: number | null,
 };
 
-export type HubTab = "details" | "history" | "routine" | "settings";
+export type HubTab = "details" | "history" | "routine" | "bosses" | "settings";
 
 export type MeterSettings = {
 	/**  Background opacity, 0.2..=1. */
@@ -245,6 +280,9 @@ export type RoutineView = {
 	catalogUpdated: string,
 	tasks: TaskView[],
 	reserves: ReserveView[],
+	bosses: BossView[],
+	/**  Followed bosses are announced this long before they return. */
+	bossLeadMinutes: number,
 	/**  Catalog entries the player hid, which "show all" brings back. */
 	hiddenCount: number,
 };

@@ -70,6 +70,28 @@
   color: #f0b4a8;
 }
 
+.ro-bosses {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0 4px;
+  list-style: none;
+}
+.ro-boss {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 8px;
+  font-size: var(--text-sm);
+}
+.ro-boss-when {
+  color: var(--text-hi);
+}
+.ro-boss[data-up] .ro-boss-when {
+  color: #b9d3b2;
+}
+
 .ro-section {
   display: flex;
   align-items: baseline;

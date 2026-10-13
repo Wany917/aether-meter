@@ -29,7 +29,7 @@ pub enum Weekday {
 }
 
 impl Weekday {
-    fn index(self) -> i64 {
+    pub(crate) fn index(self) -> i64 {
         match self {
             Self::Monday => 0,
             Self::Tuesday => 1,

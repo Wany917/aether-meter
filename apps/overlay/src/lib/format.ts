@@ -85,6 +85,11 @@ export function formatWeekday(epochMs: number, language: string): string {
   return new Intl.DateTimeFormat(uiLocale(language), { weekday: "long" }).format(epochMs);
 }
 
+/** "ven. 21:00": a moment in the week, short. */
+export function formatSlot(epochMs: number, language: string): string {
+  return new Intl.DateTimeFormat(uiLocale(language), { weekday: "short", hour: "2-digit", minute: "2-digit" }).format(epochMs);
+}
+
 /** "jeudi 21:00": a moment more than a day away. */
 export function formatWhen(epochMs: number, language: string): string {
   return new Intl.DateTimeFormat(uiLocale(language), { weekday: "long", hour: "2-digit", minute: "2-digit" }).format(epochMs);

@@ -1,8 +1,10 @@
-//! The routine tab's backend: commands, reminders as system notifications,
-//! and community catalog updates from the project's repository.
+//! The routine and boss tabs' backend: commands, kills seen by the meter,
+//! reminders as system notifications, and community catalog updates from the
+//! project's repository.
 
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
+use aether_engine::Kill;
 use aether_routine::{Cadence, Catalog, ReminderSettings, RoutineView, TaskGroup};
 use tauri::{AppHandle, Manager, State};
 use tauri_plugin_notification::NotificationExt;
@@ -139,6 +141,65 @@ pub fn routine_set_community_updates(app: AppHandle, on: bool) -> Result<Routine
         r.set_community_updates(on);
         Ok(())
     })
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn routine_boss_favorite(
+    app: AppHandle,
+    id: String,
+    on: bool,
+) -> Result<RoutineView, AppError> {
+    mutate(&app, |r, _| r.set_boss_favorite(&id, on))
+}
+
+/// A kill seen elsewhere: now, or at `at_ms`.
+#[tauri::command]
+#[specta::specta]
+pub fn routine_boss_killed(
+    app: AppHandle,
+    id: String,
+    at_ms: Option<i64>,
+) -> Result<RoutineView, AppError> {
+    mutate(&app, |r, now| {
+        r.set_boss_kill(&id, Some(at_ms.unwrap_or(now)), now)
+    })
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn routine_boss_forget(app: AppHandle, id: String) -> Result<RoutineView, AppError> {
+    mutate(&app, |r, now| r.set_boss_kill(&id, None, now))
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn routine_set_boss_lead(app: AppHandle, minutes: u8) -> Result<RoutineView, AppError> {
+    mutate(&app, |r, _| {
+        r.set_boss_lead(minutes);
+        Ok(())
+    })
+}
+
+/// Monsters the meter saw die: start the timers of the bosses among them.
+pub fn record_kills(app: &AppHandle, kills: &[Kill]) {
+    let state = app.state::<AppState>();
+    let view = {
+        let mut routine = state.routine.lock();
+        let bosses: Vec<String> = kills
+            .iter()
+            .filter_map(|k| routine.record_kill(k.npc_code, k.at_ms))
+            .collect();
+        if bosses.is_empty() {
+            return;
+        }
+        tracing::info!("boss kill seen: {}", bosses.join(", "));
+        if let Err(e) = state.routine_store.save_state(routine.state()) {
+            tracing::warn!("routine state not saved: {e}");
+        }
+        routine.view(now_ms(), &language(&state))
+    };
+    let _ = RoutineChanged(view).emit(app);
 }
 
 /// Open a guide or source link from the catalog in the default browser.
