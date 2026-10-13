@@ -27,7 +27,9 @@ pub(crate) fn start_live(
     tx: SyncSender<CapturedPayload>,
     running: Arc<AtomicBool>,
 ) -> Result<Capture, String> {
+    tracing::info!("loading the packet capture library");
     let lib = Arc::new(PcapLib::load()?);
+    tracing::info!("listing network adapters");
     let devices = lib.devices()?;
     if devices.is_empty() {
         return Err("no capture device with an address".into());

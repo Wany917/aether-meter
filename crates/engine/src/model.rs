@@ -99,6 +99,8 @@ pub enum EngineStatus {
     CaptureUnavailable {
         reason: String,
     },
+    /// Opening the capture library and the network adapters.
+    StartingCapture,
     /// Capturing, but no game connection identified yet.
     WaitingForGame,
     /// Locked on the game's connection.

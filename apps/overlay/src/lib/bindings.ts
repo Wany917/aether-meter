@@ -73,6 +73,8 @@ export type ClassId = "gladiator" | "templar" | "ranger" | "assassin" | "sorcere
 export type EngineStatus = 
 /**  The packet capture library (Npcap on Windows) could not be loaded. */
 { kind: "captureUnavailable"; reason: string } | 
+/**  Opening the capture library and the network adapters. */
+{ kind: "startingCapture" } | 
 /**  Capturing, but no game connection identified yet. */
 { kind: "waitingForGame" } | 
 /**  Locked on the game's connection. */

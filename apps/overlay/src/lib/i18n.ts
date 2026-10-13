@@ -1,6 +1,8 @@
 import type { ClassId, TargetMode } from "./bindings";
 
 const fr = {
+  "status.starting": "Démarrage de la capture",
+  "status.startingHint": "Si Npcap demande une autorisation administrateur, accepte-la.",
   "status.waiting": "En attente du jeu",
   "status.waitingHint": "Lance AION 2 et entre en jeu : le meter se cale tout seul sur la connexion.",
   "status.noCapture": "Capture indisponible",
@@ -149,6 +151,8 @@ const fr = {
 export type MessageKey = keyof typeof fr;
 
 const en: Record<MessageKey, string> = {
+  "status.starting": "Starting capture",
+  "status.startingHint": "If Npcap asks for administrator permission, allow it.",
   "status.waiting": "Waiting for the game",
   "status.waitingHint": "Start AION 2 and enter the world: the meter finds the connection by itself.",
   "status.noCapture": "Capture unavailable",

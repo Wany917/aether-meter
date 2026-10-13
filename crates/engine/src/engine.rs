@@ -14,7 +14,7 @@ use parking_lot::Mutex;
 use crate::capture;
 use crate::dispatch::{Dispatcher, LinkState};
 use crate::error::EngineError;
-use crate::feed::{DemoFeed, Feed, LiveFeed, Origin};
+use crate::feed::{CaptureState, DemoFeed, Feed, LiveFeed, Origin};
 use crate::gamedata::GameData;
 use crate::history::HistoryStore;
 use crate::model::{
@@ -169,28 +169,48 @@ fn start_parser(
     })));
 
     let (tx, rx) = sync_channel::<CapturedPayload>(CHANNEL_CAPACITY);
-    let (capture, origin) = match replay {
-        None => (capture::start_live(tx, running.clone()), Origin::Live),
-        Some((path, speed)) => {
-            let finished = Arc::new(AtomicBool::new(false));
-            let capture =
-                capture::start_replay(&path, speed, tx, running.clone(), finished.clone());
-            (
-                capture,
-                Origin::Replay {
-                    file: path,
-                    finished,
-                },
-            )
-        }
+    let finished = Arc::new(AtomicBool::new(false));
+    let origin = match &replay {
+        None => Origin::Live,
+        Some((path, _)) => Origin::Replay {
+            file: path.clone(),
+            finished: finished.clone(),
+        },
     };
-    let (mut threads, capture_error) = match capture {
-        Ok(c) => (c.threads, None),
-        Err(e) => {
-            tracing::error!("capture unavailable: {e}");
-            (Vec::new(), Some(e))
-        }
-    };
+
+    // Opening the capture library and every adapter can take seconds, or wait
+    // on Npcap's administrator prompt: never on the caller's (UI) thread.
+    let capture_state = Arc::new(Mutex::new(CaptureState::Starting));
+    let mut threads = Vec::new();
+    {
+        let (state, running) = (capture_state.clone(), running.clone());
+        threads.push(
+            std::thread::Builder::new()
+                .name("capture-start".into())
+                .spawn(move || {
+                    let capture = match replay {
+                        None => capture::start_live(tx, running),
+                        Some((path, speed)) => {
+                            capture::start_replay(&path, speed, tx, running, finished)
+                        }
+                    };
+                    match capture {
+                        Ok(capture) => {
+                            *state.lock() = CaptureState::Running;
+                            // Keep the device threads, so dropping the engine waits for them.
+                            for thread in capture.threads {
+                                let _ = thread.join();
+                            }
+                        }
+                        Err(e) => {
+                            tracing::error!("capture unavailable: {e}");
+                            *state.lock() = CaptureState::Failed(e);
+                        }
+                    }
+                })
+                .map_err(|e| EngineError::Capture(e.to_string()))?,
+        );
+    }
 
     let dispatcher = Dispatcher::new(storage.clone(), data.clone(), ping.clone(), link.clone());
     let dispatch_running = running.clone();
@@ -209,7 +229,7 @@ fn start_parser(
         tracker,
         history.clone(),
         origin,
-        capture_error,
+        capture_state,
     ));
     // Zone changes and party ends clear combat data: save first. Weak, as the
     // storage would otherwise keep the feed that owns it alive.

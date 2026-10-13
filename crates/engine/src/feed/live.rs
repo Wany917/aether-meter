@@ -19,6 +19,12 @@ use crate::model::{
 use crate::snapshot::{self, FightHeader};
 use crate::tracker::Tracker;
 
+pub(crate) enum CaptureState {
+    Starting,
+    Running,
+    Failed(String),
+}
+
 pub(crate) enum Origin {
     Live,
     Replay {
@@ -35,8 +41,8 @@ pub(crate) struct LiveFeed {
     pub tracker: Arc<Mutex<Tracker>>,
     pub history: Arc<HistoryStore>,
     pub origin: Origin,
-    /// Why capture could not start, if it could not.
-    pub capture_error: Option<String>,
+    /// Set by the thread that opens the capture.
+    pub capture: Arc<Mutex<CaptureState>>,
     calculator: Mutex<DpsCalculator>,
     /// The target the meter showed last, for the details view.
     shown_target: AtomicI32,
@@ -52,7 +58,7 @@ impl LiveFeed {
         tracker: Arc<Mutex<Tracker>>,
         history: Arc<HistoryStore>,
         origin: Origin,
-        capture_error: Option<String>,
+        capture: Arc<Mutex<CaptureState>>,
     ) -> Self {
         let calculator = DpsCalculator::new(
             storage.clone(),
@@ -68,17 +74,21 @@ impl LiveFeed {
             tracker,
             history,
             origin,
-            capture_error,
+            capture,
             calculator: Mutex::new(calculator),
             shown_target: AtomicI32::new(0),
         }
     }
 
     fn status(&self) -> EngineStatus {
-        if let Some(reason) = &self.capture_error {
-            return EngineStatus::CaptureUnavailable {
-                reason: reason.clone(),
-            };
+        match &*self.capture.lock() {
+            CaptureState::Failed(reason) => {
+                return EngineStatus::CaptureUnavailable {
+                    reason: reason.clone(),
+                };
+            }
+            CaptureState::Starting => return EngineStatus::StartingCapture,
+            CaptureState::Running => {}
         }
         match &self.origin {
             Origin::Replay { file, finished } => EngineStatus::Replay {

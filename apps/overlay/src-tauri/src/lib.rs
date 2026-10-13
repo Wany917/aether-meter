@@ -126,8 +126,10 @@ pub fn run() {
                 routine_store,
             });
 
+            tracing::info!("engine started");
             windows::apply(handle, &current)?;
             tray::create(handle, &current)?;
+            tracing::info!("tray ready");
             if let Err(e) = hotkeys::register(handle, &current.hotkeys) {
                 tracing::warn!("some shortcuts are unavailable: {e}");
             }
@@ -135,6 +137,7 @@ pub fn run() {
             routine::spawn(handle.clone());
             // Windows that start visible; the others mount when first shown.
             diagnostics::watch_windows_start(&["meter"]);
+            tracing::info!("setup done");
             Ok(())
         })
         .on_window_event(|window, event| {

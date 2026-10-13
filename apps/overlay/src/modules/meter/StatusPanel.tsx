@@ -4,6 +4,7 @@ import { useSettings } from "../../lib/settings";
 
 const MESSAGES: Record<EngineStatus["kind"], readonly [MessageKey, MessageKey]> = {
   captureUnavailable: ["status.noCapture", "status.noCaptureHint"],
+  startingCapture: ["status.starting", "status.startingHint"],
   waitingForGame: ["status.waiting", "status.waitingHint"],
   live: ["status.ready", "status.readyHint"],
   replay: ["status.replay", "status.readyHint"],

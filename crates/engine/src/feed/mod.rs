@@ -2,7 +2,7 @@ mod demo;
 mod live;
 
 pub(crate) use demo::DemoFeed;
-pub(crate) use live::{LiveFeed, Origin};
+pub(crate) use live::{CaptureState, LiveFeed, Origin};
 
 use crate::model::{FightView, MeterSnapshot, TargetMode, TrackerSnapshot};
 
