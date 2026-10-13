@@ -92,7 +92,7 @@ impl Default for Settings {
     fn default() -> Self {
         Self {
             language: "fr".into(),
-            target_mode: TargetMode::Boss,
+            target_mode: TargetMode::Auto,
             click_through: false,
             meter: MeterSettings::default(),
             tracker: TrackerSettings::default(),

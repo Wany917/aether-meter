@@ -44,6 +44,9 @@ pub(crate) struct LiveFeed {
     /// Set by the thread that opens the capture.
     pub capture: Arc<Mutex<CaptureState>>,
     calculator: Mutex<DpsCalculator>,
+    /// Your last target, for `TargetMode::Auto` when no boss is engaged.
+    fallback: Mutex<DpsCalculator>,
+    auto: AtomicBool,
     /// The target the meter showed last, for the details view.
     shown_target: AtomicI32,
 }
@@ -66,6 +69,13 @@ impl LiveFeed {
             data.npcs.clone(),
             ping.clone(),
         );
+        let mut fallback = DpsCalculator::new(
+            storage.clone(),
+            data.skills.clone(),
+            data.npcs.clone(),
+            ping.clone(),
+        );
+        fallback.set_target_selection_mode(TargetMode::LastHitByMe.parser_id());
         Self {
             data,
             storage,
@@ -76,6 +86,8 @@ impl LiveFeed {
             origin,
             capture,
             calculator: Mutex::new(calculator),
+            fallback: Mutex::new(fallback),
+            auto: AtomicBool::new(false),
             shown_target: AtomicI32::new(0),
         }
     }
@@ -119,7 +131,11 @@ impl LiveFeed {
 
 impl Feed for LiveFeed {
     fn meter(&self) -> MeterSnapshot {
-        let dps = self.calculator.lock().get_dps();
+        let mut dps = self.calculator.lock().get_dps();
+        // Auto: no boss fight on the meter, so show what you are hitting.
+        if self.auto.load(Ordering::Relaxed) && (dps.target_id == 0 || dps.map.is_empty()) {
+            dps = self.fallback.lock().get_dps();
+        }
         self.shown_target.store(dps.target_id, Ordering::Relaxed);
         let ping = self
             .ping
@@ -136,12 +152,14 @@ impl Feed for LiveFeed {
         let reader = self.reader();
         let details = reader.get_target_details(target_id, None);
         let context = reader.get_details_context();
-        let target_name = context
+        let raw_name = context
             .targets
             .iter()
             .find(|t| t.target_id == target_id)
             .map(|t| t.target_name.clone())
             .unwrap_or_default();
+        let mob_code = self.storage.mob_code(target_id).unwrap_or(0);
+        let target_name = self.data.target_label(mob_code, &raw_name);
         let header = FightHeader {
             source: FightSource::Live,
             target_name,
@@ -173,11 +191,13 @@ impl Feed for LiveFeed {
     fn reset(&self) {
         self.save_fights(true);
         self.calculator.lock().restart_target_selection(true);
+        self.fallback.lock().restart_target_selection(false);
         self.shown_target.store(0, Ordering::Relaxed);
         self.tracker.lock().clear();
     }
 
     fn set_target_mode(&self, mode: TargetMode) {
+        self.auto.store(mode == TargetMode::Auto, Ordering::Relaxed);
         self.calculator
             .lock()
             .set_target_selection_mode(mode.parser_id());

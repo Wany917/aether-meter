@@ -323,6 +323,8 @@ pub struct TrackerSnapshot {
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 #[serde(rename_all = "camelCase")]
 pub enum TargetMode {
+    /// The boss fight when there is one, else your own last target.
+    Auto,
     Boss,
     MostDamage,
     MostRecent,
@@ -331,10 +333,10 @@ pub enum TargetMode {
 }
 
 impl TargetMode {
-    /// The parser's own id for the mode.
+    /// The parser's own id for the mode (`Auto` runs the boss mode first).
     pub fn parser_id(self) -> &'static str {
         match self {
-            Self::Boss => "bossTargets",
+            Self::Auto | Self::Boss => "bossTargets",
             Self::MostDamage => "mostDamage",
             Self::MostRecent => "mostRecent",
             Self::LastHitByMe => "lastHitByMe",

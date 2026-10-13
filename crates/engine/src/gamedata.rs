@@ -37,6 +37,17 @@ struct Localized {
     language: String,
     abnormals: HashMap<u32, String>,
     dungeons: HashMap<i32, Dungeon>,
+    npcs: HashMap<i32, NpcEntry>,
+    /// Instances whose bosses come in several levels, one code each (Nightmare).
+    multi_tier_dungeons: HashSet<i32>,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct NpcEntry {
+    name: String,
+    tier: Option<String>,
+    dungeon_id: Option<i32>,
 }
 
 #[derive(Deserialize)]
@@ -118,11 +129,52 @@ impl GameData {
             .filter_map(|(id, d)| Some((id.parse().ok()?, d)))
             .collect();
 
+        let npcs: HashMap<i32, NpcEntry> =
+            read_localized::<HashMap<String, serde_json::Value>>(&i18n.join("npcs"), language)
+                .unwrap_or_default()
+                .into_iter()
+                .filter_map(|(id, value)| {
+                    Some((id.parse().ok()?, serde_json::from_value(value).ok()?))
+                })
+                .collect();
+        let mut tiers: HashMap<i32, HashSet<&str>> = HashMap::new();
+        for npc in npcs.values() {
+            if let (Some(dungeon), Some(tier)) = (npc.dungeon_id, npc.tier.as_deref()) {
+                tiers.entry(dungeon).or_default().insert(tier);
+            }
+        }
+        let multi_tier_dungeons = tiers
+            .into_iter()
+            .filter(|(_, t)| t.len() > 1)
+            .map(|(d, _)| d)
+            .collect();
+
         *self.localized.write() = Localized {
             language: language.to_string(),
             abnormals,
             dungeons,
+            npcs,
+            multi_tier_dungeons,
         };
+    }
+
+    /// "Gatekeeper Pinopi · Level 2": the NPC's name by code, with its level
+    /// where its instance has several; `fallback` when the code is unknown.
+    pub fn target_label(&self, mob_code: i32, fallback: &str) -> String {
+        let localized = self.localized.read();
+        let Some(npc) = localized
+            .npcs
+            .get(&mob_code)
+            .filter(|n| !n.name.trim().is_empty())
+        else {
+            return fallback.trim().to_string();
+        };
+        match (npc.tier.as_deref(), npc.dungeon_id) {
+            (Some(tier), Some(dungeon)) if localized.multi_tier_dungeons.contains(&dungeon) => {
+                format!("{} · {tier}", npc.name)
+            }
+            _ => npc.name.clone(),
+        }
     }
 
     pub fn skill_name(&self, code: i32) -> String {
@@ -183,5 +235,37 @@ fn read_json<T: DeserializeOwned>(path: &Path) -> Option<T> {
             tracing::warn!("ignoring {}: {e}", path.display());
             None
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn bundled(language: &str) -> GameData {
+        let dir = Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../apps/overlay/src-tauri/resources/gamedata");
+        GameData::load(&dir, language).expect("bundled game data")
+    }
+
+    #[test]
+    fn nightmare_bosses_are_named_with_their_level() {
+        let fr = bundled("fr");
+        assert_eq!(
+            fr.target_label(2_980_041, ""),
+            "Pinopi le gardien des portes · Niveau 2"
+        );
+        let en = bundled("en");
+        assert_eq!(
+            en.target_label(2_980_049, ""),
+            "Gatekeeper Pinopi · Level 10"
+        );
+    }
+
+    #[test]
+    fn unknown_codes_keep_the_parser_name() {
+        let en = bundled("en");
+        assert_eq!(en.target_label(0, " Some Boss "), "Some Boss");
+        assert_eq!(en.target_label(1, ""), "");
     }
 }

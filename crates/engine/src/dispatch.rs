@@ -30,7 +30,7 @@ const SIGNATURE_LOCK_THRESHOLD: u32 = 12;
 const SIGNATURE_WINDOW_MS: i64 = 3_000;
 /// Before locking a non-loopback flow, give a relay's loopback copy this long
 /// to show up.
-const LOOPBACK_GRACE_MS: i64 = 2_500;
+const LOOPBACK_GRACE_MS: i64 = 1_200;
 const STALE_CONNECTION_MS: i64 = 120_000;
 
 /// What the rest of the engine may read about the connection.

@@ -14,6 +14,10 @@ const fr = {
   "status.replayDone": "Rediffusion terminée",
 
   "meter.noTarget": "Aucune cible",
+  "meter.unknownTarget": "Cible inconnue",
+  "meter.colPlayer": "Joueur",
+  "meter.colDps": "DPS",
+  "meter.colTotal": "Dégâts",
   "meter.party": "Groupe",
   "meter.reset": "Réinitialiser le combat",
   "meter.details": "Détails du combat",
@@ -164,6 +168,10 @@ const en: Record<MessageKey, string> = {
   "status.replayDone": "Replay finished",
 
   "meter.noTarget": "No target",
+  "meter.unknownTarget": "Unknown target",
+  "meter.colPlayer": "Player",
+  "meter.colDps": "DPS",
+  "meter.colTotal": "Damage",
   "meter.party": "Party",
   "meter.reset": "Reset fight",
   "meter.details": "Fight details",
@@ -345,6 +353,7 @@ export function className(id: ClassId, language: string): string {
 
 const targetModes: Record<"fr" | "en", Record<TargetMode, string>> = {
   fr: {
+    auto: "Automatique (boss, sinon ta cible)",
     boss: "Boss",
     mostDamage: "Plus de dégâts reçus",
     mostRecent: "Plus récente",
@@ -352,6 +361,7 @@ const targetModes: Record<"fr" | "en", Record<TargetMode, string>> = {
     allTargets: "Toutes les cibles",
   },
   en: {
+    auto: "Automatic (boss, else your target)",
     boss: "Boss",
     mostDamage: "Most damage taken",
     mostRecent: "Most recent",

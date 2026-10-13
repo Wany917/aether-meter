@@ -24,6 +24,11 @@ export function PartyList({
   return (
     <aside className="party-list">
       <h2 className="band-title">{t("details.party")}</h2>
+      <div className="party-columns" aria-hidden="true">
+        <span>{t("meter.colPlayer")}</span>
+        <span>{t("meter.colDps")}</span>
+        <span>%</span>
+      </div>
       <ol>
         {players.map((p, i) => (
           <li key={p.actorId}>

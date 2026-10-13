@@ -89,17 +89,28 @@
   border-right: 1px solid var(--line);
   background: rgb(4 7 12 / 0.35);
 }
+.party-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 56px 40px;
+  gap: 7px;
+  padding: 6px 15px 0 10px;
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+.party-columns > :not(:first-child) {
+  text-align: right;
+}
 .party-list ol {
   display: flex;
   flex-direction: column;
   gap: 3px;
   margin: 0;
-  padding: 6px;
+  padding: 4px 6px 6px;
   list-style: none;
 }
 .party-item {
   display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto auto minmax(0, 1fr) 56px 40px;
   align-items: center;
   gap: 7px;
   width: 100%;
@@ -118,11 +129,11 @@
   color: var(--text-hi);
 }
 .party-dps {
+  text-align: right;
   color: var(--text-hi);
   font-weight: 700;
 }
 .party-share {
-  min-width: 40px;
   text-align: right;
   font-size: var(--text-sm);
   color: var(--text-dim);

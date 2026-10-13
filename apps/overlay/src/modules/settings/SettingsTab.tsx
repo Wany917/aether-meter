@@ -9,7 +9,7 @@ import { Checkbox, Choice, SettingRow, Slider } from "./controls";
 import { HiddenTimers } from "./HiddenTimers";
 import { HotkeyField } from "./HotkeyField";
 
-const TARGET_MODES: TargetMode[] = ["boss", "mostDamage", "mostRecent", "lastHitByMe", "allTargets"];
+const TARGET_MODES: TargetMode[] = ["auto", "boss", "mostDamage", "mostRecent", "lastHitByMe", "allTargets"];
 
 export function SettingsTab() {
   const { settings, t, save } = useSettings();

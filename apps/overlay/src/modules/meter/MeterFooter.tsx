@@ -30,7 +30,7 @@ export function MeterFooter({ meter }: { meter: MeterSnapshot }) {
       {meter.partyDps > 0 && (
         <span className="meter-party num">
           <span className="meter-party-label">{t("meter.party")}</span>
-          {formatAmount(meter.partyDps, settings.meter.numberFormat, settings.language)}
+          {formatAmount(meter.partyDps, settings.meter.numberFormat, settings.language)}/s
         </span>
       )}
     </footer>

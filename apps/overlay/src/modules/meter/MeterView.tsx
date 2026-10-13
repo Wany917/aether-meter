@@ -16,7 +16,7 @@ const ROW_HEIGHT = 27;
 
 export function MeterView() {
   const meter = useMeter();
-  const { settings } = useSettings();
+  const { settings, t } = useSettings();
   const players = meter?.players ?? [];
   const top = players[0]?.damage ?? 0;
   const fighting = players.some((p) => p.damage > 0);
@@ -31,6 +31,14 @@ export function MeterView() {
   return (
     <main ref={panel} className="meter surface" data-click-through={settings.clickThrough || undefined}>
       <TargetHeader meter={meter} />
+      {meter && fighting ? (
+        <div className="meter-columns" aria-hidden="true">
+          <span>{t("meter.colPlayer")}</span>
+          <span>{t("meter.colDps")}</span>
+          <span className="col-total">{t("meter.colTotal")}</span>
+          <span>%</span>
+        </div>
+      ) : null}
       {meter && fighting ? (
         <div className="meter-rows" style={{ maxHeight: settings.meter.maxRows * rowHeight + 4 }}>
           <ol className="meter-rows-track" style={{ height: players.length * rowHeight }}>

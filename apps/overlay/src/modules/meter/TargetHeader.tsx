@@ -2,6 +2,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 
 import { commands, type MeterSnapshot } from "../../lib/bindings";
 import { formatDuration, formatPercent } from "../../lib/format";
+import { targetModeName } from "../../lib/i18n";
 import { useSettings } from "../../lib/settings";
 import { Icon } from "../../ui/Icon";
 
@@ -9,6 +10,10 @@ import { Icon } from "../../ui/Icon";
 export function TargetHeader({ meter }: { meter: MeterSnapshot | undefined }) {
   const { settings, t, save } = useSettings();
   const target = meter?.target ?? null;
+  const fighting = meter?.players.some((p) => p.damage > 0) ?? false;
+  // Modes that follow no single target name the mode instead.
+  const untargeted =
+    fighting && settings.targetMode === "allTargets" ? targetModeName("allTargets", settings.language) : t("meter.noTarget");
   const hp = target?.hpRatio ?? null;
 
   return (
@@ -16,7 +21,7 @@ export function TargetHeader({ meter }: { meter: MeterSnapshot | undefined }) {
       <div className="meter-title" data-tauri-drag-region>
         <span className="target-mark" data-boss={target?.isBoss || undefined} aria-hidden="true" />
         <span className="target-name" data-tauri-drag-region>
-          {target?.name || t("meter.noTarget")}
+          {target ? target.name || t("meter.unknownTarget") : untargeted}
         </span>
         <span className="meter-timer num" data-tauri-drag-region>
           {formatDuration(meter?.battleTimeMs ?? 0)}

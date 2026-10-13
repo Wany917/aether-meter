@@ -15,7 +15,7 @@ function numberFormat(language: string, options: Intl.NumberFormatOptions): Intl
 
 /** Damage, DPS, HP: "1,2 M" or "1 234 567" depending on the setting. */
 export function formatAmount(value: number, format: NumberFormat, language: string): string {
-  if (format === "full" || Math.abs(value) < 10_000) {
+  if (format === "full" || Math.abs(value) < 1_000) {
     return numberFormat(language, { maximumFractionDigits: 0 }).format(Math.round(value));
   }
   return numberFormat(language, { notation: "compact", maximumFractionDigits: 1 }).format(value);

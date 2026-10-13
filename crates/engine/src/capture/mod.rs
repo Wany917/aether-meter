@@ -17,7 +17,7 @@ use pcap::{Device, Next, PcapLib};
 
 /// Physical adapters open this long after the virtual ones, so a relay's
 /// loopback flow gets the chance to be locked first.
-const PHYSICAL_DEVICE_DELAY: Duration = Duration::from_millis(1500);
+const PHYSICAL_DEVICE_DELAY: Duration = Duration::from_millis(500);
 
 pub(crate) struct Capture {
     pub threads: Vec<JoinHandle<()>>,

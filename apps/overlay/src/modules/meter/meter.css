@@ -2,6 +2,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  container-type: inline-size;
   /* Text stays legible over the game when the background is see-through */
   text-shadow: 0 1px 2px rgb(0 0 0 / 0.7);
   /* Natural height: the window follows it (useFitWindowHeight) */
@@ -127,10 +128,28 @@
     opacity: 0;
   }
 }
+/* Column labels, as on the game's rank table */
+.meter-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--col-dps) var(--col-total) var(--col-share);
+  gap: 7px;
+  padding: 5px 14px 0 11px;
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+.meter-columns > :not(:first-child) {
+  text-align: right;
+}
+.meter {
+  --col-dps: calc(54px * var(--ui-scale, 1));
+  --col-total: calc(50px * var(--ui-scale, 1));
+  --col-share: calc(42px * var(--ui-scale, 1));
+}
+
 /* 25 px plates on a 27 px pitch */
 .player-row {
   display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto auto minmax(0, 1fr) var(--col-dps) var(--col-total) var(--col-share);
   align-items: center;
   gap: 7px;
   width: 100%;
@@ -153,13 +172,16 @@
   color: var(--text-faint);
 }
 .player-dps {
-  min-width: 48px;
   text-align: right;
   font-weight: 700;
   color: var(--text-hi);
 }
+.player-total {
+  text-align: right;
+  font-size: var(--text-sm);
+  color: var(--text);
+}
 .player-share {
-  min-width: 42px;
   text-align: right;
   font-size: var(--text-sm);
   color: var(--text-dim);
@@ -313,4 +335,18 @@
 }
 .meter[data-click-through] .player-row:hover {
   background: rgb(9 13 21 / 0.62);
+}
+
+/* A narrow meter keeps DPS and share, and drops the totals */
+@container (width < 300px) {
+  .meter-columns {
+    grid-template-columns: minmax(0, 1fr) var(--col-dps) var(--col-share);
+  }
+  .player-row {
+    grid-template-columns: auto auto minmax(0, 1fr) var(--col-dps) var(--col-share);
+  }
+  .col-total,
+  .player-total {
+    display: none;
+  }
 }

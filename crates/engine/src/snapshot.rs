@@ -54,7 +54,7 @@ pub(crate) fn meter(
         });
         TargetView {
             id: dps.target_id,
-            name: dps.target_name.clone(),
+            name: data.target_label(dps.target_mob_code, &dps.target_name),
             is_boss: dps.target_is_boss,
             max_hp: max_hp as u64,
             hp_ratio,
@@ -229,11 +229,7 @@ pub(crate) fn summary(entry: &IndexEntry, data: &GameData) -> FightSummary {
 }
 
 fn target_name(saved: &str, mob_code: i32, data: &GameData) -> String {
-    Some(mob_code)
-        .filter(|&c| c > 0)
-        .map(|c| data.npcs.get_npc_name(c))
-        .filter(|n| !n.is_empty())
-        .unwrap_or_else(|| saved.to_string())
+    data.target_label(mob_code, saved)
 }
 
 fn display_name(nickname: &str, id: i32) -> String {

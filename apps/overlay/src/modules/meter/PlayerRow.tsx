@@ -38,6 +38,7 @@ export function PlayerRow({ row, rank, fill, onOpen }: { row: Row; rank: number;
         )}
       </span>
       <span className="player-dps num">{formatAmount(dps, numberFormat, language)}</span>
+      <span className="player-total num">{formatAmount(row.damage, numberFormat, language)}</span>
       <span className="player-share num">{formatPercent(share, language)}</span>
     </button>
   );
