@@ -452,7 +452,7 @@ export type SkillRow = {
 
 /**  How the meter picks the target whose fight it shows. */
 export type TargetMode = 
-/**  The boss fight when there is one, else your own last target. */
+/**  The boss fight while it is going on, else your own last target. */
 "auto" | "boss" | "mostDamage" | "mostRecent" | "lastHitByMe" | "allTargets";
 
 export type TargetView = {

@@ -3,7 +3,7 @@ resolver = "3"
 members = ["crates/engine", "crates/pets", "crates/routine", "apps/overlay/src-tauri"]
 
 [workspace.package]
-version = "0.1.10"
+version = "0.1.11"
 edition = "2024"
 license = "GPL-3.0-only"
 repository = "https://github.com/Wany917/aether-meter"
@@ -12,7 +12,7 @@ rust-version = "1.93"
 [workspace.dependencies]
 # Parser core and combat aggregation. Bump `rev` to pick up protocol fixes after
 # a game patch, then run `bun run sync:gamedata` so the data files match.
-a2tools = { package = "a2tools-dps-meter", git = "https://github.com/taengu/A2Tools-DPS-Meter", rev = "c9cf6551e8d8c16ed2f547d8aada0d9f016becf9", default-features = false }
+a2tools = { package = "a2tools-dps-meter", git = "https://github.com/taengu/A2Tools-DPS-Meter", rev = "2bcfe31ffaa95969b55990853c6ef188d202e8e9", default-features = false }
 
 libloading = "0.8"
 parking_lot = "0.12"

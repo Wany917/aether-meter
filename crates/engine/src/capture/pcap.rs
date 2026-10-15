@@ -5,6 +5,7 @@
 //! Adapted from A2Tools DPS Meter (GPL-3.0), `src-tauri/src/capture/pcap_capturer.rs`.
 
 use std::ffi::{CStr, CString, c_char, c_int, c_long, c_uint, c_void};
+use std::net::Ipv4Addr;
 use std::ptr;
 
 use a2tools::capture::captured_payload::CapturedPayload;
@@ -373,8 +374,8 @@ pub fn tcp_payload(
         data: ip[start..end].to_vec(),
         device_name: Some(device.to_string()),
         captured_at_ms,
-        src_ip: Some(format!("{}.{}.{}.{}", ip[12], ip[13], ip[14], ip[15])),
-        dst_ip: Some(format!("{}.{}.{}.{}", ip[16], ip[17], ip[18], ip[19])),
+        src_ip: Some(Ipv4Addr::new(ip[12], ip[13], ip[14], ip[15])),
+        dst_ip: Some(Ipv4Addr::new(ip[16], ip[17], ip[18], ip[19])),
         tcp_seq: u32::from_be_bytes([tcp[4], tcp[5], tcp[6], tcp[7]]),
         tcp_ack: u32::from_be_bytes([tcp[8], tcp[9], tcp[10], tcp[11]]),
     })

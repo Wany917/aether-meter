@@ -1,3 +1,4 @@
+mod auto;
 mod demo;
 mod live;
 

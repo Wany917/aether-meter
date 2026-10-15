@@ -7,9 +7,11 @@ use std::sync::atomic::{AtomicBool, AtomicI32, Ordering};
 use a2tools::combat::data_storage::DataStorage;
 use a2tools::combat::dps_calculator::DpsCalculator;
 use a2tools::combat::ping_tracker::PingTracker;
+use a2tools::entity::dps_data::DpsData;
 use parking_lot::Mutex;
 
 use super::Feed;
+use super::auto::{self, Fight, Pick};
 use crate::dispatch::LinkState;
 use crate::gamedata::GameData;
 use crate::history::HistoryStore;
@@ -48,7 +50,7 @@ pub(crate) struct LiveFeed {
     /// Set by the thread that opens the capture.
     pub capture: Arc<Mutex<CaptureState>>,
     calculator: Mutex<DpsCalculator>,
-    /// Your last target, for `TargetMode::Auto` when no boss is engaged.
+    /// Your last target, for `TargetMode::Auto` when no boss fight is going on.
     fallback: Mutex<DpsCalculator>,
     auto: AtomicBool,
     /// The target the meter showed last, for the details view.
@@ -125,6 +127,51 @@ impl LiveFeed {
         }
     }
 
+    /// Auto: the boss fight while it is going on, else your own target.
+    fn auto_dps(&self) -> DpsData {
+        let boss = self.calculator.lock().get_dps();
+        let mine = self.own_target_dps();
+        let boss_fight = self.fight(&boss).filter(|_| boss.target_is_boss);
+        // Before the meter knows who you are, "your" target is anyone's.
+        let my_fight = self
+            .storage
+            .local_player_id()
+            .and_then(|_| self.fight(&mine));
+        match auto::pick(boss_fight, my_fight) {
+            Pick::Mine if my_fight.is_some() => mine,
+            _ => boss,
+        }
+    }
+
+    fn own_target_dps(&self) -> DpsData {
+        let mut fallback = self.fallback.lock();
+        let dps = fallback.get_dps();
+        // A zone change clears the fights but tells only the calculator that
+        // asks first: this one went on showing the last zone's target.
+        if dps.target_id != 0
+            && self
+                .storage
+                .get_target_snapshot_light(dps.target_id)
+                .is_none()
+        {
+            fallback.restart_target_selection(false);
+            return fallback.get_dps();
+        }
+        dps
+    }
+
+    fn fight(&self, dps: &DpsData) -> Option<Fight> {
+        if dps.target_id == 0 || dps.map.is_empty() {
+            return None;
+        }
+        let target = self.storage.get_target_snapshot_light(dps.target_id)?;
+        Some(Fight {
+            target: dps.target_id,
+            last_hit_ms: target.last_damage_time,
+            dead: self.storage.is_entity_dead(dps.target_id),
+        })
+    }
+
     /// A calculator for read-only queries, so details never wait on (or
     /// disturb) the meter's target selection.
     fn reader(&self) -> DpsCalculator {
@@ -139,11 +186,11 @@ impl LiveFeed {
 
 impl Feed for LiveFeed {
     fn meter(&self) -> MeterSnapshot {
-        let mut dps = self.calculator.lock().get_dps();
-        // Auto: no boss fight on the meter, so show what you are hitting.
-        if self.auto.load(Ordering::Relaxed) && (dps.target_id == 0 || dps.map.is_empty()) {
-            dps = self.fallback.lock().get_dps();
-        }
+        let dps = if self.auto.load(Ordering::Relaxed) {
+            self.auto_dps()
+        } else {
+            self.calculator.lock().get_dps()
+        };
         self.shown_target.store(dps.target_id, Ordering::Relaxed);
         let ping = self
             .ping

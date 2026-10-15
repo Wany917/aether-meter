@@ -15,6 +15,10 @@ Tauri 2 desktop app + Rust engine + React/TS UI, Bun for JS tooling. GPL-3.0.
 - `crates/engine`: no Tauri. `Engine` facade; `Feed` trait with `LiveFeed` (parser) and `DemoFeed`.
   Parser = A2Tools crate (`a2tools` in workspace deps, `default-features = false`).
   `model.rs` is the UI contract; parser structs never reach the frontend.
+  Target mode Auto (`feed/auto.rs`): the parser's boss mode while that boss fight is going on
+  (held 60 s after its last hit while alive, 10 s once dead), else a second calculator in
+  "lastHitByMe". Only the first calculator to ask sees a zone reset: the second restarts
+  itself when its target is gone from `DataStorage`.
 - `crates/routine`: no Tauri. Content comes from `catalog/routine.json` (community catalog, validated by
   `Catalog::parse` with the same rules as `catalog/routine.schema.json`); player state is separate.
   Any catalog change bumps `revision`; clients fetch newer revisions from GitHub main.

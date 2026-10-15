@@ -326,7 +326,7 @@ pub struct TrackerSnapshot {
 #[cfg_attr(feature = "specta", derive(specta::Type))]
 #[serde(rename_all = "camelCase")]
 pub enum TargetMode {
-    /// The boss fight when there is one, else your own last target.
+    /// The boss fight while it is going on, else your own last target.
     Auto,
     Boss,
     MostDamage,
