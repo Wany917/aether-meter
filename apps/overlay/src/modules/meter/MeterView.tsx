@@ -29,11 +29,17 @@ export function MeterView() {
   const pinned = me && myIndex >= settings.meter.maxRows ? me : undefined;
 
   return (
-    <main ref={panel} className="meter surface" data-click-through={settings.clickThrough || undefined}>
+    <main
+      ref={panel}
+      className="meter surface"
+      data-click-through={settings.clickThrough || undefined}
+      data-cp={settings.meter.showCombatPower || undefined}
+    >
       <TargetHeader meter={meter} />
       {meter && fighting ? (
         <div className="meter-columns" aria-hidden="true">
           <span>{t("meter.colPlayer")}</span>
+          {settings.meter.showCombatPower && <span title={t("settings.showCombatPower")}>{t("meter.combatPower")}</span>}
           <span>{t("meter.colDps")}</span>
           <span className="col-total">{t("meter.colTotal")}</span>
           <span>%</span>

@@ -31,12 +31,9 @@ export function PlayerRow({ row, rank, fill, onOpen }: { row: Row; rank: number;
       <span className="plate-bar" aria-hidden="true" />
       <RankDiamond rank={rank} />
       <ClassMark id={row.class} label={label} />
-      <span className="player-name plate-name">
-        {displayName(row.name, row.class, nameDisplay, language)}
-        {showCombatPower && row.combatPower > 0 && (
-          <span className="player-cp num">{formatAmount(row.combatPower, "full", language)}</span>
-        )}
-      </span>
+      <span className="player-name plate-name">{displayName(row.name, row.class, nameDisplay, language)}</span>
+      {/* Its own column, so the numbers line up; empty when the game never said. */}
+      {showCombatPower && <span className="player-cp num">{row.combatPower > 0 ? formatAmount(row.combatPower, "full", language) : ""}</span>}
       <span className="player-dps num">{formatAmount(dps, numberFormat, language)}</span>
       <span className="player-total num">{formatAmount(row.damage, numberFormat, language)}</span>
       <span className="player-share num">{formatPercent(share, language)}</span>

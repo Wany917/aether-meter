@@ -110,7 +110,7 @@ impl Default for MeterSettings {
             max_rows: 8,
             number_format: NumberFormat::Compact,
             name_display: NameDisplay::Full,
-            show_combat_power: false,
+            show_combat_power: true,
         }
     }
 }

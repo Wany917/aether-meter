@@ -148,6 +148,7 @@
   --col-dps: calc(54px * var(--ui-scale, 1));
   --col-total: calc(50px * var(--ui-scale, 1));
   --col-share: calc(42px * var(--ui-scale, 1));
+  --col-cp: calc(46px * var(--ui-scale, 1));
 }
 
 /* 25 px plates on a 27 px pitch */
@@ -170,10 +171,22 @@
 .player-row[data-idle] .player-name {
   color: var(--text-faint);
 }
+/* Combat power: a column of its own between the name and the DPS */
+.meter[data-cp] .meter-columns {
+  grid-template-columns: minmax(0, 1fr) var(--col-cp) var(--col-dps) var(--col-total) var(--col-share);
+}
+.meter[data-cp] .player-row {
+  grid-template-columns: auto auto minmax(0, 1fr) var(--col-cp) var(--col-dps) var(--col-total) var(--col-share);
+}
 .player-cp {
-  margin-left: 6px;
+  overflow: hidden;
+  text-align: right;
+  white-space: nowrap;
   font-size: var(--text-xs);
-  color: var(--text-faint);
+  color: var(--text-dim);
+}
+.player-row[data-local] .player-cp {
+  color: var(--text);
 }
 .player-dps {
   text-align: right;
@@ -356,6 +369,20 @@
   }
   .col-total,
   .player-total {
+    display: none;
+  }
+}
+
+/* With combat power, names keep their room: the totals go first */
+@container (width < 380px) {
+  .meter[data-cp] .meter-columns {
+    grid-template-columns: minmax(0, 1fr) var(--col-cp) var(--col-dps) var(--col-share);
+  }
+  .meter[data-cp] .player-row {
+    grid-template-columns: auto auto minmax(0, 1fr) var(--col-cp) var(--col-dps) var(--col-share);
+  }
+  .meter[data-cp] .col-total,
+  .meter[data-cp] .player-total {
     display: none;
   }
 }
