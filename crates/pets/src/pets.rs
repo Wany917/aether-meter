@@ -163,7 +163,9 @@ impl Pets {
                         .cloned()
                         .or_else(|| def.and_then(|d| localize(&d.name, language))),
                     custom_name: custom.is_some(),
-                    level: if special { max_level.max(level) } else { level },
+                    // As the game reports it: a special pet comes whole, but
+                    // only once the player has it.
+                    level,
                     souls,
                     needed: if special {
                         None

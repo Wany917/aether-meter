@@ -29,8 +29,12 @@ export function PetsTab() {
   if (!view) return <div className="tab-loading" />;
 
   const hidden = new Set(view.regions.filter((r) => r.hidden).map((r) => r.id));
+  // Before the game has sent the collection, every count would read 0.
+  const synced = view.syncedAtMs !== null;
   const shown = selectPets(view.pets, { filter, sort, search, genus, hidden }, t);
-  const done = view.pets.filter((pet) => !inProgress(pet)).length;
+  const levelled = view.pets.filter((pet) => !pet.special);
+  const owned = view.pets.filter((pet) => pet.level > 0).length;
+  const done = levelled.filter((pet) => !inProgress(pet)).length;
   const genusName = new Map(view.genera.map((g) => [g.id, g.name]));
   const filters = [
     ["progress", t("pets.filter.progress")],
@@ -66,10 +70,15 @@ export function PetsTab() {
               {t("pets.syncedAt")} <strong className="num">{formatTime(view.syncedAtMs, settings.language)}</strong>
             </span>
           )}
-          {view.pets.length > 0 && (
+          {synced && (
+            <span>
+              <strong className="num">{owned}</strong> {t("pets.owned")}
+            </span>
+          )}
+          {synced && levelled.length > 0 && (
             <span>
               <strong className="num">
-                {done}/{view.pets.length}
+                {done}/{levelled.length}
               </strong>{" "}
               {t("pets.done")}
             </span>
@@ -101,7 +110,7 @@ export function PetsTab() {
         </div>
       )}
 
-      <p className="routine-hint bosses-hint">{view.syncedAtMs === null ? t("pets.notSynced") : t("pets.hint")}</p>
+      {synced ? <p className="routine-hint bosses-hint">{t("pets.hint")}</p> : <p className="pets-notice">{t("pets.notSynced")}</p>}
 
       {shown.length === 0 ? (
         view.pets.length > 0 && <p className="routine-hint">{t("pets.empty")}</p>
@@ -113,6 +122,7 @@ export function PetsTab() {
               pet={pet}
               genus={pet.genus === null ? null : (genusName.get(pet.genus) ?? null)}
               maxLevel={view.maxLevel}
+              synced={synced}
               now={now}
               open={openId === pet.id}
               regions={view.regions}

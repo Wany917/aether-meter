@@ -14,6 +14,7 @@ const fr = {
   "status.replayDone": "Rediffusion terminée",
 
   "meter.noTarget": "Aucune cible",
+  "meter.waitingBoss": "En attente d'un boss",
   "meter.unknownTarget": "Cible inconnue",
   "meter.colPlayer": "Joueur",
   "meter.colDps": "DPS",
@@ -143,7 +144,9 @@ const fr = {
 
   "pets.server": "Serveur",
   "pets.syncedAt": "synchro à",
-  "pets.notSynced": "Connecte-toi (ou reconnecte-toi) avec Aether ouvert : le jeu envoie tes familiers à la connexion.",
+  "pets.notSynced":
+    "Ta collection n'est pas encore lue. Le jeu l'envoie à la connexion : reviens à la sélection du personnage puis reconnecte-toi avec Aether ouvert, et tes niveaux et tes âmes s'affichent.",
+  "pets.owned": "obtenus",
   "pets.hint":
     "Aether compte chaque âme ramassée et chaque niveau gagné. Clique un familier pour voir où tombent ses âmes, double-clique son nom pour le renommer.",
   "pets.done": "au niveau max",
@@ -277,6 +280,7 @@ const en: Record<MessageKey, string> = {
   "status.replayDone": "Replay finished",
 
   "meter.noTarget": "No target",
+  "meter.waitingBoss": "Waiting for a boss",
   "meter.unknownTarget": "Unknown target",
   "meter.colPlayer": "Player",
   "meter.colDps": "DPS",
@@ -406,7 +410,9 @@ const en: Record<MessageKey, string> = {
 
   "pets.server": "Server",
   "pets.syncedAt": "synced at",
-  "pets.notSynced": "Log in (or relog) with Aether open: the game sends your pets at login.",
+  "pets.notSynced":
+    "Your collection has not been read yet. The game sends it at login: go back to character selection and log in again with Aether open, and your levels and souls show.",
+  "pets.owned": "owned",
   "pets.hint":
     "Aether counts every soul picked up and every level reached. Click a pet to see where its souls drop, double-click its name to rename it.",
   "pets.done": "at top level",

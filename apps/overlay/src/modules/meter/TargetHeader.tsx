@@ -12,9 +12,14 @@ export function TargetHeader({ meter }: { meter: MeterSnapshot | undefined }) {
   const { settings, t, save } = useSettings();
   const target = meter?.target ?? null;
   const fighting = meter?.players.some((p) => p.damage > 0) ?? false;
-  // Modes that follow no single target name the mode instead.
+  // Modes that follow no single target name the mode instead; Boss mode
+  // shows nothing but bosses, so it says what it waits for.
   const untargeted =
-    fighting && settings.targetMode === "allTargets" ? targetModeName("allTargets", settings.language) : t("meter.noTarget");
+    fighting && settings.targetMode === "allTargets"
+      ? targetModeName("allTargets", settings.language)
+      : settings.targetMode === "boss"
+        ? t("meter.waitingBoss")
+        : t("meter.noTarget");
   const hp = target?.hpRatio ?? null;
 
   return (

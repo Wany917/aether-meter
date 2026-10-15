@@ -66,6 +66,16 @@
   width: 160px;
 }
 
+/* Before the first sync: what to do, in a hairline frame */
+.pets-notice {
+  margin: 8px 2px;
+  padding: 9px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  font-size: var(--text-sm);
+  color: var(--text-hi);
+}
+
 /* The regions the player farms in: the routine's square checkboxes */
 .pets-regions {
   display: flex;

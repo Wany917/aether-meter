@@ -15,6 +15,8 @@ interface Props {
   pet: PetView;
   genus: string | null;
   maxLevel: number;
+  /** The game has sent the collection: levels and souls are known. */
+  synced: boolean;
   now: number;
   /** Its sources are shown, under it across the whole list. */
   open: boolean;
@@ -23,7 +25,7 @@ interface Props {
   onError: (m: string) => void;
 }
 
-export function PetRow({ pet, genus, maxLevel, now, open, regions, onToggle, onError }: Props) {
+export function PetRow({ pet, genus, maxLevel, synced, now, open, regions, onToggle, onError }: Props) {
   const { settings, t } = useSettings();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState("");
@@ -54,13 +56,15 @@ export function PetRow({ pet, genus, maxLevel, now, open, regions, onToggle, onE
   };
 
   const farming = pet.lastGainMs !== null && now - pet.lastGainMs < FARMING_MS;
-  const top = pet.needed === null;
+  // No souls to take: at the top level, or a special pet (whole once owned).
+  const maxed = pet.needed === null;
+  const top = synced && maxed && (!pet.special || pet.level > 0);
   const progress = pet.special
     ? t("pets.special")
-    : top
+    : maxed
       ? t("pets.max")
       : `${t("pets.left")} ${pet.toMax} ${t("pets.souls")} ${t("pets.toMax")} ${maxLevel}`.trim();
-  const detail = genus && !pet.special ? `${genus} · ${progress}` : progress;
+  const detail = pet.special ? progress : synced ? [genus, progress].filter(Boolean).join(" · ") : (genus ?? "");
 
   return (
     <li className="pet-item" data-open={open || undefined}>
@@ -71,7 +75,7 @@ export function PetRow({ pet, genus, maxLevel, now, open, regions, onToggle, onE
         aria-expanded={open}
         title={t("pets.sources.open")}
         data-top={top || undefined}
-        style={{ "--fill": `${levelProgress(pet) * 100}%` } as CSSProperties}
+        style={{ "--fill": `${top ? 100 : synced && !maxed ? levelProgress(pet) * 100 : 0}%` } as CSSProperties}
         onClick={toggle}
         onKeyDown={toggleByKey}
       >
@@ -86,7 +90,7 @@ export function PetRow({ pet, genus, maxLevel, now, open, regions, onToggle, onE
           <Icon name="star" fill={pet.favorite ? "currentColor" : "none"} />
         </button>
         <span className="pet-level num">
-          {t("pets.level")} {pet.level}
+          {t("pets.level")} {synced ? pet.level : "?"}
         </span>
         <div className="task-text">
           {editing ? (
@@ -113,7 +117,7 @@ export function PetRow({ pet, genus, maxLevel, now, open, regions, onToggle, onE
             {farming && pet.lastGainMs !== null && ` · ${t("pets.farming")} ${formatTime(pet.lastGainMs, settings.language)}`}
           </span>
         </div>
-        {!top && (
+        {synced && !maxed && (
           <span className="pet-souls num">
             {pet.souls}
             <span className="pet-needed">/{pet.needed}</span>
