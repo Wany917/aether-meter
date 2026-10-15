@@ -148,7 +148,7 @@
   --col-dps: calc(54px * var(--ui-scale, 1));
   --col-total: calc(50px * var(--ui-scale, 1));
   --col-share: calc(42px * var(--ui-scale, 1));
-  --col-cp: calc(46px * var(--ui-scale, 1));
+  --col-cp: calc(50px * var(--ui-scale, 1));
 }
 
 /* 25 px plates on a 27 px pitch */

@@ -162,7 +162,7 @@ impl Feed for DemoFeed {
                 dps: if t > 0.0 { d / t.max(1.0) } else { 0.0 },
                 share: if total > 0.0 { d / total } else { 0.0 },
                 is_local: p.local,
-                combat_power: 3_100 + (p.id as u64 % 7) * 85,
+                combat_power: 78_400 + (p.id as u64 % 7) * 2_630,
             })
             .collect();
         players.sort_by_key(|p| std::cmp::Reverse(p.damage));
@@ -212,7 +212,7 @@ impl Feed for DemoFeed {
                     } else {
                         0
                     },
-                    combat_power: 3_100 + (p.id as u64 % 7) * 85,
+                    combat_power: 78_400 + (p.id as u64 % 7) * 2_630,
                     skills,
                 }
             })

@@ -29,6 +29,12 @@ export function formatPercent(ratio: number, language: string, digits = 1): stri
   }).format(Number.isFinite(ratio) ? ratio : 0);
 }
 
+/** Combat power as the game shows it from 10,000 up: "90,21 k". */
+export function formatCombatPower(value: number, language: string): string {
+  if (value < 10_000) return numberFormat(language, { maximumFractionDigits: 0 }).format(value);
+  return numberFormat(language, { notation: "compact", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
+}
+
 /** A drop chance given in percent: "100 %", "2,44 %". */
 export function formatChance(percent: number, language: string): string {
   return numberFormat(language, { style: "percent", maximumFractionDigits: 2 }).format(percent / 100);

@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 
 import type { PlayerRow as Row } from "../../lib/bindings";
-import { formatAmount, formatPercent } from "../../lib/format";
+import { formatAmount, formatCombatPower, formatPercent } from "../../lib/format";
 import { className } from "../../lib/i18n";
 import { useTweened } from "../../lib/motion";
 import { useSettings } from "../../lib/settings";
@@ -33,7 +33,7 @@ export function PlayerRow({ row, rank, fill, onOpen }: { row: Row; rank: number;
       <ClassMark id={row.class} label={label} />
       <span className="player-name plate-name">{displayName(row.name, row.class, nameDisplay, language)}</span>
       {/* Its own column, so the numbers line up; empty when the game never said. */}
-      {showCombatPower && <span className="player-cp num">{row.combatPower > 0 ? formatAmount(row.combatPower, "full", language) : ""}</span>}
+      {showCombatPower && <span className="player-cp num">{row.combatPower > 0 ? formatCombatPower(row.combatPower, language) : ""}</span>}
       <span className="player-dps num">{formatAmount(dps, numberFormat, language)}</span>
       <span className="player-total num">{formatAmount(row.damage, numberFormat, language)}</span>
       <span className="player-share num">{formatPercent(share, language)}</span>
