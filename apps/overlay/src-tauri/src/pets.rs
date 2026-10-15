@@ -1,8 +1,9 @@
 //! The pets tab's backend: the collection records the engine reads, the
-//! player's names and favorites, and community catalog updates.
+//! player's names, favorites and regions, where souls drop, and community
+//! catalog updates.
 
 use aether_engine::{PetBatch, PetRecord};
-use aether_pets::{PetCatalog, PetsView, Record};
+use aether_pets::{PetCatalog, PetSourcesView, PetsView, Record};
 use tauri::{AppHandle, Manager, State};
 use tauri_specta::Event;
 
@@ -60,6 +61,24 @@ pub fn pets_favorite(app: AppHandle, id: u32, on: bool) -> Result<PetsView, AppE
 #[specta::specta]
 pub fn pets_rename(app: AppHandle, id: u32, name: String) -> Result<PetsView, AppError> {
     mutate(&app, |pets| pets.rename(id, &name))
+}
+
+/// The regions the player farms in, by the ones left out.
+#[tauri::command]
+#[specta::specta]
+pub fn pets_regions(app: AppHandle, hidden: Vec<String>) -> Result<PetsView, AppError> {
+    mutate(&app, |pets| {
+        pets.set_hidden_regions(hidden);
+        Ok(())
+    })
+}
+
+/// Where a pet's souls come from; `None` when no source is known.
+#[tauri::command]
+#[specta::specta]
+pub fn pet_sources(state: State<'_, AppState>, id: u32) -> Option<PetSourcesView> {
+    let language = state.settings.get().language;
+    state.pets.lock().sources(id, &language)
 }
 
 /// Push the view again (names follow the language).

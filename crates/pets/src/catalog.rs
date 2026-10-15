@@ -1,6 +1,8 @@
-//! The community pet catalog (`catalog/pets.json`): names the game's records
-//! leave out, and the souls each level takes. Validated with the same rules
-//! as `catalog/pets.schema.json`, so a broken update is never applied.
+//! The community pet catalog (`catalog/pets.json`): what the game's records
+//! leave out (names, genera) and the souls each level takes. Names and genera
+//! come from taengu's Pet Soul Tracker (`bun run sync:pets`). Validated with
+//! the same rules as `catalog/pets.schema.json`, so a broken update is never
+//! applied.
 
 use std::collections::{BTreeMap, HashSet};
 
@@ -23,6 +25,9 @@ pub struct PetCatalog {
     pub souls_per_level: Vec<u32>,
     #[serde(default)]
     pub sources: Vec<String>,
+    /// Genus id -> its name, as the game shows it.
+    #[serde(default)]
+    pub genera: BTreeMap<String, Localized>,
     pub pets: Vec<PetDef>,
 }
 
@@ -31,9 +36,15 @@ pub struct PetCatalog {
 pub struct PetDef {
     pub id: u32,
     pub name: Localized,
+    /// A key of `genera` (what Pet Genus Insight counts).
+    #[serde(default)]
+    pub genus: Option<String>,
     /// Comes at its highest level and takes no souls.
     #[serde(default)]
     pub special: bool,
+    /// Its souls only drop on maps not open yet: listed once the player has some.
+    #[serde(default)]
+    pub unreleased: bool,
 }
 
 impl PetCatalog {
@@ -78,25 +89,41 @@ impl PetCatalog {
         if self.sources.iter().any(|url| !url.starts_with("https://")) {
             return invalid("links must be https".into());
         }
+        for (id, name) in &self.genera {
+            if !valid_name(name) {
+                return invalid(format!(
+                    "genus {id}: names need an `en` entry and 1 to 60 characters each"
+                ));
+            }
+        }
         let mut ids = HashSet::new();
         for pet in &self.pets {
             if pet.id == 0 || !ids.insert(pet.id) {
                 return invalid(format!("pet {}: ids are positive and unique", pet.id));
             }
-            if !pet.name.contains_key("en")
-                || pet
-                    .name
-                    .values()
-                    .any(|n| n.trim().is_empty() || n.chars().count() > 60)
-            {
+            if !valid_name(&pet.name) {
                 return invalid(format!(
                     "pet {}: names need an `en` entry and 1 to 60 characters each",
                     pet.id
                 ));
             }
+            if pet
+                .genus
+                .as_ref()
+                .is_some_and(|g| !self.genera.contains_key(g))
+            {
+                return invalid(format!("pet {}: its genus is not in `genera`", pet.id));
+            }
         }
         Ok(())
     }
+}
+
+fn valid_name(name: &Localized) -> bool {
+    name.contains_key("en")
+        && name
+            .values()
+            .all(|n| !n.trim().is_empty() && n.chars().count() <= 60)
 }
 
 /// The text in `language`, else English.
@@ -116,6 +143,17 @@ mod tests {
             (catalog.needed(0), catalog.needed(2), catalog.needed(3)),
             (Some(5), Some(75), None)
         );
+        let laborer = catalog.pet(1002).unwrap();
+        assert_eq!(
+            localize(&laborer.name, "fr").as_deref(),
+            Some("Ouvrier Krall")
+        );
+        assert!(
+            catalog
+                .pets
+                .iter()
+                .all(|p| p.special == (p.genus.as_deref() == Some("special")))
+        );
     }
 
     #[test]
@@ -134,6 +172,12 @@ mod tests {
         assert!(
             broken(|v| v["pets"] = serde_json::json!([
                 { "id": 1, "name": { "en": "A" } }, { "id": 1, "name": { "en": "B" } }
+            ]))
+            .is_err()
+        );
+        assert!(
+            broken(|v| v["pets"] = serde_json::json!([
+                { "id": 7, "name": { "en": "Kerub" }, "genus": "unknown" }
             ]))
             .is_err()
         );

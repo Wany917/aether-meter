@@ -60,6 +60,13 @@ export const commands = {
 	petsFavorite: (id: number, on: boolean) => typedError<PetsView, AppError>(__TAURI_INVOKE("pets_favorite", { id, on })),
 	/**  The player's own name for a pet; an empty one restores the catalog's. */
 	petsRename: (id: number, name: string) => typedError<PetsView, AppError>(__TAURI_INVOKE("pets_rename", { id, name })),
+	/**  The regions the player farms in, by the ones left out. */
+	petsRegions: (hidden: string[]) => typedError<PetsView, AppError>(__TAURI_INVOKE("pets_regions", { hidden })),
+	/**  Where a pet's souls come from; `None` when no source is known. */
+	petSources: (id: number) => __TAURI_INVOKE<{
+	drops: DropView[],
+	chests: ChestView[],
+} | null>("pet_sources", { id }),
 	recordingStatus: () => __TAURI_INVOKE<RecorderStatus>("recording_status"),
 	startRecording: () => __TAURI_INVOKE<RecorderStatus>("start_recording"),
 	cancelRecording: () => __TAURI_INVOKE<RecorderStatus>("cancel_recording"),
@@ -115,7 +122,29 @@ export type BossView = {
 /**  When the content behind a task comes back. */
 export type Cadence = { kind: "daily" } | { kind: "weekly"; day: Weekday };
 
+export type ChestView = {
+	name: string,
+	/**  In percent; finite, as the sources are validated. */
+	chance: number,
+	/**  Where the chest is earned. */
+	from: string[],
+};
+
 export type ClassId = "gladiator" | "templar" | "ranger" | "assassin" | "sorcerer" | "elementalist" | "cleric" | "chanter" | "brawler" | "unknown";
+
+export type DropView = {
+	monster: string,
+	level: number,
+	/**  In percent; finite, as the sources are validated. */
+	chance: number,
+	/**  The region's id, to filter by the player's regions. */
+	region: string,
+	map: string,
+	zones: string[],
+	spawns: number,
+	/**  The nearest Kibelisk the player's side can use. */
+	teleport: TeleportView | null,
+};
 
 /**  What the capture is doing, for the meter's status line. */
 export type EngineStatus = 
@@ -159,6 +188,11 @@ export type FightView = {
 export type FrontendEvent = 
 /**  The page mounted its interface. */
 "ready" | "error";
+
+export type GenusView = {
+	id: string,
+	name: string,
+};
 
 export type HotkeySettings = {
 	clickThrough: string,
@@ -219,6 +253,12 @@ export type NumberFormat =
 /**  1,234,567 */
 "full";
 
+/**  Where a pet's souls come from. */
+export type PetSourcesView = {
+	drops: DropView[],
+	chests: ChestView[],
+};
+
 export type PetView = {
 	id: number,
 	/**  The player's name for it, else the catalog's; `None` when neither has one. */
@@ -235,6 +275,9 @@ export type PetView = {
 	favorite: boolean,
 	/**  Comes at its highest level and takes no souls. */
 	special: boolean,
+	genus: string | null,
+	/**  The regions where monsters drop its souls; empty when none is known. */
+	regions: string[],
 	lastGainMs: number | null,
 };
 
@@ -250,6 +293,11 @@ export type PetsView = {
 	soulsPerLevel: number[],
 	pets: PetView[],
 	catalogRevision: number,
+	/**  The player's side, from the server number. */
+	side: Side | null,
+	genera: GenusView[],
+	/**  Where souls drop, and whether the player farms there. */
+	regions: RegionView[],
 };
 
 export type PlayerDetails = {
@@ -298,6 +346,15 @@ export type RecordingNote = {
 	scenario: string,
 	values: NamedValue[],
 	note: string,
+};
+
+export type RegionView = {
+	/**  The region's English name. */
+	id: string,
+	name: string,
+	side: Side | null,
+	/**  The player left it out: pets that only drop there are not listed. */
+	hidden: boolean,
 };
 
 export type ReminderSettings = {
@@ -370,6 +427,9 @@ export type Settings = {
 
 export type SettingsChanged = Settings;
 
+/**  A side of the war: each has maps of its own, and Kibelisks of its own in the Abyss. */
+export type Side = "elyos" | "asmodian";
+
 export type SkillRow = {
 	code: number,
 	name: string,
@@ -421,6 +481,14 @@ export type TaskView = {
 	/**  Added by the player, not from the catalog. */
 	custom: boolean,
 	verified: boolean,
+};
+
+export type TeleportView = {
+	name: string,
+	/**  Its number on the in-game map. */
+	number: number,
+	/**  From the middle of the spawns. */
+	distanceM: number,
 };
 
 export type TimerKind = "buff" | "cooldown";

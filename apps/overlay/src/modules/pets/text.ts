@@ -26,11 +26,29 @@ const SORTS: Record<PetSort, (a: PetView, b: PetView) => number> = {
   id: (a, b) => a.id - b.id,
 };
 
-/** The pets a filter, a search and a sort leave, followed ones first. */
-export function selectPets(pets: PetView[], filter: PetFilter, sort: PetSort, search: string, t: Translate): PetView[] {
-  const query = search.trim().toLowerCase();
+export interface PetQuery {
+  filter: PetFilter;
+  sort: PetSort;
+  search: string;
+  /** A genus id, or `all`. */
+  genus: string;
+  /** The regions the player left out. */
+  hidden: ReadonlySet<string>;
+}
+
+/** Its souls drop where the player farms, or nowhere known. */
+export function farmable(pet: PetView, hidden: ReadonlySet<string>): boolean {
+  return pet.regions.length === 0 || pet.regions.some((region) => !hidden.has(region));
+}
+
+/** The pets a query leaves, followed ones first; a followed pet ignores the regions. */
+export function selectPets(pets: PetView[], query: PetQuery, t: Translate): PetView[] {
+  const search = query.search.trim().toLowerCase();
+  const { filter, genus, hidden } = query;
   return pets
     .filter((pet) => (filter === "all" ? true : filter === "followed" ? pet.favorite : inProgress(pet)))
-    .filter((pet) => !query || petName(pet, t).toLowerCase().includes(query) || String(pet.id).includes(query))
-    .sort((a, b) => Number(b.favorite) - Number(a.favorite) || SORTS[sort](a, b) || a.id - b.id);
+    .filter((pet) => genus === "all" || pet.genus === genus)
+    .filter((pet) => pet.favorite || farmable(pet, hidden))
+    .filter((pet) => !search || petName(pet, t).toLowerCase().includes(search) || String(pet.id).includes(search))
+    .sort((a, b) => Number(b.favorite) - Number(a.favorite) || SORTS[query.sort](a, b) || a.id - b.id);
 }

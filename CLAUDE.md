@@ -7,6 +7,8 @@ Tauri 2 desktop app + Rust engine + React/TS UI, Bun for JS tooling. GPL-3.0.
 - `bun run test`: `cargo test --workspace` + `tsc --noEmit`
 - `bun run bindings`: regenerate `apps/overlay/src/lib/bindings.ts` (tauri-specta). Never edit it by hand.
 - `bun run sync:gamedata`: refresh game data + class marks from A2Tools at the pinned rev
+- `bun run sync:pets [ref]`: pet names, genera and soul sources from A2Tools-Plugins (GPL-3.0);
+  bumps `catalog/pets.json` revision only when names or genera changed
 - `bun run probe <capture.pcapng> --find <n>`: find which game record carries a value (packet discovery)
 
 ## Architecture
@@ -19,7 +21,10 @@ Tauri 2 desktop app + Rust engine + React/TS UI, Bun for JS tooling. GPL-3.0.
   Bosses live in the same catalog: kills come from the engine (`Engine::take_kills`, death
   records read off the frame tap), schedules are on a server clock (`zone.rs`, Berlin for EU).
 - `crates/pets`: no Tauri. Pet collections per server from the engine's pet records
-  (`Engine::take_pets`); names and souls per level from `catalog/pets.json`.
+  (`Engine::take_pets`); names, genera and souls per level from `catalog/pets.json`
+  (community-fetched); where souls drop from `catalog/pet-sources.json` (bundled only,
+  too big for the 512 KB fetch limit). Regions of the other side are hidden by default
+  (side from the server number).
 - `apps/overlay/src-tauri`: thin shell. Commands delegate to `actions.rs` or the engine.
   `gameasset://` scheme serves NCSOFT font/icons from a disk cache (allow-listed routes only).
 - `apps/overlay/src`: `modules/<feature>/`, shared `ui/`, `lib/` (ipc, i18n, format).

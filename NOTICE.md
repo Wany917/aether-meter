@@ -14,6 +14,13 @@ Aether is licensed under the GNU General Public License v3.0 only (see `LICENSE`
   `apps/overlay/src/assets/classes/` come from its repository. The layout of
   the pet collection records decoded in `crates/engine/src/pets.rs` is the one
   its pet soul tracker reads (decoder tests in its `plugins/decoder.rs`).
+- **A2Tools-Plugins** by taengu, GPL-3.0
+  (<https://github.com/taengu/A2Tools-Plugins>). The pet names, genera and
+  soul sources in `catalog/pets.json` and `catalog/pet-sources.json` come from
+  its Pet Soul Tracker (`plugins/pet-souls/pets.js` and `sources.js`), which
+  reads them from the game client's own tables and maps; genera are from
+  [wikily.gg](https://wikily.gg/aion-2/pets). `bun run sync:pets` converts
+  them; the commit used is in `catalog/pet-sources.json` (`origin`).
 - **RATmeter** by Kuroukihime, GPL-3.0
   (<https://github.com/Kuroukihime/AIon2-Dps-Meter>): the layout of the skill
   cooldown record decoded in `crates/engine/src/tracker.rs`.
@@ -22,7 +29,7 @@ Aether is licensed under the GNU General Public License v3.0 only (see `LICENSE`
 
 `catalog/routine.json` and `catalog/pets.json` hold facts (entry counts, caps,
 recharge rates, respawn rules, souls per level) gathered from public guides,
-each listed in its `sources`. Guide links point to
+each listed in its `sources`, besides the pet data credited above. Guide links point to
 [aion2.help](https://www.aion2.help), a fan-made wiki; none of its text is
 copied here.
 

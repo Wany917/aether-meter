@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/Wany917/aether-meter/catalog/pets.schema.json",
   "title": "Aether pet catalog",
-  "description": "What the game's records do not say about pets: their names, and the souls each level takes. Bump `revision` on every change.",
+  "description": "What the game's records do not say about pets: their names and genera, and the souls each level takes. Names and genera come from taengu's Pet Soul Tracker (bun run sync:pets). Bump `revision` on every change.",
   "type": "object",
   "required": ["revision", "updated", "soulsPerLevel", "pets"],
   "properties": {
@@ -17,6 +17,11 @@
       "description": "Souls from level 0 to 1, 1 to 2, and so on. Its length is the highest level souls reach."
     },
     "sources": { "type": "array", "items": { "type": "string", "pattern": "^https://" } },
+    "genera": {
+      "type": "object",
+      "description": "Genus id -> its name in each language, as the game shows it.",
+      "additionalProperties": { "$ref": "#/$defs/name" }
+    },
     "pets": {
       "type": "array",
       "items": {
@@ -24,16 +29,21 @@
         "required": ["id", "name"],
         "properties": {
           "id": { "type": "integer", "minimum": 1, "description": "The pet's id in the game's records (Aether shows it under a pet with no name)." },
-          "name": {
-            "type": "object",
-            "required": ["en"],
-            "additionalProperties": { "type": "string", "minLength": 1, "maxLength": 60 }
-          },
-          "special": { "type": "boolean", "description": "Comes at its highest level and takes no souls." }
+          "name": { "$ref": "#/$defs/name" },
+          "genus": { "type": "string", "description": "A key of `genera`." },
+          "special": { "type": "boolean", "description": "Comes at its highest level and takes no souls." },
+          "unreleased": { "type": "boolean", "description": "Its souls only drop on maps not open yet; listed once the player has some." }
         },
         "additionalProperties": false
       }
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$defs": {
+    "name": {
+      "type": "object",
+      "required": ["en"],
+      "additionalProperties": { "type": "string", "minLength": 1, "maxLength": 60 }
+    }
+  }
 }

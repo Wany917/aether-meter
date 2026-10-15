@@ -5,13 +5,25 @@
   gap: 3px 10px;
   margin-top: 6px;
 }
+.pet-item[data-open] {
+  grid-column: 1 / -1;
+}
 .pet {
   display: flex;
   align-items: center;
   gap: 9px;
   min-height: 34px;
   padding: 4px 10px 4px 8px;
+  cursor: pointer;
   --class: #5f708d;
+}
+.pet:hover {
+  background: rgb(24 32 46 / 0.8);
+}
+.pet:focus-visible,
+.pet[aria-expanded="true"] {
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
 }
 .pet[data-top] {
   --class: #6f8a6b;
@@ -52,4 +64,62 @@
 }
 .pets-search {
   width: 160px;
+}
+
+/* The regions the player farms in: the routine's square checkboxes */
+.pets-regions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  margin: 8px 2px 6px;
+  font-size: var(--text-sm);
+}
+.pets-regions-label {
+  color: var(--text-dim);
+}
+
+/* Where a pet's souls drop, under its plate, aligned on its level */
+.pet-sources {
+  padding: 6px 10px 10px 37px;
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+}
+.pet-drops {
+  width: 100%;
+  border-collapse: collapse;
+}
+.pet-drops th,
+.pet-drops td {
+  padding: 3px 12px 3px 0;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+.pet-drops th {
+  font-weight: 400;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+.pet-drops .num {
+  text-align: right;
+}
+.pet-drop-monster {
+  color: var(--text-hi);
+}
+.pet-drop-map {
+  color: var(--text-faint);
+}
+.pet-sources-note {
+  margin: 6px 0 0;
+  color: var(--text-faint);
+}
+.pet-chests {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 8px;
+}
+.pet-chests-title {
+  color: var(--text-faint);
 }

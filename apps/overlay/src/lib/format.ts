@@ -29,6 +29,11 @@ export function formatPercent(ratio: number, language: string, digits = 1): stri
   }).format(Number.isFinite(ratio) ? ratio : 0);
 }
 
+/** A drop chance given in percent: "100 %", "2,44 %". */
+export function formatChance(percent: number, language: string): string {
+  return numberFormat(language, { style: "percent", maximumFractionDigits: 2 }).format(percent / 100);
+}
+
 /** 2:05, or 1:02:05 past an hour. */
 export function formatDuration(ms: number): string {
   const total = Math.max(0, Math.floor(ms / 1000));

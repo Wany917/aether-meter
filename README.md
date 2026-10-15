@@ -21,7 +21,9 @@ a per-skill breakdown, saved boss fights, and a buff and cooldown tracker.
   reminder before they return.
 - **Pets**: every pet's level and souls toward the next one, read from the
   game at login and counted as souls drop, per server like the game's own
-  collection; followed pets on the overlay.
+  collection; where each pet's souls drop (monsters, spawns, nearest
+  Kibelisk, chests), filtered to the regions you farm; followed pets on the
+  overlay.
 - French and English interface; skill and monster names in ten languages.
 
 ## Install (Windows)
@@ -63,15 +65,17 @@ bun --cwd apps/overlay tauri dev -- -- --replay path/to/fight.pcapng --speed 2
 crates/engine/          capture, connection locking, parsing, UI model, history
 crates/routine/         checklists, banked counters, boss timers, reminders (no Tauri)
 crates/pets/            pet soul tracker: collections per server, names (no Tauri)
-catalog/                community-maintained content: routine, bosses, pet names
+catalog/                community-maintained content: routine, bosses, pets (+ where souls drop)
 apps/overlay/src-tauri/ desktop shell: windows, tray, hotkeys, game-asset cache
 apps/overlay/src/       React UI, one page per window (meter, tracker, hub)
-scripts/                game data sync
+scripts/                game data and pet data sync
 ```
 
 The parser is [A2Tools DPS Meter](https://github.com/taengu/A2Tools-DPS-Meter)'s,
 pinned by revision in the workspace `Cargo.toml`. After a game patch, bump the
-`rev`, run `bun run sync:gamedata`, and run the tests.
+`rev`, run `bun run sync:gamedata`, and run the tests. Pet names and where
+their souls drop come from taengu's [Pet Soul Tracker](https://github.com/taengu/A2Tools-Plugins/tree/main/plugins/pet-souls):
+once it is updated, `bun run sync:pets` brings them in.
 
 ## Routine catalog: help keep it right
 

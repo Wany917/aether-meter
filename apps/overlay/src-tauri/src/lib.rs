@@ -72,6 +72,8 @@ pub fn specta_builder() -> Builder<tauri::Wry> {
             pets::get_pets,
             pets::pets_favorite,
             pets::pets_rename,
+            pets::pets_regions,
+            pets::pet_sources,
             recorder::recording_status,
             recorder::start_recording,
             recorder::cancel_recording,
@@ -135,7 +137,11 @@ pub fn run() {
             let routine_store = Store::new(&paths.app_data_dir()?);
             let routine = Routine::new(routine_store.load_catalog(), routine_store.load_state());
             let pets_store = aether_pets::Store::new(&paths.app_data_dir()?);
-            let pets = aether_pets::Pets::new(pets_store.load_catalog(), pets_store.load_state());
+            let pets = aether_pets::Pets::new(
+                pets_store.load_catalog(),
+                aether_pets::PetSources::bundled(),
+                pets_store.load_state(),
+            );
             app.manage(AppState {
                 engine,
                 settings,
