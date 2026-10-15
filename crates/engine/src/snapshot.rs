@@ -16,10 +16,12 @@ use crate::model::{
     PlayerRow, SkillRow, TargetView,
 };
 
+/// `dummy`: the target is a training dummy.
 pub(crate) fn meter(
     dps: &DpsData,
     status: EngineStatus,
     ping_ms: Option<u32>,
+    dummy: bool,
     data: &GameData,
 ) -> MeterSnapshot {
     let local = dps.local_player_id.and_then(|id| i32::try_from(id).ok());
@@ -56,6 +58,7 @@ pub(crate) fn meter(
             id: dps.target_id,
             name: data.target_label(dps.target_mob_code, &dps.target_name),
             is_boss: dps.target_is_boss,
+            is_dummy: dummy,
             max_hp: max_hp as u64,
             hp_ratio,
         }

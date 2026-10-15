@@ -27,7 +27,7 @@ export function TargetHeader({ meter }: { meter: MeterSnapshot | undefined }) {
       <div className="meter-title" data-tauri-drag-region>
         <span className="target-mark" data-boss={target?.isBoss || undefined} aria-hidden="true" />
         <span className="target-name" data-tauri-drag-region>
-          {target ? target.name || t("meter.unknownTarget") : untargeted}
+          {target ? target.name || (target.isDummy ? t("meter.trainingDummy") : t("meter.unknownTarget")) : untargeted}
         </span>
         <span className="meter-timer num" data-tauri-drag-region>
           {formatDuration(meter?.battleTimeMs ?? 0)}

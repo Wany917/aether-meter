@@ -173,6 +173,7 @@ impl Feed for DemoFeed {
                 id: 9_000,
                 name: BOSS_NAME.to_string(),
                 is_boss: true,
+                is_dummy: false,
                 max_hp: BOSS_HP as u64,
                 hp_ratio: Some((1.0 - total / BOSS_HP).clamp(0.0, 1.0)),
             }),

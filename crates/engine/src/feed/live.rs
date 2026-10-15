@@ -132,11 +132,10 @@ impl LiveFeed {
         let boss = self.calculator.lock().get_dps();
         let mine = self.own_target_dps();
         let boss_fight = self.fight(&boss).filter(|_| boss.target_is_boss);
-        // Before the meter knows who you are, "your" target is anyone's.
-        let my_fight = self
-            .storage
-            .local_player_id()
-            .and_then(|_| self.fight(&mine));
+        // Before the meter knows who you are (opened mid-session), "your"
+        // target is the one hit last by anyone: what the meter showed before,
+        // and what opening it at a training dummy needs.
+        let my_fight = self.fight(&mine);
         match auto::pick(boss_fight, my_fight) {
             Pick::Mine if my_fight.is_some() => mine,
             _ => boss,
@@ -196,7 +195,13 @@ impl Feed for LiveFeed {
             .ping
             .current_ping_ms()
             .and_then(|p| u32::try_from(p).ok());
-        snapshot::meter(&dps, self.status(), ping, &self.data)
+        let dummy = dps.target_id != 0
+            && (self
+                .storage
+                .mob_code(dps.target_id)
+                .is_some_and(|code| self.data.npcs.is_training_dummy(code))
+                || self.storage.is_hp_reset_dummy(dps.target_id));
+        snapshot::meter(&dps, self.status(), ping, dummy, &self.data)
     }
 
     fn live_fight(&self) -> Option<FightView> {

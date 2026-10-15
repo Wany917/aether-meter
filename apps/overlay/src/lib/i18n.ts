@@ -15,6 +15,7 @@ const fr = {
 
   "meter.noTarget": "Aucune cible",
   "meter.waitingBoss": "En attente d'un boss",
+  "meter.trainingDummy": "Mannequin d'entraînement",
   "meter.unknownTarget": "Cible inconnue",
   "meter.colPlayer": "Joueur",
   "meter.colDps": "DPS",
@@ -281,6 +282,7 @@ const en: Record<MessageKey, string> = {
 
   "meter.noTarget": "No target",
   "meter.waitingBoss": "Waiting for a boss",
+  "meter.trainingDummy": "Training dummy",
   "meter.unknownTarget": "Unknown target",
   "meter.colPlayer": "Player",
   "meter.colDps": "DPS",

@@ -459,6 +459,11 @@ export type TargetView = {
 	id: number,
 	name: string,
 	isBoss: boolean,
+	/**
+	 *  A training dummy, even one whose spawn the meter never saw (it is
+	 *  then known by its HP, which resets): it has no name from the game.
+	 */
+	isDummy: boolean,
 	/**  0 when the game never told us. */
 	maxHp: number,
 	/**  Remaining HP as a fraction of max, when max is known. */

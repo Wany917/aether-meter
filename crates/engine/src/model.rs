@@ -123,6 +123,9 @@ pub struct TargetView {
     pub id: i32,
     pub name: String,
     pub is_boss: bool,
+    /// A training dummy, even one whose spawn the meter never saw (it is
+    /// then known by its HP, which resets): it has no name from the game.
+    pub is_dummy: bool,
     /// 0 when the game never told us.
     pub max_hp: u64,
     /// Remaining HP as a fraction of max, when max is known.
