@@ -24,6 +24,9 @@ Tauri 2 desktop app + Rust engine + React/TS UI, Bun for JS tooling. GPL-3.0.
   Any catalog change bumps `revision`; clients fetch newer revisions from GitHub main.
   Bosses live in the same catalog: kills come from the engine (`Engine::take_kills`, death
   records read off the frame tap), schedules are on a server clock (`zone.rs`, Berlin for EU).
+  Odyle Energy comes from the parser (`DataStorage::odyle_energy`, via `Engine::take_odyle`
+  when it changes) into the `odyle-energy` reserve as a game reading (`record_game_reading`):
+  basic is the counter, charged is `refills` outside the cap.
 - `crates/pets`: no Tauri. Pet collections per server from the engine's pet records
   (`Engine::take_pets`); names, genera and souls per level from `catalog/pets.json`
   (community-fetched); where souls drop from `catalog/pet-sources.json` (bundled only,

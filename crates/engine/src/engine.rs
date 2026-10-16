@@ -21,6 +21,7 @@ use crate::kills::{Kill, KillLog};
 use crate::model::{
     FightSummary, FightView, MeterSnapshot, TargetMode, TimerKind, TimerLabel, TrackerSnapshot,
 };
+use crate::odyle::OdyleEnergy;
 use crate::pets::{PetBatch, PetLog};
 use crate::recorder::{Recorder, RecorderStatus, RecordingNote};
 use crate::snapshot;
@@ -135,6 +136,12 @@ impl Engine {
     /// Pet collection records since the last call (live capture only).
     pub fn take_pets(&self) -> Option<PetBatch> {
         self.feed.take_pets()
+    }
+
+    /// The game's Odyle energy when it changed since the last call (live
+    /// capture only).
+    pub fn take_odyle(&self) -> Option<OdyleEnergy> {
+        self.feed.take_odyle()
     }
 
     pub fn timer_label(&self, kind: TimerKind, id: u32) -> TimerLabel {

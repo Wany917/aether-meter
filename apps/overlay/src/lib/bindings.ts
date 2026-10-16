@@ -369,6 +369,10 @@ export type ReserveProjection = {
 	/**  Where the counter should be now. */
 	amount: number,
 	recordedAtMs: number,
+	/**  The game sent the value; otherwise the player entered it. */
+	fromGame: boolean,
+	/**  What refill items added outside the cap (Odyle's charged energy). */
+	refills: number,
 	/**  When it will be full, if it is not yet. */
 	fullAtMs: number | null,
 	/**  Since when it has been full, if it is. */

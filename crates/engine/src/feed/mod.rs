@@ -7,6 +7,7 @@ pub(crate) use live::{CaptureState, LiveFeed, Origin};
 
 use crate::kills::Kill;
 use crate::model::{FightView, MeterSnapshot, TargetMode, TrackerSnapshot};
+use crate::odyle::OdyleEnergy;
 use crate::pets::PetBatch;
 
 /// Where snapshots come from: the parser, or a synthetic fight for UI work.
@@ -24,4 +25,7 @@ pub(crate) trait Feed: Send + Sync {
     fn take_kills(&self) -> Vec<Kill>;
     /// Pet collection records read since the last call, live capture only.
     fn take_pets(&self) -> Option<PetBatch>;
+    /// The game's Odyle energy when it changed since the last call, live
+    /// capture only.
+    fn take_odyle(&self) -> Option<OdyleEnergy>;
 }

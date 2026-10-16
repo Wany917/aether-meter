@@ -15,6 +15,7 @@ a per-skill breakdown, saved boss fights, and a buff and cooldown tracker.
 - **Routine**: daily and weekly checklists that clear themselves at the game's
   reset, banked counters (Odyle Energy, Nightmare, Conquest...) projected to
   their cap so nothing goes to waste, and reminders before a reset or a cap.
+  Odyle Energy is read from the game itself, charged energy included.
 - **Bosses**: field boss respawn timers that start on their own when a boss dies
   near you (kills seen elsewhere can be entered), fixed-time Reshanta bosses on
   the European server clock, and the ones you follow on the overlay with a

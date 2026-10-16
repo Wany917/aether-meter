@@ -75,7 +75,12 @@ export function ReserveCard({ reserve, now, onError }: { reserve: ReserveView; n
         </span>
         {reading && (
           <span>
-            {t("routine.enteredAt")} {formatTime(reading.recordedAtMs, language)}
+            {reading.fromGame ? t("routine.readInGame") : t("routine.enteredAt")} {formatTime(reading.recordedAtMs, language)}
+          </span>
+        )}
+        {reading && reading.refills > 0 && (
+          <span title={t("routine.chargedHint")}>
+            {t("routine.charged")} <span className="num">{reading.refills}</span>
           </span>
         )}
         {!reserve.verified && <span className="unverified">{t("routine.unverified")}</span>}

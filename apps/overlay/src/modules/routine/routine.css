@@ -132,10 +132,15 @@
 }
 .reserve-foot {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 2px 10px;
   font-size: var(--text-xs);
   color: var(--text-dim);
+}
+/* A full card moves whole items to the next line, never splits one */
+.reserve-foot > * {
+  white-space: nowrap;
 }
 .reserve-foot .text-btn {
   margin-left: auto;

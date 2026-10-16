@@ -31,7 +31,7 @@ checksum = "320119579fcad9c21884f5c4861d16174d0e06250625266f50fe6898340abefa"
 
 [[package]]
 name = "aether"
-version = "0.1.15"
+version = "0.1.16"
 dependencies = [
  "aether-engine",
  "aether-pets",
@@ -57,7 +57,7 @@ dependencies = [
 
 [[package]]
 name = "aether-engine"
-version = "0.1.15"
+version = "0.1.16"
 dependencies = [
  "a2tools-dps-meter",
  "libloading 0.8.9",
@@ -72,7 +72,7 @@ dependencies = [
 
 [[package]]
 name = "aether-pets"
-version = "0.1.15"
+version = "0.1.16"
 dependencies = [
  "serde",
  "serde_json",
@@ -84,7 +84,7 @@ dependencies = [
 
 [[package]]
 name = "aether-routine"
-version = "0.1.15"
+version = "0.1.16"
 dependencies = [
  "serde",
  "serde_json",

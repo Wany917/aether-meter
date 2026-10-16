@@ -300,4 +300,8 @@ impl Feed for DemoFeed {
     fn take_pets(&self) -> Option<crate::pets::PetBatch> {
         None
     }
+
+    fn take_odyle(&self) -> Option<crate::odyle::OdyleEnergy> {
+        None
+    }
 }

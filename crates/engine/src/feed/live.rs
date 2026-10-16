@@ -19,6 +19,7 @@ use crate::kills::{Kill, KillLog};
 use crate::model::{
     EngineStatus, FightSource, FightView, MeterSnapshot, TargetMode, TrackerSnapshot,
 };
+use crate::odyle::OdyleEnergy;
 use crate::pets::{PetBatch, PetLog};
 use crate::snapshot::{self, FightHeader};
 use crate::tracker::Tracker;
@@ -55,6 +56,8 @@ pub(crate) struct LiveFeed {
     auto: AtomicBool,
     /// The target the meter showed last, for the details view.
     shown_target: AtomicI32,
+    /// The Odyle energy handed out last, so each value goes out once.
+    odyle: Mutex<Option<OdyleEnergy>>,
 }
 
 impl LiveFeed {
@@ -99,6 +102,7 @@ impl LiveFeed {
             fallback: Mutex::new(fallback),
             auto: AtomicBool::new(false),
             shown_target: AtomicI32::new(0),
+            odyle: Mutex::new(None),
         }
     }
 
@@ -270,6 +274,21 @@ impl Feed for LiveFeed {
             Origin::Live => kills,
             Origin::Replay { .. } => Vec::new(),
         }
+    }
+
+    fn take_odyle(&self) -> Option<OdyleEnergy> {
+        // A replay's energy is long out of date.
+        if !matches!(self.origin, Origin::Live) {
+            return None;
+        }
+        let (basic, charged) = self.storage.odyle_energy()?;
+        let energy = OdyleEnergy { basic, charged };
+        let mut last = self.odyle.lock();
+        if *last == Some(energy) {
+            return None;
+        }
+        *last = Some(energy);
+        Some(energy)
     }
 
     fn take_pets(&self) -> Option<PetBatch> {

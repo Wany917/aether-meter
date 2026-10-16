@@ -180,9 +180,48 @@ impl Routine {
         if self.catalog.reserve(id).is_none() {
             return Err(RoutineError::UnknownReserve(id.to_string()));
         }
-        self.state
-            .readings
-            .insert(id.to_string(), Reading { amount, at: now });
+        let refills = self.state.readings.get(id).map_or(0, |r| r.refills);
+        self.state.readings.insert(
+            id.to_string(),
+            Reading {
+                amount,
+                at: now,
+                from_game: false,
+                refills,
+            },
+        );
+        Ok(())
+    }
+
+    /// What the game itself says a reserve holds: its counter, and what
+    /// refill items added outside the cap. It replaces any entered value.
+    /// A counter above the regular cap means the membership is on.
+    pub fn record_game_reading(
+        &mut self,
+        id: &str,
+        amount: u32,
+        refills: u32,
+        now: i64,
+    ) -> Result<(), RoutineError> {
+        let def = self
+            .catalog
+            .reserve(id)
+            .ok_or_else(|| RoutineError::UnknownReserve(id.to_string()))?;
+        if def
+            .member_cap
+            .is_some_and(|m| amount > def.cap && amount <= m)
+        {
+            self.state.membership = true;
+        }
+        self.state.readings.insert(
+            id.to_string(),
+            Reading {
+                amount,
+                at: now,
+                from_game: true,
+                refills,
+            },
+        );
         Ok(())
     }
 
@@ -200,9 +239,15 @@ impl Routine {
         let cap = def.cap_for(self.state.membership);
         let current = i64::from(project(self.clock(), def, cap, reading, now).amount);
         let amount = (current + delta).clamp(0, i64::from(u32::MAX)) as u32;
-        self.state
-            .readings
-            .insert(id.to_string(), Reading { amount, at: now });
+        self.state.readings.insert(
+            id.to_string(),
+            Reading {
+                amount,
+                at: now,
+                from_game: false,
+                refills: reading.refills,
+            },
+        );
         Ok(())
     }
 
@@ -423,6 +468,8 @@ fn project(
     ReserveProjection {
         amount: amount.clamp(0, i64::from(u32::MAX)) as u32,
         recorded_at_ms: reading.at,
+        from_game: reading.from_game,
+        refills: reading.refills,
         full_at_ms: full_at,
         full_since_ms: full_since,
         wasted: wasted.clamp(0, i64::from(u32::MAX)) as u32,
@@ -493,6 +540,40 @@ mod tests {
 
         r.set_membership(true);
         assert_eq!(odyle(&r, wed(19)).amount, 590, "the member cap is higher");
+    }
+
+    #[test]
+    fn the_games_odyle_energy_replaces_what_was_entered() {
+        let mut r = routine();
+        let odyle = |r: &Routine, now| {
+            r.view(now, "en")
+                .reserves
+                .into_iter()
+                .find(|v| v.id == "odyle-energy")
+                .unwrap()
+                .reading
+                .unwrap()
+        };
+        r.set_reading("odyle-energy", 400, wed(8)).unwrap();
+        r.record_game_reading("odyle-energy", 30, 840, wed(9))
+            .unwrap();
+        let read = odyle(&r, wed(9));
+        assert_eq!((read.amount, read.from_game, read.refills), (30, true, 840));
+        // Projected from the game's value like an entered one.
+        assert_eq!(odyle(&r, wed(11)).amount, 45, "15 at 10:00");
+        // A cube entered by hand: the player's again, the charged energy kept.
+        r.adjust_reading("odyle-energy", -20, wed(11)).unwrap();
+        let spent = odyle(&r, wed(11));
+        assert_eq!(
+            (spent.amount, spent.from_game, spent.refills),
+            (25, false, 840)
+        );
+        assert!(r.record_game_reading("nope", 1, 0, wed(11)).is_err());
+
+        assert!(!r.state().membership);
+        r.record_game_reading("odyle-energy", 700, 0, wed(12))
+            .unwrap();
+        assert!(r.state().membership, "700 is past the regular 560 cap");
     }
 
     #[test]

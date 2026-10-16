@@ -4,7 +4,7 @@
 
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
-use aether_engine::Kill;
+use aether_engine::{Kill, OdyleEnergy};
 use aether_routine::{Cadence, Catalog, ReminderSettings, RoutineView, TaskGroup};
 use tauri::{AppHandle, Manager, State};
 use tauri_plugin_notification::NotificationExt;
@@ -18,6 +18,8 @@ use crate::state::AppState;
 /// The catalog the community edits; a merged pull request reaches every client.
 const COMMUNITY_CATALOG: &str =
     "https://raw.githubusercontent.com/Wany917/aether-meter/main/catalog/routine.json";
+/// The reserve the game's Odyle energy fills.
+const ODYLE_RESERVE: &str = "odyle-energy";
 const CATALOG_CHECK_EVERY: Duration = Duration::from_secs(12 * 3600);
 const REMINDER_CHECK_EVERY: Duration = Duration::from_secs(60);
 
@@ -198,6 +200,27 @@ pub fn record_kills(app: &AppHandle, kills: &[Kill]) {
             tracing::warn!("routine state not saved: {e}");
         }
         routine.view(now_ms(), &language(&state))
+    };
+    let _ = RoutineChanged(view).emit(app);
+}
+
+/// The Odyle energy the game sent: the reserve takes it as read, in place
+/// of an entered value.
+pub fn record_odyle(app: &AppHandle, energy: OdyleEnergy) {
+    let state = app.state::<AppState>();
+    let now = now_ms();
+    let view = {
+        let mut routine = state.routine.lock();
+        if let Err(e) =
+            routine.record_game_reading(ODYLE_RESERVE, energy.basic, energy.charged, now)
+        {
+            tracing::warn!("Odyle energy not recorded: {e}");
+            return;
+        }
+        if let Err(e) = state.routine_store.save_state(routine.state()) {
+            tracing::warn!("routine state not saved: {e}");
+        }
+        routine.view(now, &language(&state))
     };
     let _ = RoutineChanged(view).emit(app);
 }

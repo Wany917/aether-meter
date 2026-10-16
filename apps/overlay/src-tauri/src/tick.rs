@@ -45,6 +45,9 @@ pub fn spawn(app: AppHandle) {
                     if let Some(batch) = state.engine.take_pets() {
                         crate::pets::record(&app, batch);
                     }
+                    if let Some(energy) = state.engine.take_odyle() {
+                        crate::routine::record_odyle(&app, energy);
+                    }
                 }
                 if last_tracker.elapsed() >= TRACKER_EVERY {
                     last_tracker = Instant::now();

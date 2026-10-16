@@ -76,6 +76,13 @@ pub struct Progress {
 pub struct Reading {
     pub amount: u32,
     pub at: i64,
+    /// Read off the game's own records, not entered by the player.
+    #[serde(default)]
+    pub from_game: bool,
+    /// What refill items added beside the counter, outside its cap (Odyle's
+    /// charged energy); only the game says.
+    #[serde(default)]
+    pub refills: u32,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

@@ -71,6 +71,10 @@ pub struct ReserveProjection {
     /// Where the counter should be now.
     pub amount: u32,
     pub recorded_at_ms: i64,
+    /// The game sent the value; otherwise the player entered it.
+    pub from_game: bool,
+    /// What refill items added outside the cap (Odyle's charged energy).
+    pub refills: u32,
     /// When it will be full, if it is not yet.
     pub full_at_ms: Option<i64>,
     /// Since when it has been full, if it is.
